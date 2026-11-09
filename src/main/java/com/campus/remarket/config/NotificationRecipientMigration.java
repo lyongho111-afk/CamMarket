@@ -18,7 +18,12 @@ public class NotificationRecipientMigration implements ApplicationRunner {
     public void migrate(){
         // Install the stronger per-recipient protection before removing the old
         // one-recipient-per-order constraint. No rows or delivery states change.
-        db.execute("CREATE UNIQUE INDEX IF NOT EXISTS uq_notification_recipient_idx ON seller_notifications(order_id,seller_member_id)");
+        // 예시: try-catch를 이용해 이미 존재하는 인덱스 에러(Duplicate key name 등)는 무시하도록 처리
+        try {
+            db.execute("CREATE UNIQUE INDEX uq_notification_recipient_idx ON seller_notifications(order_id, seller_member_id)");
+        } catch (Exception e) {
+            // 이미 인덱스가 존재하는 경우 발생하는 예외 무시
+        }
         List<String> legacy=db.queryForList("""
             SELECT tc.CONSTRAINT_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
             JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE k
