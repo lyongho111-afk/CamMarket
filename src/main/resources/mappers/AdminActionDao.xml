@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campus.remarket.portal.AdminActionDao">
+  <insert id="insert" parameterType="com.campus.remarket.dto.AdminActionDto">
+    INSERT INTO admin_action_logs(shop_id,shop_name,actor_member_id,actor_name,action,before_value,after_value,note)
+    VALUES(#{shopId},#{shopName},#{actorMemberId},#{actorName},#{action},#{beforeValue},#{afterValue},#{note})
+  </insert>
+  <select id="recent" resultType="com.campus.remarket.dto.AdminActionDto">
+    SELECT * FROM admin_action_logs ORDER BY created_at DESC,action_id DESC LIMIT 500
+  </select>
+  <select id="latestPublication" resultType="com.campus.remarket.dto.AdminActionDto">
+    SELECT * FROM admin_action_logs WHERE shop_id=#{shopId} AND action='APPROVAL' ORDER BY created_at DESC,action_id DESC LIMIT 1
+  </select>
+</mapper>

@@ -1,0 +1,38 @@
+.engagement-controls{display:flex;flex-wrap:wrap;gap:7px;padding:10px 0;align-items:center}.reaction-button{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:7px 11px;border:1px solid #dce6dd;border-radius:13px;background:#fff;color:#61776a;font-size:12px;white-space:nowrap}.reaction-button.like[aria-pressed=true]{background:#fff0f1;color:#bd455d;border-color:#efc5cd}.reaction-button:disabled{opacity:.55;cursor:wait}.product{padding-bottom:0;display:flex;flex-direction:column}.product>.open{flex:1}.product>.engagement-controls{justify-content:flex-end}.engagement-post{border-bottom:1px solid #e5ebe2;padding-bottom:8px}.engagement-post .c-post{border-bottom:0}.engagement-post>.engagement-controls{padding-left:22px}.c-comment-body>.engagement-controls{padding-bottom:0}.c-article>.engagement-controls{border-top:1px solid #e5ebe2;margin-top:12px}.campus-store>.engagement-controls{padding:6px 0}.interest-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}.interest-filters button{padding:8px 15px;border:1px solid #dce5d7;border-radius:18px;background:#fff}.interest-filters .active{background:#24694f;color:#fff}.interest-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.interest-card{border:1px solid #e0e8db;border-radius:18px;padding:18px;background:#fff;display:flex;flex-direction:column}.interest-open{text-align:left;background:none;flex:1;width:100%;padding:0}.interest-open h3{font-size:17px;margin:12px 0;overflow-wrap:anywhere}.interest-open p{font-size:12px;color:#788276;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.interest-pagination{display:flex;justify-content:center;align-items:center;gap:18px;margin:25px 0}.interest-count{color:#617362;font-size:13px}.main-nav{flex-wrap:wrap}.main-nav [data-tab=likes]{color:#9d4257}@media(max-width:800px){.interest-list{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:500px){.interest-list{grid-template-columns:1fr}.product>.engagement-controls{justify-content:flex-start}.reaction-button{font-size:11px;padding:7px 8px}}
+
+.reaction-button svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}.reaction-button .like-label{margin-left:6px}.reaction-button[aria-pressed=true] svg{fill:currentColor}.product{position:relative}.product>.image-heart{position:absolute;right:9px;top:9px;z-index:3;padding:0;margin:0;display:block}.product>.image-heart .reaction-button{width:44px;height:44px;min-height:44px;padding:8px;background:transparent;border:0;border-radius:50%;color:#fff;filter:drop-shadow(0 1px 2px #0008);transition:transform .15s,color .15s}.product>.image-heart .reaction-button svg{width:27px;height:27px;stroke-width:2;fill:transparent}.product>.image-heart .reaction-button[aria-pressed=true]{color:#ec4456;background:transparent}.product>.image-heart .reaction-button[aria-pressed=true] svg{fill:currentColor;stroke:currentColor}.product>.image-heart .reaction-button:hover{background:#00000012;transform:scale(1.08)}.product>.image-heart .reaction-button:focus-visible{outline:3px solid #24694f;outline-offset:2px;background:#ffffffd9;color:#d94358}.product>.image-heart .reaction-button:disabled{opacity:.65}.product .tag{max-width:calc(100% - 65px)}.likes-view .interest-list{grid-template-columns:repeat(4,minmax(0,1fr));align-items:stretch;gap:28px 20px}.likes-view .interest-list .product-art{aspect-ratio:1/1;height:auto}.interest-card{min-width:0}.product .open{min-width:0}@media(max-width:900px){.likes-view .interest-list{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:650px){.likes-view .interest-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 12px}.product>.image-heart{right:5px;top:5px}}
+
+/* Shop actions share one baseline and a consistent touch target. */
+.campus-store-actions{display:flex;align-items:center;gap:9px;margin:15px 0 0 51px;flex-wrap:nowrap}
+.campus-store-actions>.engagement-controls{padding:0;flex-wrap:nowrap}
+.campus-store-actions .shop-map-button,.campus-store-actions .reaction-button{display:inline-flex;align-items:center;justify-content:center;min-height:38px;gap:6px;padding:9px 13px;border-radius:12px;font-size:12px;font-weight:600;line-height:18px;white-space:nowrap;transition:background .15s,box-shadow .15s,color .15s}
+.campus-store-actions .shop-map-button{color:#fff;background:#24694f;border:1px solid #24694f;box-shadow:0 3px 8px #24694f14}
+.campus-store-actions .shop-map-button:hover{background:#1b533e;box-shadow:0 4px 10px #24694f26}
+.shop-map-button svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.campus-store-actions .reaction-button{color:#9e5264;border:1px solid #ecdce1;background:#fffafb}
+.campus-store-actions .reaction-button .like-label{margin:0}
+.campus-store-actions .reaction-button:hover{background:#fff0f4;border-color:#dfadbb}
+.campus-store-actions .reaction-button[aria-pressed=true]{background:#ffe9ef;color:#bd455d;border-color:#e4acbb}
+.campus-store-actions button:focus-visible,.c-post-actions button:focus-visible{outline:3px solid #8ab6a0;outline-offset:3px}
+
+/* Keep the post link separate from the comment and like buttons. */
+.engagement-post{padding:22px 0;border-bottom:1px solid #e5ebe2}
+.engagement-post>.c-post{padding:0;border:0}
+.c-post-actions{display:flex;align-items:center;gap:15px;flex-shrink:0}
+.c-post-actions>.engagement-controls{padding:0;margin:0;flex-wrap:nowrap}
+.c-post-actions .c-comment-count,.c-post-actions .reaction-button{display:inline-flex;align-items:center;justify-content:center;min-height:32px;padding:4px 0;line-height:20px;border:0;background:transparent;border-radius:6px;font-size:11px;color:#819184}
+.c-post-actions .reaction-button svg{width:15px;height:15px}
+.c-post-actions .reaction-button .like-label{margin-left:5px}
+.c-post-actions .reaction-button:hover,.c-post-actions .reaction-button[aria-pressed=true]{background:transparent;color:#bd455d}
+.c-post-actions .c-comment-count:hover{color:#24694f}
+@media(max-width:700px){.campus-store-actions{margin-left:46px}.engagement-post{padding:21px 0}.engagement-post .c-post-bottom{flex-wrap:wrap;gap:4px 10px}.c-post-actions{margin-left:auto}}
+@media(max-width:400px){.campus-store-actions{margin-left:0}}
+
+/* Product-detail like sits next to the close control, above the photo. */
+#modal-body[data-product-id]>.detail-like-controls{justify-content:flex-end;flex-wrap:nowrap;min-height:36px;margin:-24px -20px 12px 0;padding:0 44px 0 0}
+.detail-like-controls .reaction-button{min-height:36px;padding:7px 11px;line-height:20px;border-radius:18px;background:#fff;color:#687e6c;box-shadow:0 2px 7px #234b3d08}
+.detail-like-controls .reaction-button:hover{background:#fff3f5;color:#b84a62;border-color:#e8bdc7}
+.detail-like-controls .reaction-button[aria-pressed=true]{background:#fff0f3;color:#bd455d;border-color:#e7b9c5}
+.detail-like-controls .reaction-button:focus-visible{outline:3px solid #8ab6a0;outline-offset:3px}
+#modal:has(.detail-like-controls)>.close{display:grid;place-items:center;top:8px;right:8px;width:36px;height:36px;padding:0;border-radius:50%;font-size:24px;line-height:1}
+#modal:has(.detail-like-controls)>.close:hover{background:#f1f5ef}

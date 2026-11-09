@@ -1,0 +1,104 @@
+{
+  "baseline": "before-social-source.zip (직전 최종본 작업 소스 백업)",
+  "previousFinalZipSha256": "ef9c079bde875fd3d928346358a5d7ab1da70ba4fbd615d40c33ead939b2543c",
+  "teammateOriginalZip": "campus-remarket-rating-counts-fixed.zip",
+  "teammateOriginalZipSha256": "90b35b520b1231ddb281a6795ab609be838072791583aae27383858c9672cddb",
+  "files": [
+    {
+      "file": "src/main/java/com/campus/remarket/controller/ApiErrorAdvice.java",
+      "status": "수정",
+      "beforeSha256": "f25255455253553dba72b585c50832ce5c8667f80358fc075314761f0cd85e56",
+      "afterSha256": "ac1edd21d681f37ae08121a63972d54bffefd7973bf48e6c9e927636c147a8c1"
+    },
+    {
+      "file": "src/main/java/com/campus/remarket/controller/EngagementController.java",
+      "status": "추가",
+      "beforeSha256": null,
+      "afterSha256": "4290225bc25957763fbe47676ca3955c7ab5b9b606460dc45a414b9e291bee98"
+    },
+    {
+      "file": "src/main/java/com/campus/remarket/service/EngagementService.java",
+      "status": "추가",
+      "beforeSha256": null,
+      "afterSha256": "3fd127b34ae489a296adc1a165c01e2f88fa8a343502cf72dfc20d29e2768c11"
+    },
+    {
+      "file": "src/main/resources/engagement-migration.sql",
+      "status": "추가",
+      "beforeSha256": null,
+      "afterSha256": "ef3f12f83652256568c89c3075bcc5cceca116b59584e1d749562c5bbff663ae"
+    },
+    {
+      "file": "src/main/resources/schema.sql",
+      "status": "수정",
+      "beforeSha256": "507970cc0c6be085af67370d10e553917bf4074f2b43e45960cb8963b70c161b",
+      "afterSha256": "29269fb93c01826ec9c9e52b6c5ab5522a8688a0cc2ed0146d3289e938eced65"
+    },
+    {
+      "file": "src/main/resources/static/engagement.css",
+      "status": "추가",
+      "beforeSha256": null,
+      "afterSha256": "155a2f2abf3d86ae77d4aa88a63115c3873c495d147f4b1327e945f75d31701f"
+    },
+    {
+      "file": "src/main/resources/static/engagement.js",
+      "status": "추가",
+      "beforeSha256": null,
+      "afterSha256": "c833248291632ea4118614d9ab9eb19bdf11870fb1330a6c3c7493cc86c92dea"
+    },
+    {
+      "file": "src/main/resources/static/preview/app.js",
+      "status": "수정",
+      "beforeSha256": "9cd56a0b22d63f2fd2a3734c46740c64d5a81fa330bc1ef6dc19453e1fde9454",
+      "afterSha256": "0c7b5b2ce8b1109c0f570ad4063c2ea231b7ea5d158bd97e674c7cee7baef408"
+    },
+    {
+      "file": "src/main/resources/static/preview/community.js",
+      "status": "수정",
+      "beforeSha256": "9cd821050cd46ffdf9b17419ba309f7bb62bfcbd894ac87f688c3f2298fa047f",
+      "afterSha256": "fbf1d016299c529c362da0283935bc06343bebcce88ac45a706614a2c8e3faa5"
+    },
+    {
+      "file": "src/main/resources/static/preview/features.js",
+      "status": "수정",
+      "beforeSha256": "66b56000f06f46915196809bcbadf988e954697f05f9e081cc87d397b7e17d5e",
+      "afterSha256": "4171e4004a3927b223280fde059be708f66a9155497d3a759d233e06dbf8d27b"
+    },
+    {
+      "file": "src/main/resources/static/preview/index.html",
+      "status": "수정",
+      "beforeSha256": "189e98a6851184297957bc226701e54823370a4bcf02e1ec9e85de60021f332f",
+      "afterSha256": "ccecf951e234656142868439578357b95a904a0dabf866a0f078763d07b337cb"
+    },
+    {
+      "file": "src/main/resources/static/preview/shops.js",
+      "status": "수정",
+      "beforeSha256": "48f7afb20d1f9668a8c7cdd6125027a3aa4d1561388d80274f765c8e1cd7d9d4",
+      "afterSha256": "018eddb65458316b4e6239b1310e1da716964dab9bdb375f126eb8049169f4ae"
+    },
+    {
+      "file": "src/main/resources/static/student-ux.js",
+      "status": "수정",
+      "beforeSha256": "18db18a46a76686b0ad9d438bafb9bd459ae2ecaa2e2651fff670e731e1163ee",
+      "afterSha256": "ed90c414e234d38f89780ea766a80abe0d558c450381a79ef6f151c40d21dd01"
+    },
+    {
+      "file": "src/main/resources/templates/market/index.html",
+      "status": "수정",
+      "beforeSha256": "ebdb1ccd9e8d95b4d6faa60cd5019d13d5976c47b511adc3ed43833134976038",
+      "afterSha256": "fed48fa2efd7827be6d90194b998b506a093fc97625a8c23b3d821c006dc65d1"
+    },
+    {
+      "file": "src/test/java/com/campus/remarket/EngagementIntegrationTests.java",
+      "status": "추가",
+      "beforeSha256": null,
+      "afterSha256": "58350d23ca54d13ee924176cb2658ddf8573d4bbabcd484f604d63f2d9a43da8"
+    },
+    {
+      "file": "src/test/java/com/campus/remarket/MemberIntegrationTests.java",
+      "status": "수정",
+      "beforeSha256": "4861e3f3417750f4fa1f40024b9eb17a2f0ae660a5f18b93299e6c490fb54f47",
+      "afterSha256": "fb937f0a306a0303f1f16c4b9e8601f14378772efb74e23df36680d3611a6564"
+    }
+  ]
+}

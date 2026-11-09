@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.campus.remarket.MyBatisFlowTests" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-30T01:07:17.900Z" hostname="DESKTOP-5NRA95L" time="1.119">
+  <properties/>
+  <testcase name="shopAndBoardCrud()" classname="com.campus.remarket.MyBatisFlowTests" time="0.02"/>
+  <testcase name="reservationUsesServerPriceAndKeepsIt()" classname="com.campus.remarket.MyBatisFlowTests" time="0.027"/>
+  <testcase name="expiredDiscountRestoresPriceAndAllowsNewDay()" classname="com.campus.remarket.MyBatisFlowTests" time="0.02"/>
+  <testcase name="meetingAndCompletionAreStored()" classname="com.campus.remarket.MyBatisFlowTests" time="0.02"/>
+  <testcase name="noPaymentApprovalWithoutKeys()" classname="com.campus.remarket.MyBatisFlowTests" time="0.005"/>
+  <testcase name="xmlQueriesAndJoin()" classname="com.campus.remarket.MyBatisFlowTests" time="0.014"/>
+  <testcase name="saleCrudDiscountAndBump()" classname="com.campus.remarket.MyBatisFlowTests" time="0.018"/>
+  <testcase name="invalidRatesRejected()" classname="com.campus.remarket.MyBatisFlowTests" time="0.006"/>
+  <testcase name="exposureOrderMatchesPolicy()" classname="com.campus.remarket.MyBatisFlowTests" time="0.007"/>
+  <system-out><![CDATA[2026-10-30T10:07:17.903+09:00  INFO 18560 --- [campus-remarket-mybatis] [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.campus.remarket.MyBatisFlowTests]: MyBatisFlowTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-30T10:07:17.905+09:00  INFO 18560 --- [campus-remarket-mybatis] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.campus.remarket.CampusApplication for test class com.campus.remarket.MyBatisFlowTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.2)
+
+2026-10-30T10:07:17.947+09:00  INFO 18560 --- [campus-remarket-mybatis] [    Test worker] com.campus.remarket.MyBatisFlowTests     : Starting MyBatisFlowTests using Java 25.0.4.1 with PID 18560 (started by tj-bu-705-07 in C:\Users\tj-bu-705-07\Documents\Codex\2026-10-30\build-gradle-idea\work\campus-remarket-integrated)
+2026-10-30T10:07:17.947+09:00  INFO 18560 --- [campus-remarket-mybatis] [    Test worker] com.campus.remarket.MyBatisFlowTests     : No active profile set, falling back to 1 default profile: "default"
+2026-10-30T10:07:18.186+09:00  INFO 18560 --- [campus-remarket-mybatis] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-30T10:07:18.198+09:00  INFO 18560 --- [campus-remarket-mybatis] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 9 ms. Found 3 JPA repository interfaces.
+2026-10-30T10:07:18.300+09:00  INFO 18560 --- [campus-remarket-mybatis] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2026-10-30T10:07:18.304+09:00  INFO 18560 --- [campus-remarket-mybatis] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection conn10: url=jdbc:h2:mem:campus user=SA
+2026-10-30T10:07:18.304+09:00  INFO 18560 --- [campus-remarket-mybatis] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2026-10-30T10:07:18.339+09:00  INFO 18560 --- [campus-remarket-mybatis] [    Test worker] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-10-30T10:07:18.372+09:00  INFO 18560 --- [campus-remarket-mybatis] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-30T10:07:18.375+09:00  INFO 18560 --- [campus-remarket-mybatis] [    Test worker] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:campus]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: CAMPUS/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-30T10:07:18.427+09:00  INFO 18560 --- [campus-remarket-mybatis] [    Test worker] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-30T10:07:18.436+09:00  INFO 18560 --- [campus-remarket-mybatis] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-30T10:07:18.697+09:00  INFO 18560 --- [campus-remarket-mybatis] [    Test worker] o.s.b.h.a.H2ConsoleAutoConfiguration     : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:campus'
+2026-10-30T10:07:18.733+09:00  INFO 18560 --- [campus-remarket-mybatis] [    Test worker] com.campus.remarket.MyBatisFlowTests     : Started MyBatisFlowTests in 0.818 seconds (process running for 12.281)
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,27 @@
+{
+  "tests": {
+    "tests": 46,
+    "failures": 0,
+    "errors": 0
+  },
+  "originalFilesUnchanged": 6,
+  "originalIntegrationFilesAdjusted": 3,
+  "flows": [
+    "student signup regression",
+    "owner multipart signup",
+    "pending shop",
+    "owner member/shop link",
+    "shop photo storage and response",
+    "manager access",
+    "admin approval",
+    "optional inputs",
+    "invalid input rollback",
+    "5MB limit",
+    "transaction rollback file cleanup"
+  ],
+  "ui": [
+    "owner first/second steps",
+    "original shop-information form layout"
+  ],
+  "databaseBackupExcludedFromPackage": true
+}

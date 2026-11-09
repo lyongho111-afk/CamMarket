@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>거래 상세와 매너온도 평가</title><link rel="stylesheet" th:href="@{/css/app.css}"></head>
+<body><nav th:replace="~{common/nav :: navigation}"></nav>
+<main><h1>거래 상세</h1><dl>
+<dt>주문번호</dt><dd th:text="${dto.orderId}"></dd><dt>상품</dt><dd th:text="${dto.saleName}"></dd>
+<dt>약속 가격</dt><dd th:text="${dto.agreedPrice}"></dd><dt>상태</dt><dd th:text="${dto.status}"></dd>
+<dt>장소</dt><dd th:text="${dto.meetingPlace}"></dd><dt>약속 시간</dt><dd th:text="${dto.meetingTime}"></dd></dl>
+<form method="post" action="/trades/cancel" th:if="${dto.status == 'RESERVED'}"><input type="hidden" name="id" th:value="${dto.orderId}"><button>예약 취소</button></form>
+<section id="rating-section" class="box"><h2>거래 상대 매너온도 평가</h2>
+<p th:if="${ratingDemo}">demo-buyer 시연 계정입니다. 실제 로그인 인증은 연결 전입니다.</p>
+<p th:if="${ratingSuccess}" th:text="${ratingSuccess}" role="status"></p>
+<p th:text="${rating.message}"></p>
+<p th:if="${rating.temp != null}">상대방 현재 매너온도 <b th:text="${#numbers.formatDecimal(rating.temp / 10.0,1,1)}"></b>°</p>
+<form id="manner-rating-form" method="post" th:action="@{/trades/rating}" th:if="${rating.canRate}">
+<input type="hidden" name="id" th:value="${dto.orderId}"><input type="hidden" name="csrf" th:value="${ratingCsrf}">
+<label>상대방의 거래 매너<select name="feedback" required><option value="GOOD">좋아요</option><option value="BAD">아쉬워요</option></select></label>
+<p>한 거래에서 상대방을 한 번만 평가할 수 있습니다.</p><button type="submit">평가 저장</button></form>
+</section><a href="/trades/selectAll">목록으로</a></main></body></html>

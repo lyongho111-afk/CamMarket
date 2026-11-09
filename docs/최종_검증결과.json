@@ -1,0 +1,17 @@
+{
+  "java": {
+    "tests": 54,
+    "failures": 0,
+    "errors": 0
+  },
+  "signupOriginalFilesUnchanged": 6,
+  "ratingOriginalFilesUnchanged": 3,
+  "ratingOriginalDialogUnchanged": true,
+  "teammateZipSHA256": "b436fd545643138e46e8aa5f890f5a4a65be512cab97fd2062b295cf5e1dd351",
+  "uiFivePointsResult": {
+    "before": 36.5,
+    "after": 37.0,
+    "browserErrors": 0
+  },
+  "liveExternalMessagesSent": false
+}

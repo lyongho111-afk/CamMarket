@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ko">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>로그인 · 캠퍼스 리마켓</title><link rel="stylesheet" href="style.css"><script src="/account-security.js?v=20261104"></script></head>
+<body>
+<header><a class="brand" href="/">re<span>:</span>market<small>CAMPUS EDITION</small></a></header>
+<main><div style="max-width:480px;margin:0 auto;padding:10px 0 60px">
+  <div class="panel">
+    <span class="eyebrow">WELCOME BACK</span>
+    <h2>우리 캠퍼스로 로그인</h2>
+    <p>학생은 학교와 학번으로, 사장님·매니저·관리자는 유형을 선택하고 아이디로 로그인해요.</p>
+    <div id="schoolBanner" hidden style="position:relative;border-radius:15px;overflow:hidden;margin-bottom:18px;border:1px solid var(--line);background:#f2f5ef">
+    <img id="schoolImg" alt="" style="width:100%;height:190px;object-fit:cover;display:block">
+    <button id="schoolImgToggle" type="button" hidden style="position:absolute;right:10px;bottom:10px;background:#ffffffe6;border:1px solid var(--line);border-radius:20px;padding:7px 13px;font-size:12px;font-weight:700;color:var(--green)">캠퍼스 약도 보기</button>
+  </div>
+    <form id="loginForm" method="post" action="/api/members/login">
+      <label class="field">로그인 유형 / 학교
+        <select name="schoolId" id="schoolSelect" required>
+          <option value="">학교를 선택해 주세요</option>
+          <!-- member.js가 학교 목록을 채움 -->
+          <option value="OWNER">사장님(아이디로 로그인)</option>
+          <option value="MANAGER">매니저(아이디로 로그인)</option>
+          <option value="ADMIN">관리자(아이디로 로그인)</option>
+        </select>
+      </label>
+      <label class="field"><span id="loginIdLabel">학번</span><input name="loginId" required maxlength="30" autocomplete="username" placeholder="예: 20261234"></label>
+      <label class="field">비밀번호<input name="password" type="password" required maxlength="64" autocomplete="current-password"></label>
+      <button class="primary wide" type="submit" disabled>로그인</button>
+    </form>
+    <p class="muted" style="text-align:center;margin-top:22px">아직 회원이 아니신가요? <a href="signup.html" style="color:var(--green);font-weight:700">회원가입 →</a></p>
+  </div>
+  <p class="demo-label" style="margin-top:18px">시연 계정 (비밀번호 campus1234!) · 학생: 인하대학교 / 20261234 · 사장: owner1 · 매니저: manager1 · 관리자: admin1</p>
+</div></main>
+<div id="toast" role="status"></div>
+<script src="member.js?v=20261102-login"></script>
+<script src="/login-banner.js?v=20261105-merge"></script></body></html>

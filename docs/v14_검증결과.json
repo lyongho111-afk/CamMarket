@@ -1,0 +1,49 @@
+{
+  "version": "v14",
+  "date": "2026-11-02",
+  "java": {
+    "tests": 42,
+    "failures": 0,
+    "errors": 0
+  },
+  "javascript": {
+    "syntaxFiles": 6,
+    "portalHelperChecks": 20,
+    "failures": 0
+  },
+  "h2Migration": {
+    "passed": true,
+    "preservedSales": 8,
+    "preservedPosts": 3,
+    "removedUnusedColumns": 12
+  },
+  "ui": {
+    "registeredShopMapAndPopup": true,
+    "statusLegend": true,
+    "communityCategories": true,
+    "bannerManualNavigation": true,
+    "bannerAutoAdvance": true,
+    "ownerLink": true,
+    "managerLink": true,
+    "reservationSellerNotification": true,
+    "notificationSettingsSave": true,
+    "markAsRead": true,
+    "browserConsoleErrors": 0
+  },
+  "externalDelivery": {
+    "liveSent": false,
+    "localMockAdapters": [
+      "SMTP",
+      "SOLAPI LMS",
+      "SOLAPI Kakao ATA"
+    ],
+    "verified": [
+      "seller recipient",
+      "channel opt out",
+      "configuration required",
+      "provider receipt",
+      "ownership access",
+      "duplicate reservation outbox prevention"
+    ]
+  }
+}

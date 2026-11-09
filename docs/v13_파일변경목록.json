@@ -1,0 +1,150 @@
+{
+  "baseline": "campus-remarket-v12-history/campus-remarket (extracted v12 folder)",
+  "baselineNote": "The original ZIP was no longer present at comparison time. The supplied v12 extracted folder was used read-only.",
+  "compared": 453,
+  "missing": [],
+  "changed": [
+    {
+      "path": "README.md",
+      "v12Sha256": "6BE662A4AC9D381AF4AB696AF9EDB4A0803884F7EE30A9B46A975E5B00C2DF4F",
+      "v13Sha256": "83108AD9B5FA6FDA4650E44143D868D73CB9ABE51340FEEB679186DE87441E01"
+    },
+    {
+      "path": "app/campus-remarket.jar",
+      "v12Sha256": "548B13E6D8645CE7497759F6DD5772CBB97A716114C9F662685E41E77DD64D95",
+      "v13Sha256": "2AF2CBEBECD56BDE3090CE89B70A00F52A38762BFB8F30C86204F36E4AC53D01"
+    },
+    {
+      "path": "docs/sql/schema-h2.sql",
+      "v12Sha256": "C707146AD5E49B52887C0270AF36278856B3958CBBC52D2A7B82EAE539B9EE60",
+      "v13Sha256": "E7EA829D56BE465BB5EB016A25EDF73D5F91800A9CC8F3EBC9B38C0B79103524"
+    },
+    {
+      "path": "docs/sql/schema-mysql.sql",
+      "v12Sha256": "F05F8450828BB49134FB8127F0A7778356E742DA29F88C948BF92271BCD8BB61",
+      "v13Sha256": "E915B702580389DB9C778B36168357D5C620C50FAB8744FDBA2542F0F8B02011"
+    },
+    {
+      "path": "src/main/java/com/campus/remarket/dto/ShopDto.java",
+      "v12Sha256": "0E7B3589D82476BBEB7C3190225BD858E164FC361243FFE69BDE35F33F0AD9B4",
+      "v13Sha256": "7EB6335C7AF30FB044A473EDFB899B936E8AACAB8FC263EA15488CA0F87B7C4D"
+    },
+    {
+      "path": "src/main/java/com/campus/remarket/portal/PortalShopDao.java",
+      "v12Sha256": "8DB8813CB01992676F38B7AA9997F758F5B085FD18B5CBD047BA7F175D9D1AF7",
+      "v13Sha256": "C9FB46AD4F6CFF47CA256E1D09883424FF023040390B5AA30935717B760CAA07"
+    },
+    {
+      "path": "src/main/java/com/campus/remarket/portal/StaffPortalController.java",
+      "v12Sha256": "C07D0507BE7AB150E60C41513AE5B15293609FB19BDC5B6D1112585C55995CBD",
+      "v13Sha256": "D8F98A32D85B365F6F3AB37B37FD5879F4815B380A7CD5707418B755FF0F6E67"
+    },
+    {
+      "path": "src/main/java/com/campus/remarket/portal/StaffPortalService.java",
+      "v12Sha256": "2F4045FD9D8DB5729FF81BA723FAF91FCD648D9BC4740EC08DD301AA89D5082D",
+      "v13Sha256": "536354D18CB1BB58116C71A855E41EC68787B79C7F62EA47FD0E72063B4CAF38"
+    },
+    {
+      "path": "src/main/resources/schema.sql",
+      "v12Sha256": "C707146AD5E49B52887C0270AF36278856B3958CBBC52D2A7B82EAE539B9EE60",
+      "v13Sha256": "E7EA829D56BE465BB5EB016A25EDF73D5F91800A9CC8F3EBC9B38C0B79103524"
+    },
+    {
+      "path": "src/main/resources/mappers/PortalShopDao.xml",
+      "v12Sha256": "B05236DD60F0E9DD401CC1370FB01BAC1588E78B8795BF082EAE4530D9A708A5",
+      "v13Sha256": "BB71119BC63E2B6DAF45130A640C03DABD72C5552178B1618BE902BABBEF3EA2"
+    },
+    {
+      "path": "src/main/resources/mappers/ShopDao.xml",
+      "v12Sha256": "CFE0753CCCA27C76E9363387613F8D4F5E10D85F9A7744A67CDD25C448F6F500",
+      "v13Sha256": "272A7449CF1604DF20D1DCB1731980993736F97A449EC6B50044A02B7930135E"
+    },
+    {
+      "path": "src/main/resources/portal-sites/admin/app.js",
+      "v12Sha256": "53BB2F664BE96FC371E20AA86A7F2B2380949325999AC74A0D31C74C808209EC",
+      "v13Sha256": "F1917D6794CCEA08A24C45548D76262FA08B3BEC735D478CDC02440363A9FBB2"
+    },
+    {
+      "path": "src/main/resources/portal-sites/admin/common.js",
+      "v12Sha256": "F8B01D6917241B79B88EEB25481C0DDB84F35F594606CCCCDF023860C7D23BC0",
+      "v13Sha256": "822384D7C7DA7DD81D3267CE07F18F3900B962E67FF35CFE54AE4ADE4D0E4558"
+    },
+    {
+      "path": "src/main/resources/portal-sites/admin/index.html",
+      "v12Sha256": "28838CFEED1B4F1F69D4BC65F27A5F015A30DC8770CC938FBA8B427B5A65C83A",
+      "v13Sha256": "E4E1821235EE6430ADB9B43110CAF4E0BD806CC407FAE542289C7750DBF6D55B"
+    },
+    {
+      "path": "src/main/resources/portal-sites/admin/styles.css",
+      "v12Sha256": "6EA19F5C59E983A28425563BCA0E3C8E48A8410BA25B5FF4CD8BF09427E246B3",
+      "v13Sha256": "28CBDFFD516059126B4D362EDBAAF8CFA3D91BADCCB59C1870674657051625AB"
+    },
+    {
+      "path": "src/main/resources/portal-sites/owner/app.js",
+      "v12Sha256": "D11D9695094308BE27351583987D518F4991DF544B1600F27D6F9D99BA3A725D",
+      "v13Sha256": "11FB0310BD706B0C4C5FC58DB89EEA7D52E56C38CBFD63A0DE6EB2485535074A"
+    },
+    {
+      "path": "src/main/resources/portal-sites/owner/common.js",
+      "v12Sha256": "F8B01D6917241B79B88EEB25481C0DDB84F35F594606CCCCDF023860C7D23BC0",
+      "v13Sha256": "822384D7C7DA7DD81D3267CE07F18F3900B962E67FF35CFE54AE4ADE4D0E4558"
+    },
+    {
+      "path": "src/main/resources/portal-sites/owner/index.html",
+      "v12Sha256": "90B294E1E53A8876D52BB5146F078FD21B8001990374E29FC3AEB6CA2D75503A",
+      "v13Sha256": "97F54163BB9E4ED0CCD59394975AFAB2FCE0F4ECD9D4FA962F4BBE64D59074DF"
+    },
+    {
+      "path": "src/main/resources/portal-sites/owner/styles.css",
+      "v12Sha256": "A7E23C7FB16FCCD9EF541896C7979D688A6636858477E094F2FDB9BD7DE97604",
+      "v13Sha256": "BB07D458E3CF286DC67364EAC8B41F743EE019F27DFA9AE9DF160A98AB8349B1"
+    },
+    {
+      "path": "src/test/java/com/campus/remarket/StaffPortalTests.java",
+      "v12Sha256": "741A89CDDA8A0FD315CDABD41BA3A9FE28020D4377359A8EFAB11B5C15C81AEF",
+      "v13Sha256": "D3EBFD5C47302A085E460F5801FB525DAAF9197D77D22E40EC5863CEC571B44A"
+    }
+  ],
+  "added": [
+    "v13_변경내역_먼저읽기.html",
+    "docs/v13_검증결과.json",
+    "docs/v13_검증결과.md",
+    "docs/v13_변경내역.md",
+    "docs/v13_실행과확인방법.md",
+    "docs/v13_프런트엔드_자동검증.json",
+    "docs/v13_JAR_SHA256.txt",
+    "docs/sql/migrate-v12-to-v13-h2.sql",
+    "docs/sql/migrate-v12-to-v13-mysql.sql",
+    "docs/v13_테스트/TEST-com.campus.remarket.MannerRatingTests.xml",
+    "docs/v13_테스트/TEST-com.campus.remarket.MemberIntegrationTests.xml",
+    "docs/v13_테스트/TEST-com.campus.remarket.MyBatisFlowTests.xml",
+    "docs/v13_테스트/TEST-com.campus.remarket.StaffPortalTests.xml",
+    "docs/v13_화면검증/v13-admin-history.jpg",
+    "docs/v13_화면검증/v13-admin-mobile.jpg",
+    "docs/v13_화면검증/v13-owner-dashboard.jpg",
+    "docs/v13_화면검증/v13-owner-mobile.jpg",
+    "src/main/java/com/campus/remarket/dto/AdminActionDto.java",
+    "src/main/java/com/campus/remarket/portal/AdminActionDao.java",
+    "src/main/resources/mappers/AdminActionDao.xml",
+    "tools/verify-portal-ui.mjs"
+  ],
+  "studentUi": {
+    "compared": 29,
+    "changed": 2,
+    "unchanged": false
+  },
+  "memberModule": {
+    "compared": 21,
+    "changed": 0,
+    "unchanged": true
+  },
+  "headerAlignmentPatch": {
+    "files": [
+      "src/main/resources/static/preview/session.css",
+      "src/main/resources/static/preview/index.html"
+    ],
+    "jarSha256": "2AF2CBEBECD56BDE3090CE89B70A00F52A38762BFB8F30C86204F36E4AC53D01",
+    "description": "Align member menu to the 1180px main container with 32px desktop and 20px mobile inner padding",
+    "date": "2026-11-01"
+  }
+}

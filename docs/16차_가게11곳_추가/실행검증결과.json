@@ -1,0 +1,143 @@
+{
+  "passed": true,
+  "counts": {
+    "members": 36,
+    "students": 12,
+    "shops": 16,
+    "pendingShops": 0,
+    "sales": 24,
+    "trades": 2,
+    "completed": 1,
+    "ratings": 0
+  },
+  "schools": [
+    {
+      "code": "INHA",
+      "schoolId": 1,
+      "name": "인하대학교",
+      "shops": 5,
+      "products": 8
+    },
+    {
+      "code": "INU",
+      "schoolId": 2,
+      "name": "인천대학교",
+      "shops": 5,
+      "products": 8
+    },
+    {
+      "code": "CHUNGWOON",
+      "schoolId": 6,
+      "name": "청운대학교 인천캠퍼스",
+      "shops": 6,
+      "products": 8
+    }
+  ],
+  "owners": [
+    {
+      "loginId": "owner_inu01",
+      "shopId": 6,
+      "school": "INU",
+      "name": "압록순대국 송도본점",
+      "latitude": 37.38546,
+      "longitude": 126.6435983,
+      "verified": true
+    },
+    {
+      "loginId": "owner_inu02",
+      "shopId": 7,
+      "school": "INU",
+      "name": "지츠겐",
+      "latitude": 37.3840647,
+      "longitude": 126.6432114,
+      "verified": true
+    },
+    {
+      "loginId": "owner_inu03",
+      "shopId": 8,
+      "school": "INU",
+      "name": "오봉집 송도인천대입구역점",
+      "latitude": 37.3832947,
+      "longitude": 126.642256,
+      "verified": true
+    },
+    {
+      "loginId": "owner_inu04",
+      "shopId": 9,
+      "school": "INU",
+      "name": "목향 중식당",
+      "latitude": 37.3823401,
+      "longitude": 126.6413688,
+      "verified": true
+    },
+    {
+      "loginId": "owner_inu05",
+      "shopId": 10,
+      "school": "INU",
+      "name": "나 그리고 너",
+      "latitude": 37.3840647,
+      "longitude": 126.6432114,
+      "verified": true
+    },
+    {
+      "loginId": "owner_chung01",
+      "shopId": 11,
+      "school": "CHUNGWOON",
+      "name": "국수나무 인천도화점",
+      "latitude": 37.469918,
+      "longitude": 126.6619945,
+      "verified": true
+    },
+    {
+      "loginId": "owner_chung02",
+      "shopId": 12,
+      "school": "CHUNGWOON",
+      "name": "정정아식당",
+      "latitude": 37.4702407,
+      "longitude": 126.661177,
+      "verified": true
+    },
+    {
+      "loginId": "owner_chung03",
+      "shopId": 13,
+      "school": "CHUNGWOON",
+      "name": "담솥 앨리웨이 인천점",
+      "latitude": 37.4695306,
+      "longitude": 126.6645932,
+      "verified": true
+    },
+    {
+      "loginId": "owner_chung04",
+      "shopId": 14,
+      "school": "CHUNGWOON",
+      "name": "히노아지 앨리웨이인천점",
+      "latitude": 37.4695306,
+      "longitude": 126.6645932,
+      "verified": true
+    },
+    {
+      "loginId": "owner_chung05",
+      "shopId": 15,
+      "school": "CHUNGWOON",
+      "name": "백령면옥",
+      "latitude": 37.4694616,
+      "longitude": 126.6632659,
+      "verified": true
+    },
+    {
+      "loginId": "owner_chung06",
+      "shopId": 16,
+      "school": "CHUNGWOON",
+      "name": "시아우동",
+      "latitude": 37.4759307,
+      "longitude": 126.6608737,
+      "verified": true
+    }
+  ],
+  "newOwnerLogins": 11,
+  "ownerStatusSync": true,
+  "blankPhotos": 11,
+  "siaPhoneBlank": true,
+  "jeongNotice": true,
+  "externalMessagesSent": 0
+}

@@ -1,0 +1,222 @@
+{
+  "base_archive": "campus-remarket-final-signup-manner.zip",
+  "base_archive_sha256": "19c17fa8a9f90be13d796f7810cdb738cdcc64160a745401c57b12d7ade01b4a",
+  "deleted_files": [
+    "campus-remarket/src/main/resources/static/manager.html"
+  ],
+  "modified_files": [
+    {
+      "path": "campus-remarket/README.md",
+      "sha256": "c245695459ae7e49364ddfdf28b9ced844c2e6984e8ad20852c9ec7525e7c7d3",
+      "bytes": 2656
+    },
+    {
+      "path": "campus-remarket/app/campus-remarket.jar",
+      "sha256": "31ea5bd40fe6e1166bdd07ad259ca9a8c7996c4b059be28ead67072b4d3c5e6d",
+      "bytes": 61039176
+    },
+    {
+      "path": "campus-remarket/config/portal-links.properties",
+      "sha256": "d93399f63895881a2dd7fa63e1e3608168734f36d877944dbdacf02183336543",
+      "bytes": 38
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/auth/MarketMember.java",
+      "sha256": "9836de5057bb44701cf777810ed9ac4ea8c78e4b85d41aabdc1917e894bfec92",
+      "bytes": 3378
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/config/MemberPageConfig.java",
+      "sha256": "f7c9b8c7456bf5cf4654bbdfec23baddff14cd3808273871e3f01a468df0f0bf",
+      "bytes": 1528
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/controller/BoardApiController.java",
+      "sha256": "6079737fab7e966bdd29b8ae77d5093ff34d39aa2071bcba8fdc93862a7095ad",
+      "bytes": 2982
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/controller/PortalPageController.java",
+      "sha256": "7529adf788e30759a0ef965fc41e8da864d106ddc7038442e6237be7c2d85394",
+      "bytes": 717
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/dao/BoardDao.java",
+      "sha256": "17cc4caef07f477ad8360ce5db3d236080415d032804b28cbb00e79a1d7d2d9f",
+      "bytes": 741
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/dto/BoardCommentDto.java",
+      "sha256": "4ffb2ab4169c0fd0bb46d69e6df9a0c0be371f63a72a418c429b8c6af0b1ba72",
+      "bytes": 331
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/dto/BoardDto.java",
+      "sha256": "167b65c0088a2ff65c03620e4b08c8f757fa0487a051bbff00d837433157e9da",
+      "bytes": 542
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/portal/PortalDirectory.java",
+      "sha256": "ecfadddf8b3b15c24c3bb5c9c7868852814647feb043d97aff47cbec7dcf6335",
+      "bytes": 852
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/portal/StaffPortalService.java",
+      "sha256": "9a783c46a004a47803c76f771a287415c649d95dae66e512784127906479af92",
+      "bytes": 15804
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/service/BoardService.java",
+      "sha256": "ea76740f9bb7af08d3a9ec41a4efd1645ded2ffc65e2046b0217d49de065f9c9",
+      "bytes": 2807
+    },
+    {
+      "path": "campus-remarket/src/main/java/demo/campus/campusremarketmember/member/controller/MemberController.java",
+      "sha256": "7090fecd2ae57f6b841d1ce5f1bf7ebc16b9916ac389ab01de12d777d995eb2f",
+      "bytes": 7091
+    },
+    {
+      "path": "campus-remarket/src/main/java/demo/campus/campusremarketmember/member/dto/LoginDto.java",
+      "sha256": "1834ccf2a362da05d45c1291b10b194b3a498bdccd8de05034d8f3586ddff190",
+      "bytes": 253
+    },
+    {
+      "path": "campus-remarket/src/main/java/portal/campus/PortalGatewayController.java",
+      "sha256": "5bd7992246f2c7cd264763b3564aa861acfab11ecfffb632af209a5407061dcc",
+      "bytes": 4395
+    },
+    {
+      "path": "campus-remarket/src/main/java/portal/campus/StartSites.java",
+      "sha256": "13db461f8c6def015b916a3dd1277ee4f5f0203e474aa90ff414160a8930b035",
+      "bytes": 3539
+    },
+    {
+      "path": "campus-remarket/src/main/resources/community-migration.sql",
+      "sha256": "172c541280d2d81961d02c9cae78c2ecfb7a14ec7372d8b7d33c517883a34f63",
+      "bytes": 744
+    },
+    {
+      "path": "campus-remarket/src/main/resources/mappers/BoardDao.xml",
+      "sha256": "21e97126cd4a304f509f0a173fd44ca61328ef8988683744c2dd79a429b6b95d",
+      "bytes": 2870
+    },
+    {
+      "path": "campus-remarket/src/main/resources/portal-sites/admin/app.js",
+      "sha256": "9c86a74939958eb4215aab9e78c526345e1e8ad01360d0fef777d2b449d41bd1",
+      "bytes": 14881
+    },
+    {
+      "path": "campus-remarket/src/main/resources/portal-sites/admin/common.js",
+      "sha256": "616e8922190e4c56a0e1000443f16b2f88947254f8cbc877590ae75baab7f620",
+      "bytes": 18592
+    },
+    {
+      "path": "campus-remarket/src/main/resources/portal-sites/admin/index.html",
+      "sha256": "418278457fedb64a3e256d5086df8a5cb7126e36b99423c899988bf4f44232d6",
+      "bytes": 5725
+    },
+    {
+      "path": "campus-remarket/src/main/resources/portal-sites/owner/common.js",
+      "sha256": "616e8922190e4c56a0e1000443f16b2f88947254f8cbc877590ae75baab7f620",
+      "bytes": 18592
+    },
+    {
+      "path": "campus-remarket/src/main/resources/portal-sites/owner/index.html",
+      "sha256": "77b83e86573c6fba0658b43bb5fd2398d69b6b281e5b1f08369dbeefd0ead613",
+      "bytes": 5665
+    },
+    {
+      "path": "campus-remarket/src/main/resources/schema.sql",
+      "sha256": "507970cc0c6be085af67370d10e553917bf4074f2b43e45960cb8963b70c161b",
+      "bytes": 11336
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/login.html",
+      "sha256": "df0159a7b2e5ee10ba80f3d3f540ead70d5d9413ffaeae720465db67c3d4f330",
+      "bytes": 2242
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/member-navigation.js",
+      "sha256": "32ca39a805782af25f04a4c4dff242475340ae424e71ca61d5c7282c9246bcec",
+      "bytes": 905
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/member.js",
+      "sha256": "47ea05d2ba4a95dac9b26b1e56e794345f3a4a895c02c5d1613eaf72b50beda0",
+      "bytes": 9534
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/preview/app.js",
+      "sha256": "9cd56a0b22d63f2fd2a3734c46740c64d5a81fa330bc1ef6dc19453e1fde9454",
+      "bytes": 20351
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/preview/community.css",
+      "sha256": "ffe8db30cab49c0a2773bf4be9e0e3ff33b185f76e07efc21aee041a3dbad9ee",
+      "bytes": 11603
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/preview/community.js",
+      "sha256": "9cd821050cd46ffdf9b17419ba309f7bb62bfcbd894ac87f688c3f2298fa047f",
+      "bytes": 18063
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/preview/index.html",
+      "sha256": "5c018c8f9ec214e33484bd4a045ee99095d89d40593efa73bce518a02a3a77ae",
+      "bytes": 5196
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/preview/session.js",
+      "sha256": "ded9b227d071fbad255bac05e0ea2d4bdb46f21039574ef1a6a394632fcd0d22",
+      "bytes": 1890
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/signup.html",
+      "sha256": "597f6ec25eeda2ead8fdafae3c35086d3f0384538f887be6f525ee0fb425317a",
+      "bytes": 8534
+    },
+    {
+      "path": "campus-remarket/src/main/resources/templates/market/index.html",
+      "sha256": "013635972eb567a90175084d8ff471670376266b3e06fa1d10478df1c481a289",
+      "bytes": 5275
+    },
+    {
+      "path": "campus-remarket/src/test/java/com/campus/remarket/BoardCommunityTests.java",
+      "sha256": "8d8a5683213f880cd9b855de776cf0cc3728652d78c107fc9f24306df4e44505",
+      "bytes": 6676
+    },
+    {
+      "path": "campus-remarket/src/test/java/com/campus/remarket/MemberIntegrationTests.java",
+      "sha256": "4861e3f3417750f4fa1f40024b9eb17a2f0ae660a5f18b93299e6c490fb54f47",
+      "bytes": 26450
+    },
+    {
+      "path": "campus-remarket/src/test/java/com/campus/remarket/RatingSummaryTests.java",
+      "sha256": "ed7e5900548c065c3a44dbd068e529c41d4b2393d6e437de6cfed338c0941464",
+      "bytes": 3759
+    },
+    {
+      "path": "campus-remarket/src/test/java/com/campus/remarket/SharedLoginTests.java",
+      "sha256": "0d1a353c273c466e30c10be9dd2d1deb516b451155abefeabb3e7ac0ba4831c1",
+      "bytes": 5206
+    },
+    {
+      "path": "campus-remarket/커뮤니티_수정안내.md",
+      "sha256": "8049b681f51d24c8ae18f9dc897d2c38ad2fb0f349a9f9972d115a26936b42a2",
+      "bytes": 2842
+    },
+    {
+      "path": "campus-remarket/평가집계_수정안내.md",
+      "sha256": "f8cb9bba98f7fd86c750ce943314549d68107c097ccacf8201d0a620de0b8b94",
+      "bytes": 4412
+    }
+  ],
+  "validation": {
+    "java_tests": 63,
+    "failures": 0,
+    "browser_flow": [
+      "owner login in market -> owner portal without reauthentication",
+      "manager login in owner portal -> market remains authenticated"
+    ]
+  }
+}

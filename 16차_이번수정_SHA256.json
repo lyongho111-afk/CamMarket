@@ -1,0 +1,82 @@
+[
+  {
+    "path": "src/main/java/com/campus/remarket/config/AdditionalCampusShopsSeed.java",
+    "beforeSha256": null,
+    "afterSha256": "d2709de18979d414c96f3e2d14210d2ada2979f1d02d5fcca854dcca95a462d3"
+  },
+  {
+    "path": "src/main/resources/campus-shops-20261106.json",
+    "beforeSha256": null,
+    "afterSha256": "890cc629df4783f6bca14e15876a3a324ee97a8426ffa423ddc7de1d431dfec7"
+  },
+  {
+    "path": "src/main/resources/static/preview/shops.js",
+    "beforeSha256": "6d4e5623f6767dad758e840e85d73dd5f71b092d34927cf0feaf574e5b8eb749",
+    "afterSha256": "e4785e082bdbe196ca25ed1621a0967c1707e143a330ff0691581d9069b409ee"
+  },
+  {
+    "path": "src/main/resources/static/preview/app.js",
+    "beforeSha256": "55ecf6da90790e8b257a6d34d596ca7cac6cb5e444ed6cac51d28723a8395d12",
+    "afterSha256": "17bb8187d55eeb2b826bd87769014e75c3b9b3d984414dcbf53e4704d170a1e4"
+  },
+  {
+    "path": "src/test/java/com/campus/remarket/AdditionalCampusShopsTests.java",
+    "beforeSha256": null,
+    "afterSha256": "73dd577319ebc8d13a41d04268d4fd9cb6f00479644c2b94c57e1461a958be64"
+  },
+  {
+    "path": "app/campus-remarket.jar",
+    "beforeSha256": "0a5cc9ddb0a48227bd8483f77ee44f13558f1fe2debc208ac617bc8c3b322d04",
+    "afterSha256": "27730a620a5320c11c1dedde99654cba417d3370b33b102351d361f715162ae2"
+  },
+  {
+    "path": "README.md",
+    "beforeSha256": "7e791c96b56c0c31597930dbe193cfee42e933198ef0b82e1d9be377885e4b1a",
+    "afterSha256": "c149ba0a21471bc065f80ad1b6353bf12b87e2818a86b639962ee2427f693003"
+  },
+  {
+    "path": "00_16차_가게11곳_변경내역_20261106.txt",
+    "beforeSha256": null,
+    "afterSha256": "ac634208beaf2d0650503baea002086f17e906ea44a711ac5034bcda0904a12a"
+  },
+  {
+    "path": "00_신규사장계정_카톡복사용_20261106.txt",
+    "beforeSha256": null,
+    "afterSha256": "02e1c68abf543407351bd4e5ca6d807efe7bbb9da49f1453e714718d92279847"
+  },
+  {
+    "path": "00_전체계정_DB현황_20261106.txt",
+    "beforeSha256": null,
+    "afterSha256": "4f3e36400c0ceb5fa31f57d4f01a5e627e0d418622ee0f41656dd5b8156ec149"
+  },
+  {
+    "path": "00_16차_가게11곳_변경내역_20261106.html",
+    "beforeSha256": null,
+    "afterSha256": "db8c81dd7167ada44961e7c58dc9b44283bee37479a4ab7bbf1edf89143a96fa"
+  },
+  {
+    "path": "00_16차_공유주소_20261106.txt",
+    "beforeSha256": null,
+    "afterSha256": "80c269a85dd3aade99a99737081db6a62e37f9d0defbafd94ddd19cdf9267346"
+  },
+  {
+    "path": "docs/16차_가게11곳_추가/사용자입력_원본.json",
+    "beforeSha256": null,
+    "afterSha256": "b32757e8726b128b84c1640a4d58eb98026c20e28b73ebca432feceb7cfa03e5"
+  },
+  {
+    "path": "docs/16차_가게11곳_추가/실행검증결과.json",
+    "beforeSha256": null,
+    "afterSha256": "1180d15a72cc9ae93ef928b752cfe111d97722dc042ac795ede11425ccc86108"
+  },
+  {
+    "path": "docs/16차_가게11곳_추가/카카오_좌표확인.json",
+    "beforeSha256": null,
+    "afterSha256": "890cc629df4783f6bca14e15876a3a324ee97a8426ffa423ddc7de1d431dfec7"
+  },
+  {
+    "path": "16차_이번수정_코드비교.diff",
+    "beforeSha256": null,
+    "afterSha256": "d8955f1b640e812a374257cd52bb01ee78fb3d1e3a5b92c51c92c1a0d437d5cb"
+  }
+]

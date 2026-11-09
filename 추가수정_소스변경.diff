@@ -1,0 +1,619 @@
+--- before/src/main/java/com/campus/remarket/controller/ApiErrorAdvice.java
++++ after/src/main/java/com/campus/remarket/controller/ApiErrorAdvice.java
+@@ -5,7 +5,7 @@
+ import org.springframework.web.bind.annotation.*;
+ import org.springframework.web.server.ResponseStatusException;
+ @Order(0)
+-@RestControllerAdvice(assignableTypes={TradeReviewApiController.class,LocationController.class,AccountController.class,ProductApiController.class,BoardApiController.class,TradeApiController.class,ShopApiController.class,IntegrationApiController.class,MannerRatingApiController.class,com.campus.remarket.notification.NotificationController.class})
++@RestControllerAdvice(assignableTypes={EngagementController.class,TradeReviewApiController.class,LocationController.class,AccountController.class,ProductApiController.class,BoardApiController.class,TradeApiController.class,ShopApiController.class,IntegrationApiController.class,MannerRatingApiController.class,com.campus.remarket.notification.NotificationController.class})
+ public class ApiErrorAdvice {
+     @ExceptionHandler({IllegalArgumentException.class,IllegalStateException.class})
+     public ResponseEntity<Map<String,String>> invalid(RuntimeException error){return ResponseEntity.badRequest().body(Map.of("message",error.getMessage()));}
+--- before/src/main/java/com/campus/remarket/controller/EngagementController.java
++++ after/src/main/java/com/campus/remarket/controller/EngagementController.java
+@@ -0,0 +1,22 @@
++package com.campus.remarket.controller;
++import com.campus.remarket.service.EngagementService;
++import com.campus.remarket.portal.StaffAccess;
++import demo.campus.campusremarketmember.member.util.LoginSession;
++import jakarta.servlet.http.HttpServletRequest;
++import java.util.*;
++import org.springframework.web.bind.annotation.*;
++
++@RestController @RequestMapping("/api/engagement")
++public class EngagementController {
++    private final EngagementService service;private final StaffAccess access;private final HttpServletRequest request;
++    public EngagementController(EngagementService service,StaffAccess access,HttpServletRequest request){this.service=service;this.access=access;this.request=request;}
++    @GetMapping("/state") public List<EngagementService.State> state(@RequestParam(defaultValue="")String targets){var s=request.getSession(false);return service.states(targets,s==null?null:LoginSession.memberId(s));}
++    @GetMapping("/session") public Map<String,String> session(){access.current();return Map.of("csrfToken",access.csrf());}
++    public record Input(Boolean active){}
++    @PutMapping("/{type}/{id}/{kind}") public EngagementService.State set(@PathVariable String type,@PathVariable long id,@PathVariable String kind,@RequestBody Input input,@RequestHeader(value="X-CSRF-Token",required=false)String csrf){
++        var me=access.current();access.verify(csrf);if(input.active()==null)throw new IllegalArgumentException("반응 상태를 선택하세요.");
++        String value=switch(kind){case "like"->"LIKE";case "bookmark"->"BOOKMARK";default->throw new IllegalArgumentException("반응 종류를 확인하세요.");};
++        return service.set(me.getId(),new EngagementService.Target(type,id),value,input.active());
++    }
++    @GetMapping("/bookmarks") public Map<String,Object> bookmarks(@RequestParam(defaultValue="0")int page,@RequestParam(defaultValue="ALL")String type){return service.bookmarks(access.current().getId(),page,type);}
++}
+--- before/src/main/java/com/campus/remarket/service/EngagementService.java
++++ after/src/main/java/com/campus/remarket/service/EngagementService.java
+@@ -0,0 +1,64 @@
++package com.campus.remarket.service;
++
++import java.util.*;
++import org.springframework.jdbc.core.JdbcTemplate;
++import org.springframework.stereotype.Service;
++import org.springframework.transaction.annotation.Transactional;
++import org.springframework.web.server.ResponseStatusException;
++import org.springframework.http.HttpStatus;
++
++/** Public likes and private bookmarks share identity checks, but remain independent. */
++@Service
++public class EngagementService {
++    public record Target(String type,long id) {
++        public Target {
++            if(!Set.of("SALE","POST","SHOP","COMMENT").contains(type)||id<1)
++                throw new IllegalArgumentException("콘텐츠 종류와 번호를 확인하세요.");
++        }
++    }
++    public record State(String type,long id,long likeCount,boolean liked,boolean bookmarked,boolean available){}
++    private final JdbcTemplate db;
++    public EngagementService(JdbcTemplate db){this.db=db;}
++
++    public List<State> states(String query,Long memberId){
++        if(query==null||query.isBlank())return List.of();
++        String[] parts=query.split(",",-1);if(parts.length>100)throw new IllegalArgumentException("한 번에 100개까지 조회할 수 있어요.");
++        var targets=new LinkedHashSet<Target>();
++        for(String part:parts){String[] pair=part.split(":",-1);if(pair.length!=2)throw new IllegalArgumentException("콘텐츠 번호를 확인하세요.");targets.add(new Target(pair[0],Long.parseLong(pair[1])));}
++        var params=new ArrayList<Object>();StringJoiner where=new StringJoiner(" OR ");
++        for(var t:targets){where.add("(t.target_type=? AND t.target_id=?)");params.add(t.type());params.add(t.id());}
++        // One batch query, never trust client-provided counts or member identifiers.
++        params.addFirst(memberId==null?-1L:memberId);params.addFirst(memberId==null?-1L:memberId);
++        var found=db.query("SELECT t.target_type,t.target_id,COALESCE(SUM(CASE WHEN r.kind='LIKE' THEN 1 ELSE 0 END),0) likes,COALESCE(MAX(CASE WHEN r.kind='LIKE' AND r.member_id=? THEN 1 ELSE 0 END),0) liked,COALESCE(MAX(CASE WHEN r.kind='BOOKMARK' AND r.member_id=? THEN 1 ELSE 0 END),0) bookmarked FROM engagement_targets t LEFT JOIN content_reactions r ON r.target_type=t.target_type AND r.target_id=t.target_id WHERE "+where+" GROUP BY t.target_type,t.target_id",
++            (rs,i)->new State(rs.getString(1),rs.getLong(2),rs.getLong(3),rs.getInt(4)==1,rs.getInt(5)==1,true),params.toArray());
++        Map<Target,State> index=new HashMap<>();found.forEach(s->index.put(new Target(s.type(),s.id()),s));
++        return targets.stream().map(t->index.getOrDefault(t,new State(t.type(),t.id(),0,false,false,false))).toList();
++    }
++
++    @Transactional
++    public State set(long memberId,Target target,String kind,boolean active){
++        if(!Set.of("LIKE","BOOKMARK").contains(kind))throw new IllegalArgumentException("반응 종류를 확인하세요.");
++        // Serialize writes from the same account, including simultaneous duplicate requests.
++        db.queryForObject("SELECT id FROM member WHERE id=? FOR UPDATE",Long.class,memberId);
++        if(active){
++            if(db.queryForObject("SELECT COUNT(*) FROM engagement_targets WHERE target_type=? AND target_id=?",Integer.class,target.type(),target.id())!=1)
++                throw new ResponseStatusException(HttpStatus.NOT_FOUND,"삭제되었거나 공개되지 않은 콘텐츠예요.");
++            if(db.queryForObject("SELECT COUNT(*) FROM content_reactions WHERE member_id=? AND target_type=? AND target_id=? AND kind=?",Integer.class,memberId,target.type(),target.id(),kind)==0)
++                db.update("INSERT INTO content_reactions(member_id,target_type,target_id,kind) VALUES(?,?,?,?)",memberId,target.type(),target.id(),kind);
++        }else db.update("DELETE FROM content_reactions WHERE member_id=? AND target_type=? AND target_id=? AND kind=?",memberId,target.type(),target.id(),kind);
++        return states(target.type()+":"+target.id(),memberId).getFirst();
++    }
++
++    public Map<String,Object> bookmarks(long memberId,int page,String type){
++        if(page<0||page>100000)throw new IllegalArgumentException("페이지 번호를 확인하세요.");
++        if(!type.equals("ALL"))new Target(type,1);
++        String filter=" FROM content_reactions r JOIN engagement_targets t ON r.target_type=t.target_type AND r.target_id=t.target_id WHERE r.member_id=? AND r.kind='BOOKMARK'"+(type.equals("ALL")?"":" AND r.target_type=?");
++        List<Object> args=new ArrayList<>();args.add(memberId);if(!type.equals("ALL"))args.add(type);
++        long total=db.queryForObject("SELECT COUNT(*)"+filter,Long.class,args.toArray());
++        args.add(page*24);
++        var items=db.query("SELECT t.*,r.created_at"+filter+" ORDER BY r.created_at DESC,r.target_type,r.target_id LIMIT 24 OFFSET ?",(rs,i)->{
++            Map<String,Object> m=new LinkedHashMap<>();m.put("type",rs.getString("target_type"));m.put("id",rs.getLong("target_id"));m.put("title",rs.getString("title"));m.put("subtitle",rs.getString("subtitle"));m.put("price",rs.getObject("price"));m.put("photo",rs.getString("photo"));m.put("parentId",rs.getLong("parent_id"));m.put("savedAt",rs.getTimestamp("created_at").toLocalDateTime());return m;
++        },args.toArray());
++        return Map.of("items",items,"total",total,"page",page,"pageSize",24);
++    }
++}
+--- before/src/main/resources/engagement-migration.sql
++++ after/src/main/resources/engagement-migration.sql
+@@ -0,0 +1,17 @@
++-- Additive migration for existing H2/MySQL databases. Keep existing content intact.
++CREATE TABLE IF NOT EXISTS content_reactions (
++    member_id BIGINT NOT NULL,
++    target_type VARCHAR(10) NOT NULL,
++    target_id BIGINT NOT NULL,
++    kind VARCHAR(10) NOT NULL,
++    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
++    PRIMARY KEY(member_id,target_type,target_id,kind),
++    CONSTRAINT ck_reaction_type CHECK(target_type IN ('SALE','POST','SHOP','COMMENT')),
++    CONSTRAINT ck_reaction_kind CHECK(kind IN ('LIKE','BOOKMARK'))
++);
++CREATE INDEX IF NOT EXISTS ix_reaction_target ON content_reactions(target_type,target_id,kind);
++CREATE OR REPLACE VIEW engagement_targets AS
++ SELECT 'SALE' AS target_type,selno AS target_id,name AS title,location AS subtitle,current_price AS price,photo1 AS photo,selno AS parent_id FROM sale_listing
++ UNION ALL SELECT 'POST',post_id,title,SUBSTRING(content,1,160),NULL,NULL,post_id FROM board_posts
++ UNION ALL SELECT 'SHOP',shopId,shopname,address,NULL,photo,shopId FROM shops WHERE checked=TRUE
++ UNION ALL SELECT 'COMMENT',comment_id,SUBSTRING(c.content,1,100),p.title,NULL,NULL,c.post_id FROM board_comments c JOIN board_posts p ON p.post_id=c.post_id;
+--- before/src/main/resources/schema.sql
++++ after/src/main/resources/schema.sql
+@@ -228,3 +228,22 @@
+     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     CONSTRAINT uk_trade_review UNIQUE (order_id, reviewer_id)
+     );
++
++-- Likes and private bookmarks
++-- Additive migration for existing H2/MySQL databases. Keep existing content intact.
++CREATE TABLE IF NOT EXISTS content_reactions (
++    member_id BIGINT NOT NULL,
++    target_type VARCHAR(10) NOT NULL,
++    target_id BIGINT NOT NULL,
++    kind VARCHAR(10) NOT NULL,
++    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
++    PRIMARY KEY(member_id,target_type,target_id,kind),
++    CONSTRAINT ck_reaction_type CHECK(target_type IN ('SALE','POST','SHOP','COMMENT')),
++    CONSTRAINT ck_reaction_kind CHECK(kind IN ('LIKE','BOOKMARK'))
++);
++CREATE INDEX IF NOT EXISTS ix_reaction_target ON content_reactions(target_type,target_id,kind);
++CREATE OR REPLACE VIEW engagement_targets AS
++ SELECT 'SALE' AS target_type,selno AS target_id,name AS title,location AS subtitle,current_price AS price,photo1 AS photo,selno AS parent_id FROM sale_listing
++ UNION ALL SELECT 'POST',post_id,title,SUBSTRING(content,1,160),NULL,NULL,post_id FROM board_posts
++ UNION ALL SELECT 'SHOP',shopId,shopname,address,NULL,photo,shopId FROM shops WHERE checked=TRUE
++ UNION ALL SELECT 'COMMENT',comment_id,SUBSTRING(c.content,1,100),p.title,NULL,NULL,c.post_id FROM board_comments c JOIN board_posts p ON p.post_id=c.post_id;
+--- before/src/main/resources/static/engagement.css
++++ after/src/main/resources/static/engagement.css
+@@ -0,0 +1 @@
++.engagement-controls{display:flex;flex-wrap:wrap;gap:7px;padding:10px 0;align-items:center}.reaction-button{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:7px 11px;border:1px solid #dce6dd;border-radius:13px;background:#fff;color:#61776a;font-size:12px;white-space:nowrap}.reaction-button.like[aria-pressed=true]{background:#fff0f1;color:#bd455d;border-color:#efc5cd}.reaction-button.bookmark[aria-pressed=true]{background:#f8f4d9;color:#846721;border-color:#e5d697}.reaction-button:disabled{opacity:.55;cursor:wait}.product{padding-bottom:0;display:flex;flex-direction:column}.product>.open{flex:1}.product>.engagement-controls{justify-content:flex-end}.engagement-post{border-bottom:1px solid #e5ebe2;padding-bottom:8px}.engagement-post .c-post{border-bottom:0}.engagement-post>.engagement-controls{padding-left:22px}.c-comment-body>.engagement-controls{padding-bottom:0}.c-article>.engagement-controls{border-top:1px solid #e5ebe2;margin-top:12px}.campus-store>.engagement-controls{padding:6px 0}.interest-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}.interest-filters button{padding:8px 15px;border:1px solid #dce5d7;border-radius:18px;background:#fff}.interest-filters .active{background:#24694f;color:#fff}.interest-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.interest-card{border:1px solid #e0e8db;border-radius:18px;padding:18px;background:#fff;display:flex;flex-direction:column}.interest-open{text-align:left;background:none;flex:1;width:100%;padding:0}.interest-open h3{font-size:17px;margin:12px 0;overflow-wrap:anywhere}.interest-open p{font-size:12px;color:#788276;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.interest-pagination{display:flex;justify-content:center;align-items:center;gap:18px;margin:25px 0}.interest-count{color:#617362;font-size:13px}.main-nav{flex-wrap:wrap}.main-nav [data-tab=interests]{color:#7b692a}@media(max-width:800px){.interest-list{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:500px){.interest-list{grid-template-columns:1fr}.product>.engagement-controls{justify-content:flex-start}.reaction-button{font-size:11px;padding:7px 8px}}
+--- before/src/main/resources/static/engagement.js
++++ after/src/main/resources/static/engagement.js
+@@ -0,0 +1,44 @@
++// Server-backed likes and private interests. No localStorage counts or member IDs.
++const engagementState={items:new Map(),pending:new Set(),revision:new Map(),csrf:null,member:null,onlyLiked:false,page:0,type:'ALL',sequence:0};
++const engagementTypeNames={SALE:'판매글',POST:'게시글',SHOP:'가게',COMMENT:'댓글'};
++const engagementKey=(type,id)=>type+':'+id;
++function engagementControls(type,id,title){
++ const bar=el('div','engagement-controls');bar.dataset.reactionKey=engagementKey(type,id);bar.dataset.title=title;
++ for(const [kind,label]of [['like','좋아요'],['bookmark','관심 등록']]){const b=el('button','reaction-button '+kind);b.type='button';b.dataset.kind=kind;b.setAttribute('aria-label',title+' '+label);b.setAttribute('aria-pressed','false');b.textContent=(kind==='like'?'♡ 좋아요 ':'☆ 관심 ')+(kind==='like'?'…':'');b.disabled=true;b.onclick=e=>{e.preventDefault();e.stopPropagation();engagementSet(type,id,kind)};bar.append(b)}
++ return bar;
++}
++function paintEngagement(){
++ document.querySelectorAll('[data-reaction-key]').forEach(bar=>{const key=bar.dataset.reactionKey,s=engagementState.items.get(key);for(const b of bar.querySelectorAll('.reaction-button')){const like=b.dataset.kind==='like',active=!!s?.[like?'liked':'bookmarked'];const text=like?(active?'♥':'♡')+' 좋아요 '+(s?s.likeCount:'…'):(active?'★ 관심 등록됨':'☆ 관심 등록');if(b.textContent!==text)b.textContent=text;b.setAttribute('aria-pressed',String(active));b.disabled=!s||!s.available||engagementState.pending.has(key);b.title=s&&!s.available?'삭제되었거나 공개되지 않은 콘텐츠':active?'취소하려면 누르세요':'';}});
++ const button=document.querySelector('#liked-only');if(button){const text=engagementState.onlyLiked?'♥ 좋아요한 판매글 보는 중':'♡ 좋아요한 판매글';if(button.textContent!==text)button.textContent=text;button.setAttribute('aria-pressed',String(engagementState.onlyLiked));}
++ document.querySelectorAll('.product[data-product-id]').forEach(c=>{c.hidden=engagementState.onlyLiked&&!engagementState.items.get('SALE:'+c.dataset.productId)?.liked});
++}
++async function refreshEngagement(force=false){
++ const member=currentSession.member?.id||null;if(engagementState.member!==member){engagementState.member=member;engagementState.csrf=null;engagementState.items.clear();}
++ const keys=[...new Set([...document.querySelectorAll('[data-reaction-key]')].map(n=>n.dataset.reactionKey))].filter(key=>!engagementState.pending.has(key)&&(force||!engagementState.items.has(key)||Date.now()-engagementState.items.get(key).fetchedAt>20000));
++ paintEngagement();for(let start=0;start<keys.length;start+=100){const batch=keys.slice(start,start+100),versions=new Map(batch.map(k=>[k,engagementState.revision.get(k)||0]));try{const rows=await api('engagement/state?targets='+encodeURIComponent(batch.join(',')));if(member!==(currentSession.member?.id||null))return;for(const row of rows){const key=engagementKey(row.type,row.id);if(versions.get(key)===(engagementState.revision.get(key)||0)&&!engagementState.pending.has(key))engagementState.items.set(key,{...row,fetchedAt:Date.now()});}paintEngagement();}catch(error){toast(error.message);return;}}
++}
++async function engagementSet(type,id,kind,desired){
++ if(!requireLogin())return false;const key=engagementKey(type,id),old=engagementState.items.get(key);if(engagementState.pending.has(key))return false;
++ const active=desired??!old?.[kind==='like'?'liked':'bookmarked'];engagementState.pending.add(key);engagementState.revision.set(key,(engagementState.revision.get(key)||0)+1);paintEngagement();
++ try{if(!engagementState.csrf)engagementState.csrf=(await api('engagement/session')).csrfToken;const response=await fetch('/api/engagement/'+type+'/'+id+'/'+kind,{method:'PUT',headers:{'Content-Type':'application/json','X-CSRF-Token':engagementState.csrf},body:JSON.stringify({active})});const row=await response.json();if(!response.ok){if(response.status===401)engagementState.csrf=null;throw Error(row.message||'반응을 저장하지 못했어요.');}engagementState.items.set(key,{...row,fetchedAt:Date.now()});toast(kind==='like'?(active?'좋아요를 눌렀어요.':'좋아요를 취소했어요.'):(active?'내 관심목록에 담았어요.':'관심목록에서 뺐어요.'));if(kind==='bookmark'&&!active&&tab==='interests')queueMicrotask(renderInterests);return true;}catch(error){toast(error.message);return false;}finally{engagementState.pending.delete(key);paintEngagement();}
++}
++async function openInterestItem(item){
++ if(item.type==='POST'||item.type==='COMMENT'){communityOpen(item.parentId);return;}
++ if(item.type==='SALE'){if(!products.some(p=>p.id===item.id))await loadData();productDetail(item.id);return;}
++ const store=shops.find(s=>s.id===item.id);if(store)shopDetail(store);else toast('공개된 가게 정보를 찾을 수 없어요.');
++}
++async function renderInterests(){
++ document.body.dataset.page='interests';$('.section-head').hidden=false;$('.controls').hidden=true;$('#market-tools').hidden=true;$('#exposure-guide').hidden=true;$('#write').hidden=true;$('#page-return').hidden=false;$('#page-return').onclick=()=>switchTab('market');$('#section-kicker').textContent='MY INTERESTS';$('#section-title').textContent='내 관심목록';$('#section-sub').textContent='마음에 담아 둔 물건과 캠퍼스 이야기를 한곳에서 확인해요.';
++ const root=$('#results');root.className='interests-view';root.replaceChildren();if(!currentSession.authenticated){root.append(el('p','empty','로그인하면 내 계정에 저장된 관심목록을 볼 수 있어요.'),actionButton('로그인하기',()=>requireLogin()));return;}
++ const sequence=++engagementState.sequence,filters=el('div','interest-filters');for(const [type,name]of Object.entries({ALL:'전체',...engagementTypeNames})){const b=actionButton(name,()=>{engagementState.type=type;engagementState.page=0;renderInterests()},false,type===engagementState.type?'active':'');b.setAttribute('aria-pressed',String(type===engagementState.type));filters.append(b)}root.append(filters,el('p','fine-print','관심목록은 나만 볼 수 있어요. 삭제되거나 비공개로 바뀐 콘텐츠는 목록에서 제외돼요.'));
++ const loading=el('p','empty','관심목록을 불러오는 중…');root.append(loading);try{const data=await api('engagement/bookmarks?page='+engagementState.page+'&type='+engagementState.type);if(sequence!==engagementState.sequence||tab!=='interests')return;loading.remove();if(data.total>0&&!data.items.length&&engagementState.page>0){engagementState.page--;return renderInterests();}root.append(el('p','interest-count','총 '+data.total+'개의 관심 항목'));
++ if(!data.items.length)root.append(el('p','empty','아직 관심 항목이 없어요. 콘텐츠의 ☆ 관심 등록 버튼을 눌러 보세요.'));
++ const list=el('div','interest-list');for(const item of data.items){const card=el('article','interest-card'),open=actionButton('',()=>openInterestItem(item),false,'interest-open');open.append(el('small','eyebrow',engagementTypeNames[item.type]),el('h3','',item.title),el('p','',item.subtitle||''));if(item.price!=null)open.append(el('strong','',formatMoney(item.price)));card.append(open,engagementControls(item.type,item.id,item.title));list.append(card)}root.append(list);
++ const pager=el('div','interest-pagination');if(data.page>0)pager.append(actionButton('이전',()=>{engagementState.page--;renderInterests()},false,'secondary'));pager.append(el('span','',(data.page+1)+' / '+Math.max(1,Math.ceil(data.total/data.pageSize))));if((data.page+1)*data.pageSize<data.total)pager.append(actionButton('다음',()=>{engagementState.page++;renderInterests()},false,'secondary'));root.append(pager);refreshEngagement();
++ }catch(error){if(sequence!==engagementState.sequence)return;loading.textContent=error.message;root.append(actionButton('다시 불러오기',renderInterests,false,'secondary'));}
++}
++document.addEventListener('DOMContentLoaded',()=>{
++ const nav=document.querySelector('.main-nav');if(!nav)return;const b=actionButton('☆ 관심목록',()=>{engagementState.page=0;switchTab('interests')},false,'');b.dataset.tab='interests';nav.insertBefore(b,nav.lastElementChild);
++ let timer;new MutationObserver(()=>{clearTimeout(timer);timer=setTimeout(()=>{const tools=$('#market-tools');if(tools&&!$('#liked-only')){const filter=actionButton('♡ 좋아요한 판매글',()=>{if(!requireLogin())return;engagementState.onlyLiked=!engagementState.onlyLiked;paintEngagement()},false,'');filter.id='liked-only';tools.append(filter)}refreshEngagement();},60)}).observe(document.querySelector('main'),{childList:true,subtree:true});
++ refreshEngagement();document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshEngagement(true)});
++});
+--- before/src/main/resources/static/preview/app.js
++++ after/src/main/resources/static/preview/app.js
+@@ -20,17 +20,17 @@
+ function timestamp(value){if(!value)return 0;if(Array.isArray(value))return new Date(value[0],value[1]-1,value[2],value[3]||0,value[4]||0,value[5]||0).getTime();return Date.parse(/[zZ]|[+-]\d\d:\d\d$/.test(value)?value:value+'+09:00')}
+ async function loadData(){const [sales,board,trades,stores]=await Promise.all([api('products'),api('boards'),api('trades'),api('shops')]);const old=new Map(products.map(p=>[p.id,p]));orders=trades;products=sales.map(s=>{const previous=old.get(s.selno),order=orders.find(o=>o.selno===s.selno&&o.status!=='CANCELED');return {...s,id:s.selno,title:s.name,body:s.detail,basePrice:s.oprice,price:s.currentPrice,createdAt:timestamp(s.regtime),bumpedAt:timestamp(s.bumpedAt),discountEnd:timestamp(s.endtime),discountRate:s.discount||0,temperature:Number(s.sellerTemperature??36.5),status:['COMPLETED','거래완료'].includes(order?.status)?'done':{'판매중':'sale','예약중':'reserved','거래완료':'done'}[s.status],agreedPrice:order?.agreedPrice??null,order,tradeStep:(s.status==='거래완료'||['COMPLETED','거래완료'].includes(order?.status))?5:order?3:0,payment:order?.status==='PAID'?'DONE':'NONE',place:previous?.place??0,customPlace:previous?.customPlace}});posts=board.map(p=>({...p,id:p.postId,category:p.categoryName,body:p.content,icon:'☷',meta:'인하대학교 · '+dateTime(timestamp(p.regtime))}));shops=stores;loaded=true;render()}
+ async function perform(task,message,close=true){try{await task();await loadData();if(close)$('#modal').close();if(message)toast(message);return true}catch(e){toast(e.message);return false}}
+-function switchTab(next){if(!['market','life','community','mine','shops','integrations'].includes(next))return;tab=next;category='전체';$('#search').value='';history.pushState(null,'','#'+(next==='mine'?'my-sales':next==='integrations'?'trade/'+tradeProductId:next));render();$('#content').scrollIntoView({behavior:'smooth'})}
+-function restoreRoute(){const route=location.hash.slice(1).split('/');tab=route[0]==='my-sales'?'mine':route[0]==='trade'?'integrations':['market','life','community','shops'].includes(route[0])?route[0]:'market';if(tab==='integrations')tradeProductId=Number(route[1]);render()}
+-function render(){$('.section-head').hidden=false;syncFeatureTabs();if(tab==='community')return renderCommunity();$('#write').hidden=tab==='mine'||tab==='integrations'||tab==='shops'||tab==='life';$('#search').placeholder=tab==='community'?'캠퍼스 이야기를 검색해 보세요':(tab==='shops'||tab==='life')?'캠퍼스 주변 가게를 찾아보세요':'이번 학기에 필요한 건 무엇인가요?';if(tab==='mine')return renderMine();if(tab==='integrations')return renderIntegration();if(tab==='shops'||tab==='life')return renderShops();const config={market:['CAMPUS PICKS','이번 학기, 가볍게 준비해요 ↗','인하대학교 이웃들이 올린 물건을 만나보세요.','＋ 판매하기'],community:['CAMPUS TALK','우리 캠퍼스의 오늘 이야기','궁금한 것부터 소소한 일상까지, 이웃과 나눠요.','＋ 글쓰기'],shops:['AROUND CAMPUS','공강에 들르기 좋은 곳','우리 학교 주변 가게의 소식을 확인해 보세요.','']}[tab];$('#section-kicker').textContent=config[0];$('#section-title').textContent=config[1];$('#section-sub').textContent=config[2];$('#write').textContent=config[3];$('#sort').hidden=tab!=='market';const options=tab==='market'?['전체',...categories]:tab==='community'?['전체',...boardCategories]:['전체'];$('#filters').replaceChildren(...options.map(c=>actionButton(c,()=>{category=c;render()},false,c===category?'active':'')));const q=$('#search').value.trim().toLowerCase();let data=(tab==='market'?products:tab==='community'?posts:shops).filter(p=>(category==='전체'||p.category===category)&&(p.title+' '+p.category+' '+(p.body||'')).toLowerCase().includes(q));if(tab==='market'){if($('#discount-only').checked)data=data.filter(isDiscounted);data.sort((a,b)=>$('#sort').value==='low'?displayPrice(a)-displayPrice(b):$('#sort').value==='high'?displayPrice(b)-displayPrice(a):exposureCompare(a,b));$('#result-count').textContent='총 '+data.length+'개의 캠퍼스 물건'}const root=$('#results');root.className=tab==='market'?'grid':'posts';root.replaceChildren();if(!loaded)return root.append(el('p','empty','캠퍼스 소식을 불러오고 있어요…'));if(!data.length)return root.append(el('p','empty','아직 글이 없어요. 새로운 이야기를 올려 보세요.'));for(const p of data){if(tab==='market'){root.append(marketCard(p));continue}const button=el('button','post'),info=el('div');info.append(el('span','eyebrow',p.category||'캠퍼스 가게'),el('h3','',p.title),el('p','',tab==='shops'?p.status+' · '+(p.hours||'영업시간 문의'):p.meta));button.append(el('span','post-icon',tab==='shops'?'☕':p.icon),info,el('span','','↗'));button.onclick=()=>tab==='shops'?shopDetail(p):postDetail(p);root.append(button)}}
++function switchTab(next){if(!['market','life','community','mine','shops','integrations','interests'].includes(next))return;tab=next;category='전체';$('#search').value='';history.pushState(null,'','#'+(next==='mine'?'my-sales':next==='integrations'?'trade/'+tradeProductId:next));render();$('#content').scrollIntoView({behavior:'smooth'})}
++function restoreRoute(){const route=location.hash.slice(1).split('/');tab=route[0]==='my-sales'?'mine':route[0]==='trade'?'integrations':['market','life','community','shops','interests'].includes(route[0])?route[0]:'market';if(tab==='integrations')tradeProductId=Number(route[1]);render()}
++function render(){$('.section-head').hidden=false;syncFeatureTabs();if(tab==='interests')return renderInterests();if(tab==='community')return renderCommunity();$('#write').hidden=tab==='mine'||tab==='integrations'||tab==='shops'||tab==='life';$('#search').placeholder=tab==='community'?'캠퍼스 이야기를 검색해 보세요':(tab==='shops'||tab==='life')?'캠퍼스 주변 가게를 찾아보세요':'이번 학기에 필요한 건 무엇인가요?';if(tab==='mine')return renderMine();if(tab==='integrations')return renderIntegration();if(tab==='shops'||tab==='life')return renderShops();const config={market:['CAMPUS PICKS','이번 학기, 가볍게 준비해요 ↗','인하대학교 이웃들이 올린 물건을 만나보세요.','＋ 판매하기'],community:['CAMPUS TALK','우리 캠퍼스의 오늘 이야기','궁금한 것부터 소소한 일상까지, 이웃과 나눠요.','＋ 글쓰기'],shops:['AROUND CAMPUS','공강에 들르기 좋은 곳','우리 학교 주변 가게의 소식을 확인해 보세요.','']}[tab];$('#section-kicker').textContent=config[0];$('#section-title').textContent=config[1];$('#section-sub').textContent=config[2];$('#write').textContent=config[3];$('#sort').hidden=tab!=='market';const options=tab==='market'?['전체',...categories]:tab==='community'?['전체',...boardCategories]:['전체'];$('#filters').replaceChildren(...options.map(c=>actionButton(c,()=>{category=c;render()},false,c===category?'active':'')));const q=$('#search').value.trim().toLowerCase();let data=(tab==='market'?products:tab==='community'?posts:shops).filter(p=>(category==='전체'||p.category===category)&&(p.title+' '+p.category+' '+(p.body||'')).toLowerCase().includes(q));if(tab==='market'){if($('#discount-only').checked)data=data.filter(isDiscounted);data.sort((a,b)=>$('#sort').value==='low'?displayPrice(a)-displayPrice(b):$('#sort').value==='high'?displayPrice(b)-displayPrice(a):exposureCompare(a,b));$('#result-count').textContent='총 '+data.length+'개의 캠퍼스 물건'}const root=$('#results');root.className=tab==='market'?'grid':'posts';root.replaceChildren();if(!loaded)return root.append(el('p','empty','캠퍼스 소식을 불러오고 있어요…'));if(!data.length)return root.append(el('p','empty','아직 글이 없어요. 새로운 이야기를 올려 보세요.'));for(const p of data){if(tab==='market'){root.append(marketCard(p));continue}const button=el('button','post'),info=el('div');info.append(el('span','eyebrow',p.category||'캠퍼스 가게'),el('h3','',p.title),el('p','',tab==='shops'?p.status+' · '+(p.hours||'영업시간 문의'):p.meta));button.append(el('span','post-icon',tab==='shops'?'☕':p.icon),info,el('span','','↗'));button.onclick=()=>tab==='shops'?shopDetail(p):postDetail(p);root.append(button)}}
+ function addField(form,label,name,value='',kind='input',required=true){const box=el('label','',label),input=el(kind);input.name=name;input.required=required;if(kind!=='select')input.value=value;box.append(input);form.append(box);return input}
+ function submitForm(form,label,save){const error=el('p','rate-error'),button=el('button','primary',label);button.type='submit';form.append(error,button);form.onsubmit=async e=>{e.preventDefault();if(!form.reportValidity())return;button.disabled=true;error.textContent='';try{await save(new FormData(form));await loadData();$('#modal').close();toast('저장했어요.')}catch(e){error.textContent=e.message}finally{button.disabled=false}}}
+ function saleForm(p=null){if(!requireStudentLogin())return;const root=modal(p?'판매글 수정':'새 주인을 찾아주세요','물건 정보와 판매 가격을 입력해 주세요.'),form=el('form');addField(form,'상품명','name',p?.title||'').maxLength=150;const select=addField(form,'카테고리','category','','select');categories.forEach(c=>select.append(new Option(c,c)));select.value=p?.category||categories[0];const price=addField(form,'판매 가격 (원)','oprice',p?.basePrice??'');price.type='number';price.min=0;price.max=99999999;price.step=1;if(p&&(isDiscounted(p)||p.status!=='sale'))price.readOnly=true;addField(form,'거래 장소','location',p?.location||'인하대학교 정문').maxLength=100;addField(form,'상품 설명','detail',p?.body||'','textarea').maxLength=1500;submitForm(form,p?'수정 저장':'판매글 등록',f=>api('products'+(p?'/'+p.id:''),p?'PUT':'POST',{name:f.get('name').trim(),category:f.get('category'),oprice:Number(f.get('oprice')),location:f.get('location').trim(),detail:f.get('detail').trim(),photo1:p?.photo1||null,photo2:p?.photo2||null,photo3:p?.photo3||null,buyprice:p?.buyprice??null,wishprice:p?.wishprice??null}));root.append(form)}
+ function postForm(p=null){return communityForm(p)}
+ function confirmAction(title,body,task,label='확인'){const root=modal(title,body),button=actionButton(label,async()=>{button.disabled=true;const ok=await perform(task,'처리했어요.');if(!ok)button.disabled=false});root.append(button)}
+ function postDetail(p){communityOpen(p.id)}
+-function shopDetail(s){const root=modal(s.title,s.category||'캠퍼스 가게');if(s.photo){const photo=el('img');photo.src='/api/shops/photo/'+encodeURIComponent(s.photo);photo.alt=s.title+' 상점 사진';photo.style.cssText='width:100%;max-height:240px;object-fit:cover;border-radius:12px';root.append(photo)}for(const [label,value]of [['운영 상태',s.status],['영업시간',s.hours],['메뉴',s.menu],['전화',s.phone],['휴무',s.offday],['이벤트',s.event],['여유 공간',s.space]])if(value)root.append(el('p','detail-description',label+' · '+value))}
+-function productDetail(id){const p=products.find(p=>p.id===id);if(!p)return;activeProductId=id;const root=modal(p.title,p.category+' · '+p.location);root.dataset.productId=id;const image=el('div','detail-art'),i=Math.max(0,categories.indexOf(p.category));image.style.background=palettes[i];image.innerHTML=art(i);root.prepend(image);root.append(priceBlock(p),el('p','detail-description',p.body||'같은 캠퍼스 이웃과 가까운 곳에서 거래해요.'),el('p','fine-print','판매자 온도 '+p.temperature.toFixed(1)+'° · '+statusText(p)),el('p','fine-print','등록 '+dateTime(p.createdAt)+(p.bumpedAt?' · 끌어올림 '+dateTime(p.bumpedAt):'')));if(p.agreedPrice!=null)root.append(el('p','locked-price','약속한 거래 가격 '+formatMoney(p.agreedPrice)+' 유지'));if(p.order?.meetingPlace)root.append(el('p','detail-description','📍 '+p.order.meetingPlace+(p.order.meetingTime?' · '+dateTime(timestamp(p.order.meetingTime)):'')));if(p.status==='sale'&&p.seller!==actorKey())root.append(actionButton('거래 약속 잡기',()=>appointmentDialog(p)));if(p.status!=='done')root.append(actionButton('거래 지도 · 결제 확인 →',()=>{$('#modal').close();tradeProductId=id;switchTab('integrations')}));else {root.append(el('p','locked-price','✓ 거래가 완료됐어요.'));if(p.order)renderTradeRating(root,p.order.orderId);}root.append(actionButton('내 판매글 관리',()=>{$('#modal').close();switchTab('mine')},false,'secondary wide'))}
++function shopDetail(s){const root=modal(s.title,s.category||'캠퍼스 가게');if(s.photo){const photo=el('img');photo.src='/api/shops/photo/'+encodeURIComponent(s.photo);photo.alt=s.title+' 상점 사진';photo.style.cssText='width:100%;max-height:240px;object-fit:cover;border-radius:12px';root.append(photo)}for(const [label,value]of [['운영 상태',s.status],['영업시간',s.hours],['메뉴',s.menu],['전화',s.phone],['휴무',s.offday],['이벤트',s.event],['여유 공간',s.space]])if(value)root.append(el('p','detail-description',label+' · '+value));root.append(engagementControls('SHOP',s.id,s.title))}
++function productDetail(id){const p=products.find(p=>p.id===id);if(!p)return;activeProductId=id;const root=modal(p.title,p.category+' · '+p.location);root.dataset.productId=id;const image=el('div','detail-art'),i=Math.max(0,categories.indexOf(p.category));image.style.background=palettes[i];image.innerHTML=art(i);root.prepend(image);root.append(priceBlock(p),el('p','detail-description',p.body||'같은 캠퍼스 이웃과 가까운 곳에서 거래해요.'),el('p','fine-print','판매자 온도 '+p.temperature.toFixed(1)+'° · '+statusText(p)),el('p','fine-print','등록 '+dateTime(p.createdAt)+(p.bumpedAt?' · 끌어올림 '+dateTime(p.bumpedAt):'')));if(p.agreedPrice!=null)root.append(el('p','locked-price','약속한 거래 가격 '+formatMoney(p.agreedPrice)+' 유지'));if(p.order?.meetingPlace)root.append(el('p','detail-description','📍 '+p.order.meetingPlace+(p.order.meetingTime?' · '+dateTime(timestamp(p.order.meetingTime)):'')));if(p.status==='sale'&&p.seller!==actorKey())root.append(actionButton('거래 약속 잡기',()=>appointmentDialog(p)));if(p.status!=='done')root.append(actionButton('거래 지도 · 결제 확인 →',()=>{$('#modal').close();tradeProductId=id;switchTab('integrations')}));else {root.append(el('p','locked-price','✓ 거래가 완료됐어요.'));if(p.order)renderTradeRating(root,p.order.orderId);}root.append(engagementControls('SALE',p.id,p.title));root.append(actionButton('내 판매글 관리',()=>{$('#modal').close();switchTab('mine')},false,'secondary wide'))}
+ function appointmentDialog(p){if(!requireStudentLogin())return;if(p.seller===actorKey())return toast('내 판매글에는 구매 예약을 할 수 없어요.');const root=modal('가까운 곳에서 약속해요','확정 시점의 판매 가격으로 거래 약속을 저장해요.'),form=el('form');const select=addField(form,'거래 장소','meetingPlace','','select');previewPlaces.forEach(x=>select.append(new Option(x.name,x.name)));const time=addField(form,'약속 시간 (선택)','meetingTime','','input',false);time.type='datetime-local';root.append(priceBlock(p));submitForm(form,'이 가격과 약속으로 확정',f=>{const place=previewPlaces.find(x=>x.name===f.get('meetingPlace'));return api('trades','POST',{selno:p.id,meetingPlace:place.name,meetingTime:f.get('meetingTime')||null,latitude:place.lat,longitude:place.lng})});root.append(form)}
+ function renderMine(){if(!requireStudentLogin())return;const mine=products.filter(p=>p.seller===actorKey());$('#section-kicker').textContent='MY CAMPUS SHOP';$('#section-title').textContent='내 물건의 다음 이야기';$('#section-sub').textContent='할인율만 입력하세요. 판매 가격은 자동으로 계산해 드려요.';const root=$('#results');root.className='manage-view';root.replaceChildren();const stats=el('div','shop-stats');[['판매 중',mine.filter(p=>p.status==='sale').length],['24시간 할인 중',mine.filter(isDiscounted).length],['끌어올리기 가능',mine.filter(p=>p.status==='sale'&&(!p.bumpedAt||Date.now()-p.bumpedAt>=PREVIEW_DAY)).length]].forEach(([title,n])=>{const s=el('div');s.append(el('span','',title),el('strong','',n+'개'));stats.append(s)});root.append(stats,el('p','demo-note seller-notice','◷ 할인은 딱 24시간, 끝나면 원래 가격으로. 예약 가격은 유지돼요.\n최신 등록 → 끌어올리기 → 판매 중(온도순) → 예약 중 → 거래 완료'),actionButton('＋ 판매글 등록',()=>saleForm(),false,'secondary'));const list=el('div','seller-list');for(const p of mine){const row=el('article','seller-row'),image=el('div','seller-image'),info=el('div','seller-info'),buttons=el('div','seller-actions');image.innerHTML=art(Math.max(0,categories.indexOf(p.category)));info.append(el('small','',p.category+' · '+statusText(p)),el('h3','',p.title),priceBlock(p));if(p.order)info.append(el('p','fine-print','약속 가격 '+formatMoney(p.order.agreedPrice)+' · '+(p.order.meetingPlace||'장소 미지정')));const cooldown=p.bumpedAt&&Date.now()-p.bumpedAt<PREVIEW_DAY;if(cooldown&&p.status==='sale')info.append(el('p','fine-print','다음 끌어올림 '+dateTime(p.bumpedAt+PREVIEW_DAY)));buttons.append(actionButton(isDiscounted(p)?'할인 종료':'◷ 24시간 할인',()=>discountDialog(p),p.status!=='sale'),actionButton(cooldown?'↟ 끌어올림 대기':'↟ 끌어올리기',()=>bumpDialog(p),p.status!=='sale'||cooldown,'secondary'),actionButton('수정',()=>saleForm(p),false,'secondary'),actionButton('삭제',()=>confirmAction('판매글을 삭제할까요?',p.title,()=>api('products/'+p.id,'DELETE'),'삭제하기'),Boolean(orders.find(o=>o.selno===p.id)),'secondary'));const state=el('select');state.setAttribute('aria-label',p.title+' 판매 상태');[['sale','판매 중'],['reserved','예약 중'],['done','거래 완료']].forEach(([v,t])=>state.append(new Option(t,v)));if(p.status==='sale')state.querySelector('option[value=done]').disabled=true;state.value=p.status;state.disabled=p.status==='done';state.onchange=()=>{const next=state.value;state.value=p.status;if(next===p.status)return;if(p.status==='sale')toast('구매자가 상품 상세에서 예약하면 상태가 변경돼요.');else if(next==='sale')cancelReservation(p);else if(next==='done')completeTrade(p)};buttons.append(state);row.append(image,info,buttons);list.append(row)}root.append(list)}
+ function cancelReservation(p){if(!p.order)return toast('예약 정보가 없습니다.');confirmAction('예약을 취소할까요?','판매 중 상태로 돌아갑니다.',()=>api('trades/'+p.order.orderId+'/cancel','POST'),'예약 취소')}
+--- before/src/main/resources/static/preview/community.js
++++ after/src/main/resources/static/preview/community.js
+@@ -1,113 +1,113 @@
+-// Campus community: real post routes and server-backed comments.
+-const communityState={sort:'latest',commentSort:'oldest',csrf:null,csrfMember:null,sequence:0};
+-const communitySymbols=['▦','♧','♨','◉','◇','☷','▣','⌖','↗','♡','✦'];
+-
+-function communityIcon(name){
+-  const icon=el('span','c-icon');icon.setAttribute('aria-hidden','true');
+-  const paths={comment:'<path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H5l-3 3V11.5A7.5 7.5 0 0 1 9.5 4h3A7.5 7.5 0 0 1 20 11.5Z"/>',search:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/>',pen:'<path d="m15 4 5 5M4 20l5-1L21 7a2 2 0 0 0-5-5L4 14Z"/>'};
+-  icon.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'+paths[name]+'</svg>';return icon;
+-}
+-function communityTime(value){
+-  const time=timestamp(value),minutes=Math.max(0,Math.floor((Date.now()-time)/60000));
+-  if(!time)return '방금 전';if(minutes<1)return '방금 전';if(minutes<60)return minutes+'분 전';if(minutes<1440)return Math.floor(minutes/60)+'시간 전';if(minutes<10080)return Math.floor(minutes/1440)+'일 전';return new Date(time).toLocaleDateString('ko-KR');
+-}
+-function communityName(p){return p.authorName||'캠퍼스 이웃'}
+-function communitySchool(p){return p.schoolName||'인하대학교'}
+-function communityOwn(p){return currentSession.authenticated&&(p.authorMemberId!=null?Number(p.authorMemberId)===Number(currentSession.member.id):p.writer===actorKey())}
+-function communityNavigate(path){history.pushState(null,'','#'+path);render();$('#content').scrollIntoView({behavior:'instant'});requestAnimationFrame(()=>{const heading=$('#results h2');if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true})}})}
+-function communityOpen(id){communityNavigate('community/'+id)}
+-function communityForm(p=null){if(!requireLogin())return;communityNavigate(p?'community/edit/'+(p.postId||p.id):'community/new')}
+-async function communityApi(path,method='GET',body){
+-  if(method==='GET')return api('boards'+path);
+-  if(!communityState.csrf||communityState.csrfMember!==currentSession.member?.id){const session=await api('boards/session');communityState.csrf=session.csrfToken;communityState.csrfMember=currentSession.member?.id}
+-  const response=await fetch('/api/boards'+path,{method,headers:{'Content-Type':'application/json','X-CSRF-Token':communityState.csrf},body:body===undefined?undefined:JSON.stringify(body)});
+-  const raw=await response.text();let data;try{data=raw?JSON.parse(raw):null}catch{}
+-  if(!response.ok)throw Error(data?.message||'저장하지 못했어요. 잠시 후 다시 시도해 주세요.');return data;
+-}
+-function communityAvatar(name,small=false){const avatar=el('span','c-avatar'+(small?' small':''),(name||'캠').slice(0,1));avatar.setAttribute('aria-hidden','true');return avatar}
+-function communityCategory(next){category=next;communityNavigate('community')}
+-function communitySidebar(){
+-  const aside=el('aside','c-sidebar'),heading=el('h3','','이야기 카테고리'),nav=el('nav');nav.setAttribute('aria-label','커뮤니티 카테고리');
+-  ['전체',...boardCategories].forEach((name,index)=>{const button=actionButton('',()=>communityCategory(name),false,'c-category'+(category===name?' active':''));button.append(el('span','c-category-symbol',communitySymbols[index]),el('span','',name));const count=posts.filter(p=>name==='전체'||p.category===name).length;button.append(el('small','',String(count)));button.setAttribute('aria-pressed',String(category===name));nav.append(button)});
+-  aside.append(heading,nav,el('div','c-sidebar-note','같은 캠퍼스라 더 가까운 이야기.\n서로를 존중하는 말을 나눠요.'));return aside;
+-}
+-function communityRail(){
+-  const aside=el('aside','c-rail'),card=el('div','c-rail-card');card.append(el('span','c-mini-label','OUR CAMPUS'),el('h3','','함께 채우는\n우리 학교 이야기'),el('p','','점심 메뉴부터 수업 고민까지,\n가까운 이웃에게 물어보세요.'));
+-  const write=actionButton('글쓰기',()=>communityForm(),false,'c-write');write.prepend(communityIcon('pen'));card.append(write);
+-  const topics=el('div','c-rail-topics');topics.append(el('h3','','어떤 이야기를 찾으세요?'));const chips=el('div','c-topic-chips');['맛집 추천','가성비','취업팁','고민상담','자유게시판'].forEach(name=>chips.append(actionButton(name,()=>communityCategory(name),false,'')));topics.append(chips,el('p','','궁금한 주제를 선택해 보세요.'));
+-  aside.append(card,topics);return aside;
+-}
+-function renderCommunity(){
+-  const sequence=++communityState.sequence;document.body.dataset.page='community';$('#search').placeholder='캠퍼스 이야기를 검색해 보세요';
+-  $('.section-head').hidden=true;$('.controls').hidden=true;$('#page-return').hidden=true;
+-  const root=$('#results');root.className='community-view';root.replaceChildren();
+-  const breadcrumb=el('div','c-breadcrumb');breadcrumb.append(actionButton('홈',()=>switchTab('market'),false,''),el('span','','›'),actionButton('커뮤니티',()=>communityNavigate('community'),false,''),el('span','c-school-pill','● '+(currentSession.member?.schoolName||'인하대학교')));
+-  const layout=el('div','c-layout'),main=el('div','c-main');layout.append(communitySidebar(),main);root.append(breadcrumb,layout);
+-  const route=location.hash.slice(1).split('/');
+-  if(route[1]==='new'||route[1]==='edit'){layout.classList.add('c-layout-detail');renderCommunityEditor(main,route[1]==='edit'?Number(route[2]):null,sequence);return}
+-  if(route[1]){layout.classList.add('c-layout-detail');renderCommunityDetail(main,Number(route[1]),sequence);return}
+-  layout.append(communityRail());renderCommunityFeed(main);
+-}
+-function communityHeading(main,title,subtitle){const intro=el('div','c-intro');intro.append(el('span','c-mini-label','CAMPUS TALK'),el('h2','',title),el('p','',subtitle));main.append(intro)}
+-function renderCommunityFeed(main){
+-  communityHeading(main,'우리 캠퍼스의 오늘 이야기','궁금한 것부터 소소한 일상까지, 이웃과 나눠요.');
+-  const toolbar=el('div','c-feed-toolbar'),search=el('form','c-search');search.setAttribute('role','search');const input=el('input');input.type='search';input.setAttribute('aria-label','커뮤니티 검색');input.placeholder='어떤 이야기가 궁금하세요?';input.value=$('#search').value;const find=el('button');find.type='submit';find.setAttribute('aria-label','검색');find.append(communityIcon('search'));search.append(input,find);
+-  let searchTimer;input.oninput=()=>{clearTimeout(searchTimer);searchTimer=setTimeout(()=>{$('#search').value=input.value;updateList()},150)};search.onsubmit=e=>{e.preventDefault();clearTimeout(searchTimer);$('#search').value=input.value;updateList()};
+-  const write=actionButton('글쓰기',()=>communityForm(),false,'c-write');write.prepend(communityIcon('pen'));toolbar.append(search,write);main.append(toolbar);
+-  const filterbar=el('div','c-feed-filter'),count=el('span'),sort=el('select');sort.setAttribute('aria-label','게시글 정렬');sort.append(new Option('최신순','latest'),new Option('댓글 많은 순','comments'));sort.value=communityState.sort;sort.onchange=()=>{communityState.sort=sort.value;updateList()};filterbar.append(count,sort);const list=el('div','c-feed');main.append(filterbar,list);
+-  function updateList(){
+-    const q=$('#search').value.trim().toLowerCase();let data=posts.filter(p=>(category==='전체'||p.category===category)&&[p.title,p.body,p.authorName].join(' ').toLowerCase().includes(q));
+-    data.sort((a,b)=>(communityState.sort==='comments'?(b.commentCount||0)-(a.commentCount||0):0)||b.id-a.id);
+-    count.replaceChildren(el('strong','',category==='전체'?'전체 이야기':category),document.createTextNode(' '+data.length+'개'));list.replaceChildren();
+-    if(!loaded){list.append(el('p','c-empty','이야기를 불러오고 있어요…'));return}
+-    if(!data.length){const empty=el('div','c-empty');empty.append(el('strong','',q?'검색 결과가 없어요':'아직 올라온 이야기가 없어요'),el('p','',q?'다른 검색어나 카테고리로 찾아보세요.':'첫 번째 이야기를 들려주세요.'),actionButton('글쓰기',()=>communityForm(),false,'c-text-button'));list.append(empty);return}
+-    data.forEach(p=>list.append(communityPostRow(p)));
+-  }updateList();
+-}
+-function communityPostRow(p){
+-  const row=el('a','c-post');row.href='#community/'+p.id;row.onclick=e=>{if(e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;e.preventDefault();communityOpen(p.id)};
+-  const top=el('div','c-post-top');top.append(el('span','c-category-badge',p.category),el('span','c-post-time',communityTime(p.regtime)));
+-  row.append(top,el('h3','',p.title),el('p','c-post-excerpt',p.body));const bottom=el('div','c-post-bottom'),by=el('span','c-post-by');by.append(communityAvatar(communityName(p),true),document.createTextNode(communityName(p)+' · '+communitySchool(p)));const comments=el('span','c-comment-count');comments.append(communityIcon('comment'),document.createTextNode('댓글 '+(p.commentCount||0)));bottom.append(by,comments);row.append(bottom);return row;
+-}
+-function communityBack(main){const row=el('div','c-back-row');row.append(actionButton('← 목록으로',()=>communityNavigate('community'),false,'c-text-button'),actionButton('새 글쓰기',()=>communityForm(),false,'c-text-button'));main.append(row)}
+-async function renderCommunityDetail(main,id,sequence){
+-  communityBack(main);const loading=el('p','c-empty','이야기를 불러오고 있어요…');main.append(loading);
+-  try{
+-    if(!Number.isInteger(id)||id<1)throw Error('게시글을 찾을 수 없어요.');
+-    const [post,comments]=await Promise.all([communityApi('/'+id),communityApi('/'+id+'/comments')]);
+-    if(sequence!==communityState.sequence||!main.isConnected)return;loading.remove();
+-    const article=el('article','c-article'),author=el('div','c-author'),authorInfo=el('div');authorInfo.append(el('strong','',communityName(post)),el('p','',communitySchool(post)+' · '+communityTime(post.regtime)));author.append(communityAvatar(communityName(post)),authorInfo);
+-    const categoryLink=actionButton(post.categoryName,()=>communityCategory(post.categoryName),false,'c-category-badge');article.append(categoryLink,author,el('h2','c-article-title',post.title),el('div','c-article-body',post.content));
+-    const foot=el('div','c-article-footer'),commentCount=el('span','c-comment-count');commentCount.append(communityIcon('comment'),document.createTextNode('댓글 '+comments.length));foot.append(commentCount,el('time','',dateTime(timestamp(post.regtime))));article.append(foot);
+-    if(communityOwn(post)){const actions=el('div','c-author-actions');actions.append(actionButton('수정하기',()=>communityForm(post),false,'c-text-button'),actionButton('삭제하기',()=>communityDeletePost(post),false,'c-text-button danger'));article.append(actions)}main.append(article);
+-    renderCommunityComments(main,post,comments);
+-    const related=posts.filter(p=>p.id!==id&&(category==='전체'||p.category===category)).slice(0,3);if(related.length){const more=el('section','c-related');more.append(el('h3','','캠퍼스의 다른 이야기'));related.forEach(p=>more.append(communityPostRow(p)));main.append(more)}
+-  }catch(error){if(sequence===communityState.sequence&&main.isConnected){loading.className='c-empty c-error';loading.textContent=error.message}}
+-}
+-function renderCommunityComments(main,post,comments){
+-  const section=el('section','c-comments');section.setAttribute('aria-label','댓글');const header=el('div','c-comments-head'),sort=el('select');sort.setAttribute('aria-label','댓글 정렬');sort.append(new Option('등록순','oldest'),new Option('최신순','latest'));sort.value=communityState.commentSort;header.append(el('h3','','댓글 '+comments.length),sort);section.append(header);
+-  const list=el('div','c-comment-list');section.append(list);sort.onchange=()=>{communityState.commentSort=sort.value;drawComments()};
+-  function drawComments(){list.replaceChildren();if(!comments.length){const empty=el('div','c-comment-empty');empty.append(communityIcon('comment'),el('strong','','아직 댓글이 없어요'),el('p','','가장 먼저 따뜻한 한마디를 남겨보세요.'));list.append(empty);return}
+-    const data=communityState.commentSort==='latest'?[...comments].reverse():comments;data.forEach(comment=>{
+-      const row=el('article','c-comment'),body=el('div','c-comment-body'),head=el('div','c-comment-author');head.append(el('strong','',comment.authorName));if(comment.memberId===post.authorMemberId)head.append(el('span','c-writer-label','작성자'));head.append(el('small','',communityTime(comment.regtime)));body.append(head,el('p','',comment.content));
+-      if(currentSession.authenticated&&Number(comment.memberId)===Number(currentSession.member.id))body.append(actionButton('삭제',()=>communityDeleteComment(post.postId,comment.commentId),false,'c-comment-delete'));
+-      row.append(communityAvatar(comment.authorName,true),body);list.append(row);
+-    });
+-  }drawComments();
+-  if(!currentSession.authenticated){const gate=el('div','c-login-prompt');gate.append(el('p','','로그인하고 캠퍼스 이웃과 이야기를 나눠보세요.'),actionButton('로그인하고 댓글 쓰기',()=>requireLogin(),false,'c-write'));section.append(gate);main.append(section);return}
+-  const form=el('form','c-comment-form'),label=el('label','','댓글 남기기'),textarea=el('textarea');textarea.name='content';textarea.required=true;textarea.maxLength=1000;textarea.placeholder='이웃에게 도움이 되는 댓글을 남겨주세요.';label.append(textarea);const bottom=el('div','c-form-bottom'),counter=el('span','c-character-count','0 / 1,000'),error=el('p','c-form-error');error.setAttribute('role','alert');const submit=el('button','c-write','댓글 등록');submit.type='submit';textarea.oninput=()=>counter.textContent=textarea.value.length.toLocaleString()+' / 1,000';bottom.append(counter,submit);form.append(label,error,bottom);
+-  form.onsubmit=async e=>{e.preventDefault();if(!textarea.value.trim()){error.textContent='댓글 내용을 입력해 주세요.';textarea.focus();return}submit.disabled=true;error.textContent='';try{await communityApi('/'+post.postId+'/comments','POST',{content:textarea.value.trim()});await loadData();toast('댓글을 등록했어요.');requestAnimationFrame(()=>$('.c-comments')?.scrollIntoView({block:'start'}))}catch(err){error.textContent=err.message;submit.disabled=false}};section.append(form);main.append(section);
+-}
+-function communityDeletePost(post){confirmAction('게시글을 삭제할까요?','게시글과 댓글이 함께 삭제됩니다.',async()=>{await communityApi('/'+post.postId,'DELETE');communityNavigate('community')},'삭제하기')}
+-function communityDeleteComment(postId,commentId){confirmAction('내 댓글을 삭제할까요?','삭제한 댓글은 되돌릴 수 없어요.',()=>communityApi('/'+postId+'/comments/'+commentId,'DELETE'),'삭제하기')}
+-async function renderCommunityEditor(main,id,sequence){
+-  communityBack(main);if(!currentSession.authenticated){communityHeading(main,'함께 나누고 싶은 이야기가 있나요?','로그인 후 글을 작성할 수 있어요.');main.append(actionButton('로그인하고 글쓰기',()=>requireLogin(),false,'c-write'));return}
+-  let post=null;
+-  if(id){const loading=el('p','c-empty','게시글을 불러오고 있어요…');main.append(loading);try{post=await communityApi('/'+id);if(sequence!==communityState.sequence||!main.isConnected)return;loading.remove();if(!communityOwn(post))throw Error('내가 쓴 게시글만 수정할 수 있어요.')}catch(error){loading.remove();main.append(el('p','c-empty c-error',error.message));return}}
+-  communityHeading(main,id?'이야기 수정하기':'우리 캠퍼스에 이야기 나누기','정보도, 질문도, 소소한 일상도 좋아요.');
+-  const form=el('form','c-editor'),categoryLabel=el('label','','카테고리'),select=el('select');select.name='categoryId';boardCategories.forEach((name,i)=>select.append(new Option(name,boardCategoryIds[i])));select.value=post?.categoryId||(category!=='전체'?boardCategoryIds[boardCategories.indexOf(category)]:10);categoryLabel.append(select);
+-  const titleLabel=el('label','','제목'),title=el('input');title.name='title';title.required=true;title.maxLength=150;title.placeholder='이야기의 제목을 적어주세요';title.value=post?.title||'';titleLabel.append(title);
+-  const bodyLabel=el('label','','내용'),body=el('textarea');body.name='content';body.required=true;body.maxLength=3000;body.placeholder='이웃과 나누고 싶은 이야기를 들려주세요.\n서로를 존중하는 따뜻한 말을 사용해 주세요.';body.value=post?.content||'';bodyLabel.append(body);
+-  const counter=el('span','c-character-count'),error=el('p','c-form-error');error.setAttribute('role','alert');const bottom=el('div','c-editor-bottom'),cancel=actionButton('취소',()=>communityNavigate(id?'community/'+id:'community'),false,'c-cancel'),submit=el('button','c-write',id?'수정 저장':'게시글 등록');submit.type='submit';body.oninput=()=>counter.textContent=body.value.length.toLocaleString()+' / 3,000';body.oninput();bottom.append(cancel,submit);form.append(categoryLabel,titleLabel,bodyLabel,counter,el('p','c-editor-note','개인 연락처 등 민감한 정보는 게시글에 남기지 마세요.'),error,bottom);
+-  form.onsubmit=async e=>{e.preventDefault();if(!title.value.trim()||!body.value.trim()){error.textContent='제목과 내용을 모두 입력해 주세요.';return}submit.disabled=true;error.textContent='';try{const saved=await communityApi(id?'/'+id:'',id?'PUT':'POST',{categoryId:Number(select.value),title:title.value.trim(),content:body.value.trim()});await loadData();communityOpen(saved.postId);toast(id?'게시글을 수정했어요.':'새 이야기를 등록했어요.')}catch(err){error.textContent=err.message;submit.disabled=false}};main.append(form);
+-}
++// Campus community: real post routes and server-backed comments.
++const communityState={sort:'latest',commentSort:'oldest',csrf:null,csrfMember:null,sequence:0};
++const communitySymbols=['▦','♧','♨','◉','◇','☷','▣','⌖','↗','♡','✦'];
++
++function communityIcon(name){
++  const icon=el('span','c-icon');icon.setAttribute('aria-hidden','true');
++  const paths={comment:'<path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H5l-3 3V11.5A7.5 7.5 0 0 1 9.5 4h3A7.5 7.5 0 0 1 20 11.5Z"/>',search:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/>',pen:'<path d="m15 4 5 5M4 20l5-1L21 7a2 2 0 0 0-5-5L4 14Z"/>'};
++  icon.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'+paths[name]+'</svg>';return icon;
++}
++function communityTime(value){
++  const time=timestamp(value),minutes=Math.max(0,Math.floor((Date.now()-time)/60000));
++  if(!time)return '방금 전';if(minutes<1)return '방금 전';if(minutes<60)return minutes+'분 전';if(minutes<1440)return Math.floor(minutes/60)+'시간 전';if(minutes<10080)return Math.floor(minutes/1440)+'일 전';return new Date(time).toLocaleDateString('ko-KR');
++}
++function communityName(p){return p.authorName||'캠퍼스 이웃'}
++function communitySchool(p){return p.schoolName||'인하대학교'}
++function communityOwn(p){return currentSession.authenticated&&(p.authorMemberId!=null?Number(p.authorMemberId)===Number(currentSession.member.id):p.writer===actorKey())}
++function communityNavigate(path){history.pushState(null,'','#'+path);render();$('#content').scrollIntoView({behavior:'instant'});requestAnimationFrame(()=>{const heading=$('#results h2');if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true})}})}
++function communityOpen(id){communityNavigate('community/'+id)}
++function communityForm(p=null){if(!requireLogin())return;communityNavigate(p?'community/edit/'+(p.postId||p.id):'community/new')}
++async function communityApi(path,method='GET',body){
++  if(method==='GET')return api('boards'+path);
++  if(!communityState.csrf||communityState.csrfMember!==currentSession.member?.id){const session=await api('boards/session');communityState.csrf=session.csrfToken;communityState.csrfMember=currentSession.member?.id}
++  const response=await fetch('/api/boards'+path,{method,headers:{'Content-Type':'application/json','X-CSRF-Token':communityState.csrf},body:body===undefined?undefined:JSON.stringify(body)});
++  const raw=await response.text();let data;try{data=raw?JSON.parse(raw):null}catch{}
++  if(!response.ok)throw Error(data?.message||'저장하지 못했어요. 잠시 후 다시 시도해 주세요.');return data;
++}
++function communityAvatar(name,small=false){const avatar=el('span','c-avatar'+(small?' small':''),(name||'캠').slice(0,1));avatar.setAttribute('aria-hidden','true');return avatar}
++function communityCategory(next){category=next;communityNavigate('community')}
++function communitySidebar(){
++  const aside=el('aside','c-sidebar'),heading=el('h3','','이야기 카테고리'),nav=el('nav');nav.setAttribute('aria-label','커뮤니티 카테고리');
++  ['전체',...boardCategories].forEach((name,index)=>{const button=actionButton('',()=>communityCategory(name),false,'c-category'+(category===name?' active':''));button.append(el('span','c-category-symbol',communitySymbols[index]),el('span','',name));const count=posts.filter(p=>name==='전체'||p.category===name).length;button.append(el('small','',String(count)));button.setAttribute('aria-pressed',String(category===name));nav.append(button)});
++  aside.append(heading,nav,el('div','c-sidebar-note','같은 캠퍼스라 더 가까운 이야기.\n서로를 존중하는 말을 나눠요.'));return aside;
++}
++function communityRail(){
++  const aside=el('aside','c-rail'),card=el('div','c-rail-card');card.append(el('span','c-mini-label','OUR CAMPUS'),el('h3','','함께 채우는\n우리 학교 이야기'),el('p','','점심 메뉴부터 수업 고민까지,\n가까운 이웃에게 물어보세요.'));
++  const write=actionButton('글쓰기',()=>communityForm(),false,'c-write');write.prepend(communityIcon('pen'));card.append(write);
++  const topics=el('div','c-rail-topics');topics.append(el('h3','','어떤 이야기를 찾으세요?'));const chips=el('div','c-topic-chips');['맛집 추천','가성비','취업팁','고민상담','자유게시판'].forEach(name=>chips.append(actionButton(name,()=>communityCategory(name),false,'')));topics.append(chips,el('p','','궁금한 주제를 선택해 보세요.'));
++  aside.append(card,topics);return aside;
++}
++function renderCommunity(){
++  const sequence=++communityState.sequence;document.body.dataset.page='community';$('#search').placeholder='캠퍼스 이야기를 검색해 보세요';
++  $('.section-head').hidden=true;$('.controls').hidden=true;$('#page-return').hidden=true;
++  const root=$('#results');root.className='community-view';root.replaceChildren();
++  const breadcrumb=el('div','c-breadcrumb');breadcrumb.append(actionButton('홈',()=>switchTab('market'),false,''),el('span','','›'),actionButton('커뮤니티',()=>communityNavigate('community'),false,''),el('span','c-school-pill','● '+(currentSession.member?.schoolName||'인하대학교')));
++  const layout=el('div','c-layout'),main=el('div','c-main');layout.append(communitySidebar(),main);root.append(breadcrumb,layout);
++  const route=location.hash.slice(1).split('/');
++  if(route[1]==='new'||route[1]==='edit'){layout.classList.add('c-layout-detail');renderCommunityEditor(main,route[1]==='edit'?Number(route[2]):null,sequence);return}
++  if(route[1]){layout.classList.add('c-layout-detail');renderCommunityDetail(main,Number(route[1]),sequence);return}
++  layout.append(communityRail());renderCommunityFeed(main);
++}
++function communityHeading(main,title,subtitle){const intro=el('div','c-intro');intro.append(el('span','c-mini-label','CAMPUS TALK'),el('h2','',title),el('p','',subtitle));main.append(intro)}
++function renderCommunityFeed(main){
++  communityHeading(main,'우리 캠퍼스의 오늘 이야기','궁금한 것부터 소소한 일상까지, 이웃과 나눠요.');
++  const toolbar=el('div','c-feed-toolbar'),search=el('form','c-search');search.setAttribute('role','search');const input=el('input');input.type='search';input.setAttribute('aria-label','커뮤니티 검색');input.placeholder='어떤 이야기가 궁금하세요?';input.value=$('#search').value;const find=el('button');find.type='submit';find.setAttribute('aria-label','검색');find.append(communityIcon('search'));search.append(input,find);
++  let searchTimer;input.oninput=()=>{clearTimeout(searchTimer);searchTimer=setTimeout(()=>{$('#search').value=input.value;updateList()},150)};search.onsubmit=e=>{e.preventDefault();clearTimeout(searchTimer);$('#search').value=input.value;updateList()};
++  const write=actionButton('글쓰기',()=>communityForm(),false,'c-write');write.prepend(communityIcon('pen'));toolbar.append(search,write);main.append(toolbar);
++  const filterbar=el('div','c-feed-filter'),count=el('span'),sort=el('select');sort.setAttribute('aria-label','게시글 정렬');sort.append(new Option('최신순','latest'),new Option('댓글 많은 순','comments'));sort.value=communityState.sort;sort.onchange=()=>{communityState.sort=sort.value;updateList()};filterbar.append(count,sort);const list=el('div','c-feed');main.append(filterbar,list);
++  function updateList(){
++    const q=$('#search').value.trim().toLowerCase();let data=posts.filter(p=>(category==='전체'||p.category===category)&&[p.title,p.body,p.authorName].join(' ').toLowerCase().includes(q));
++    data.sort((a,b)=>(communityState.sort==='comments'?(b.commentCount||0)-(a.commentCount||0):0)||b.id-a.id);
++    count.replaceChildren(el('strong','',category==='전체'?'전체 이야기':category),document.createTextNode(' '+data.length+'개'));list.replaceChildren();
++    if(!loaded){list.append(el('p','c-empty','이야기를 불러오고 있어요…'));return}
++    if(!data.length){const empty=el('div','c-empty');empty.append(el('strong','',q?'검색 결과가 없어요':'아직 올라온 이야기가 없어요'),el('p','',q?'다른 검색어나 카테고리로 찾아보세요.':'첫 번째 이야기를 들려주세요.'),actionButton('글쓰기',()=>communityForm(),false,'c-text-button'));list.append(empty);return}
++    data.forEach(p=>list.append(communityPostRow(p)));
++  }updateList();
++}
++function communityPostRow(p){
++  const row=el('a','c-post');row.href='#community/'+p.id;row.onclick=e=>{if(e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;e.preventDefault();communityOpen(p.id)};
++  const top=el('div','c-post-top');top.append(el('span','c-category-badge',p.category),el('span','c-post-time',communityTime(p.regtime)));
++  row.append(top,el('h3','',p.title),el('p','c-post-excerpt',p.body));const bottom=el('div','c-post-bottom'),by=el('span','c-post-by');by.append(communityAvatar(communityName(p),true),document.createTextNode(communityName(p)+' · '+communitySchool(p)));const comments=el('span','c-comment-count');comments.append(communityIcon('comment'),document.createTextNode('댓글 '+(p.commentCount||0)));bottom.append(by,comments);row.append(bottom);const wrapper=el('article','engagement-post');wrapper.append(row,engagementControls('POST',p.id,p.title));return wrapper;
++}
++function communityBack(main){const row=el('div','c-back-row');row.append(actionButton('← 목록으로',()=>communityNavigate('community'),false,'c-text-button'),actionButton('새 글쓰기',()=>communityForm(),false,'c-text-button'));main.append(row)}
++async function renderCommunityDetail(main,id,sequence){
++  communityBack(main);const loading=el('p','c-empty','이야기를 불러오고 있어요…');main.append(loading);
++  try{
++    if(!Number.isInteger(id)||id<1)throw Error('게시글을 찾을 수 없어요.');
++    const [post,comments]=await Promise.all([communityApi('/'+id),communityApi('/'+id+'/comments')]);
++    if(sequence!==communityState.sequence||!main.isConnected)return;loading.remove();
++    const article=el('article','c-article'),author=el('div','c-author'),authorInfo=el('div');authorInfo.append(el('strong','',communityName(post)),el('p','',communitySchool(post)+' · '+communityTime(post.regtime)));author.append(communityAvatar(communityName(post)),authorInfo);
++    const categoryLink=actionButton(post.categoryName,()=>communityCategory(post.categoryName),false,'c-category-badge');article.append(categoryLink,author,el('h2','c-article-title',post.title),el('div','c-article-body',post.content));
++    const foot=el('div','c-article-footer'),commentCount=el('span','c-comment-count');commentCount.append(communityIcon('comment'),document.createTextNode('댓글 '+comments.length));foot.append(commentCount,el('time','',dateTime(timestamp(post.regtime))));article.append(foot);
++    if(communityOwn(post)){const actions=el('div','c-author-actions');actions.append(actionButton('수정하기',()=>communityForm(post),false,'c-text-button'),actionButton('삭제하기',()=>communityDeletePost(post),false,'c-text-button danger'));article.append(actions)}article.append(engagementControls('POST',id,post.title));main.append(article);
++    renderCommunityComments(main,post,comments);
++    const related=posts.filter(p=>p.id!==id&&(category==='전체'||p.category===category)).slice(0,3);if(related.length){const more=el('section','c-related');more.append(el('h3','','캠퍼스의 다른 이야기'));related.forEach(p=>more.append(communityPostRow(p)));main.append(more)}
++  }catch(error){if(sequence===communityState.sequence&&main.isConnected){loading.className='c-empty c-error';loading.textContent=error.message}}
++}
++function renderCommunityComments(main,post,comments){
++  const section=el('section','c-comments');section.setAttribute('aria-label','댓글');const header=el('div','c-comments-head'),sort=el('select');sort.setAttribute('aria-label','댓글 정렬');sort.append(new Option('등록순','oldest'),new Option('최신순','latest'));sort.value=communityState.commentSort;header.append(el('h3','','댓글 '+comments.length),sort);section.append(header);
++  const list=el('div','c-comment-list');section.append(list);sort.onchange=()=>{communityState.commentSort=sort.value;drawComments()};
++  function drawComments(){list.replaceChildren();if(!comments.length){const empty=el('div','c-comment-empty');empty.append(communityIcon('comment'),el('strong','','아직 댓글이 없어요'),el('p','','가장 먼저 따뜻한 한마디를 남겨보세요.'));list.append(empty);return}
++    const data=communityState.commentSort==='latest'?[...comments].reverse():comments;data.forEach(comment=>{
++      const row=el('article','c-comment'),body=el('div','c-comment-body'),head=el('div','c-comment-author');head.append(el('strong','',comment.authorName));if(comment.memberId===post.authorMemberId)head.append(el('span','c-writer-label','작성자'));head.append(el('small','',communityTime(comment.regtime)));body.append(head,el('p','',comment.content));
++      if(currentSession.authenticated&&Number(comment.memberId)===Number(currentSession.member.id))body.append(actionButton('삭제',()=>communityDeleteComment(post.postId,comment.commentId),false,'c-comment-delete'));
++      body.append(engagementControls('COMMENT',comment.commentId,comment.content.slice(0,35)));row.append(communityAvatar(comment.authorName,true),body);list.append(row);
++    });
++  }drawComments();
++  if(!currentSession.authenticated){const gate=el('div','c-login-prompt');gate.append(el('p','','로그인하고 캠퍼스 이웃과 이야기를 나눠보세요.'),actionButton('로그인하고 댓글 쓰기',()=>requireLogin(),false,'c-write'));section.append(gate);main.append(section);return}
++  const form=el('form','c-comment-form'),label=el('label','','댓글 남기기'),textarea=el('textarea');textarea.name='content';textarea.required=true;textarea.maxLength=1000;textarea.placeholder='이웃에게 도움이 되는 댓글을 남겨주세요.';label.append(textarea);const bottom=el('div','c-form-bottom'),counter=el('span','c-character-count','0 / 1,000'),error=el('p','c-form-error');error.setAttribute('role','alert');const submit=el('button','c-write','댓글 등록');submit.type='submit';textarea.oninput=()=>counter.textContent=textarea.value.length.toLocaleString()+' / 1,000';bottom.append(counter,submit);form.append(label,error,bottom);
++  form.onsubmit=async e=>{e.preventDefault();if(!textarea.value.trim()){error.textContent='댓글 내용을 입력해 주세요.';textarea.focus();return}submit.disabled=true;error.textContent='';try{await communityApi('/'+post.postId+'/comments','POST',{content:textarea.value.trim()});await loadData();toast('댓글을 등록했어요.');requestAnimationFrame(()=>$('.c-comments')?.scrollIntoView({block:'start'}))}catch(err){error.textContent=err.message;submit.disabled=false}};section.append(form);main.append(section);
++}
++function communityDeletePost(post){confirmAction('게시글을 삭제할까요?','게시글과 댓글이 함께 삭제됩니다.',async()=>{await communityApi('/'+post.postId,'DELETE');communityNavigate('community')},'삭제하기')}
++function communityDeleteComment(postId,commentId){confirmAction('내 댓글을 삭제할까요?','삭제한 댓글은 되돌릴 수 없어요.',()=>communityApi('/'+postId+'/comments/'+commentId,'DELETE'),'삭제하기')}
++async function renderCommunityEditor(main,id,sequence){
++  communityBack(main);if(!currentSession.authenticated){communityHeading(main,'함께 나누고 싶은 이야기가 있나요?','로그인 후 글을 작성할 수 있어요.');main.append(actionButton('로그인하고 글쓰기',()=>requireLogin(),false,'c-write'));return}
++  let post=null;
++  if(id){const loading=el('p','c-empty','게시글을 불러오고 있어요…');main.append(loading);try{post=await communityApi('/'+id);if(sequence!==communityState.sequence||!main.isConnected)return;loading.remove();if(!communityOwn(post))throw Error('내가 쓴 게시글만 수정할 수 있어요.')}catch(error){loading.remove();main.append(el('p','c-empty c-error',error.message));return}}
++  communityHeading(main,id?'이야기 수정하기':'우리 캠퍼스에 이야기 나누기','정보도, 질문도, 소소한 일상도 좋아요.');
++  const form=el('form','c-editor'),categoryLabel=el('label','','카테고리'),select=el('select');select.name='categoryId';boardCategories.forEach((name,i)=>select.append(new Option(name,boardCategoryIds[i])));select.value=post?.categoryId||(category!=='전체'?boardCategoryIds[boardCategories.indexOf(category)]:10);categoryLabel.append(select);
++  const titleLabel=el('label','','제목'),title=el('input');title.name='title';title.required=true;title.maxLength=150;title.placeholder='이야기의 제목을 적어주세요';title.value=post?.title||'';titleLabel.append(title);
++  const bodyLabel=el('label','','내용'),body=el('textarea');body.name='content';body.required=true;body.maxLength=3000;body.placeholder='이웃과 나누고 싶은 이야기를 들려주세요.\n서로를 존중하는 따뜻한 말을 사용해 주세요.';body.value=post?.content||'';bodyLabel.append(body);
++  const counter=el('span','c-character-count'),error=el('p','c-form-error');error.setAttribute('role','alert');const bottom=el('div','c-editor-bottom'),cancel=actionButton('취소',()=>communityNavigate(id?'community/'+id:'community'),false,'c-cancel'),submit=el('button','c-write',id?'수정 저장':'게시글 등록');submit.type='submit';body.oninput=()=>counter.textContent=body.value.length.toLocaleString()+' / 3,000';body.oninput();bottom.append(cancel,submit);form.append(categoryLabel,titleLabel,bodyLabel,counter,el('p','c-editor-note','개인 연락처 등 민감한 정보는 게시글에 남기지 마세요.'),error,bottom);
++  form.onsubmit=async e=>{e.preventDefault();if(!title.value.trim()||!body.value.trim()){error.textContent='제목과 내용을 모두 입력해 주세요.';return}submit.disabled=true;error.textContent='';try{const saved=await communityApi(id?'/'+id:'',id?'PUT':'POST',{categoryId:Number(select.value),title:title.value.trim(),content:body.value.trim()});await loadData();communityOpen(saved.postId);toast(id?'게시글을 수정했어요.':'새 이야기를 등록했어요.')}catch(err){error.textContent=err.message;submit.disabled=false}};main.append(form);
++}
+--- before/src/main/resources/static/preview/features.js
++++ after/src/main/resources/static/preview/features.js
+@@ -13,6 +13,6 @@
+ function countdown(t){const n=Math.max(0,Math.ceil((t-Date.now())/1000));return [Math.floor(n/3600),Math.floor(n%3600/60),n%60].map(x=>String(x).padStart(2,'0')).join(':');}
+ function dateTime(t){return new Date(t).toLocaleString('ko-KR',{month:'long',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false});}
+ function priceBlock(p){const box=el('div','price-block');if(isDiscounted(p))box.append(el('del','old-price',formatMoney(p.basePrice)));const line=el('div','price-row');if(isDiscounted(p))line.append(el('b','rate',p.discountRate+'%'));line.append(el('strong','price',formatMoney(displayPrice(p))));box.append(line);if(isDiscounted(p)){const clock=el('div','discount-clock');clock.append(el('span','','◷ 하루 할인 '));const timer=el('span','',countdown(p.discountEnd));timer.dataset.until=p.discountEnd;clock.append(timer,el('span','',' 남음'));box.append(clock)}return box;}
+-function marketCard(p){const card=el('article','product'),open=el('button','open'),index=Math.max(0,categories.indexOf(p.category)),picture=el('div','product-art');picture.style.background=palettes[index];picture.innerHTML=art(index);const rank=exposureRank(p);picture.append(el('span','tag',rank===0?'NEW · 최신 등록':rank===1?'↟ 끌어올림':'캠퍼스 직거래'));if(p.status!=='sale')picture.append(el('span','status-cover',statusText(p)));open.append(picture,el('div','category-label',p.category),el('h3','',p.title),priceBlock(p),el('div','meta',p.location+' · '+statusText(p)+' · ♧ '+p.temperature.toFixed(1)+'°'));card.dataset.productId=p.id;open.onclick=()=>productDetail(p.id);const fav=el('button','favorite'+(favorites.has(p.id)?' saved':''),favorites.has(p.id)?'♥':'♡');fav.setAttribute('aria-label',p.title+' 찜');fav.setAttribute('aria-pressed',String(favorites.has(p.id)));fav.onclick=()=>{favorites.has(p.id)?favorites.delete(p.id):favorites.add(p.id);render()};card.append(open,fav);return card;}
++function marketCard(p){const card=el('article','product'),open=el('button','open'),index=Math.max(0,categories.indexOf(p.category)),picture=el('div','product-art');picture.style.background=palettes[index];picture.innerHTML=art(index);const rank=exposureRank(p);picture.append(el('span','tag',rank===0?'NEW · 최신 등록':rank===1?'↟ 끌어올림':'캠퍼스 직거래'));if(p.status!=='sale')picture.append(el('span','status-cover',statusText(p)));open.append(picture,el('div','category-label',p.category),el('h3','',p.title),priceBlock(p),el('div','meta',p.location+' · '+statusText(p)+' · ♧ '+p.temperature.toFixed(1)+'°'));card.dataset.productId=p.id;open.onclick=()=>productDetail(p.id);card.append(open,engagementControls('SALE',p.id,p.title));return card;}
+ function syncFeatureTabs(){const personal=tab==='mine',trade=tab==='integrations';document.body.dataset.page=tab;const selected=trade?'market':tab;document.querySelectorAll('[data-tab]').forEach(b=>{b.classList.toggle('selected',b.dataset.tab===selected);if(b.dataset.tab===selected)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});$('#my-sale-count').textContent=products.filter(p=>p.seller===actorKey()).length;document.querySelector('[data-tab="mine"]').setAttribute('aria-label','내 판매글 '+products.filter(p=>p.seller===actorKey()).length+'개');$('#market-tools').hidden=tab!=='market';$('#exposure-guide').hidden=tab!=='market';$('.controls').hidden=personal||trade;$('#write').hidden=personal||trade;$('#page-return').hidden=!personal&&!trade;$('#page-return').onclick=()=>switchTab('market');}
+ function actionButton(text,fn,disabled=false,cls='primary'){const b=el('button',cls,text);b.type='button';b.disabled=disabled;b.onclick=fn;return b;}
+--- before/src/main/resources/static/preview/index.html
++++ after/src/main/resources/static/preview/index.html
+@@ -5,4 +5,4 @@
+ <main><section class="hero"><div><span class="eyebrow">BACK TO CAMPUS · RE:START</span><h1>필요했던 그 물건,<br>같은 캠퍼스에 있어요.</h1><p>전공책부터 실습 준비물까지.<br>잘 쓰던 물건에 다음 학기를 선물하세요.</p><button id="hero-action">우리 학교 물건 둘러보기　↗</button></div><div class="hero-art" aria-hidden="true"><span class="orbit"></span><span class="sticker">NEW SEMESTER<br><b>새 주인을 찾아요!</b></span><div class="book b1">DESIGN<small>공간을 그리는 시간</small></div><div class="book b2">CAMPUS<small>작은 순환, 새로운 시작</small></div><div class="laptop"><div>re:use<span>다시 쓰는 우리의 캠퍼스</span></div></div><span class="spark">✳</span><span class="hero-label">GOOD THINGS, AGAIN.</span></div></section>
+ <section id="content" aria-label="서비스 콘텐츠"><div class="section-head"><div><span class="eyebrow" id="section-kicker">CAMPUS PICKS</span><h2 id="section-title">이번 학기, 가볍게 준비해요 ↗</h2><p id="section-sub">인하대학교 이웃들이 올린 물건을 만나보세요.</p></div><div class="section-actions"><button id="page-return" class="secondary" hidden>← 물건 둘러보기</button><button class="primary" id="write">＋ 판매하기</button></div></div><div class="controls"><div id="filters" class="filters" aria-label="카테고리"></div><select id="sort" aria-label="상품 정렬"><option value="latest">기본순</option><option value="low">낮은 가격순</option><option value="high">높은 가격순</option></select></div><div class="market-tools" id="market-tools"><label><input type="checkbox" id="discount-only"> 24시간 할인만 보기</label><span id="result-count"></span></div><details id="exposure-guide" class="exposure-guide"><summary>노출 순서 <b>최신 › 끌어올리기 › 판매 중(온도순) › 예약 중 › 거래 완료</b><span>안내 ⌄</span></summary><p>최신 등록·끌어올리기는 각각 24시간 동안 우선 노출해요. 끌어올리기는 게시글당 24시간에 한 번 사용할 수 있어요. 예약·완료 글은 아래 구간에 표시됩니다.</p></details><div id="results" aria-live="polite"></div></section>
+ <aside class="bottom-banner"><span>♻</span><div><b>교재는 다음 후배에게, 추억은 내 마음에.</b><p>캠퍼스 안에서 시작하는 작고 기분 좋은 순환</p></div><span>RE:MARKET ↗</span></aside></main>
+-<footer><b>campus re:market</b><a href="plan.html" target="_blank" rel="noopener">v14 변경사항 ↗</a><span>회원 로그인으로 이용하는 캠퍼스 마켓 · 실제 송금·정산은 지원하지 않습니다.</span></footer><dialog id="modal"><button class="close" aria-label="닫기">×</button><div id="modal-body"></div></dialog><div id="toast" role="status"></div><script src="/preview/session.js?v=20261102-login"></script><script src="features.js?v=14"></script><script src="/preview/manner-rating.js?v=14"></script><script src="app.js?v=14"></script><script src="integrations-live.js?v=14"></script><script src="shops.js?v=14"></script><script src="/preview/v14.js"></script><script src="/preview/trade-review-dialog.js?v=20261102"></script><script src="/preview/community.js?v=20261102-1"></script><link rel="stylesheet" href="/ux.css"><link rel="stylesheet" href="/vendor/leaflet.css"><script src="/vendor/leaflet.js"></script><script src="/location-ui.js"></script><script src="/student-ux.js"></script></body></html>
++<footer><b>campus re:market</b><a href="plan.html" target="_blank" rel="noopener">v14 변경사항 ↗</a><span>회원 로그인으로 이용하는 캠퍼스 마켓 · 실제 송금·정산은 지원하지 않습니다.</span></footer><dialog id="modal"><button class="close" aria-label="닫기">×</button><div id="modal-body"></div></dialog><div id="toast" role="status"></div><script src="/preview/session.js?v=20261102-login"></script><script src="features.js?v=14"></script><script src="/preview/manner-rating.js?v=14"></script><script src="app.js?v=14"></script><script src="integrations-live.js?v=14"></script><script src="shops.js?v=14"></script><script src="/preview/v14.js"></script><script src="/preview/trade-review-dialog.js?v=20261102"></script><script src="/preview/community.js?v=20261102-1"></script><link rel="stylesheet" href="/ux.css"><link rel="stylesheet" href="/vendor/leaflet.css"><script src="/vendor/leaflet.js"></script><script src="/location-ui.js"></script><script src="/student-ux.js"></script><link rel="stylesheet" href="/engagement.css?v=20261102-social"><script src="/engagement.js?v=20261102-social"></script></body></html>
+--- before/src/main/resources/static/preview/shops.js
++++ after/src/main/resources/static/preview/shops.js
+@@ -38,7 +38,7 @@
+   open.append(shopPhoto(store),info,status);open.onclick=()=>shopDetail(store);card.append(open);
+   if(store.address)card.append(el('p','campus-store-menu',store.address));if(store.menu)card.append(el('p','campus-store-menu',store.menu));if(store.space)card.append(el('p','campus-store-space','여유 공간 · '+store.space));
+   if(store.latitude!=null&&store.longitude!=null)card.append(actionButton('지도에서 보기',()=>{const m=store._mapMarker;if(registeredShopMap&&m){registeredShopMap.setView(m.getLatLng(),17);m.openPopup();mapNode.scrollIntoView({behavior:'smooth',block:'center'})}},false,'secondary'));
+-  else{unlocated++;card.append(el('p','fine-print','위치 등록 준비 중 · 목록에서 정보 확인 가능'))}list.append(card);
++  else{unlocated++;card.append(el('p','fine-print','위치 등록 준비 중 · 목록에서 정보 확인 가능'))}card.append(engagementControls('SHOP',store.id,store.title));list.append(card);
+  }
+  if(unlocated)mapPanel.append(el('p','fine-print','좌표가 없는 '+unlocated+'개 업체는 목록에만 표시됩니다.'));
+  mapPanel.append(el('p','fine-print','업체가 직접 입력한 운영 상태입니다. 방문 전 확인해 주세요.'));
+--- before/src/main/resources/static/student-ux.js
++++ after/src/main/resources/static/student-ux.js
+@@ -1,11 +1,8 @@
+ (()=>{
+- let loadedKey=null,onlyLiked=false;function enhance(){const search=document.querySelector('#search');if(search&&!document.querySelector('#clear-search')){const b=document.createElement('button');b.id='clear-search';b.type='button';b.textContent='×';b.setAttribute('aria-label','검색어 전체 삭제');search.parentElement.append(b);const sync=()=>b.hidden=!search.value;search.addEventListener('input',sync);b.onclick=()=>{search.value='';search.dispatchEvent(new Event('input',{bubbles:true}));search.focus();sync();};sync();}
++ function enhance(){const search=document.querySelector('#search');if(search&&!document.querySelector('#clear-search')){const b=document.createElement('button');b.id='clear-search';b.type='button';b.textContent='×';b.setAttribute('aria-label','검색어 전체 삭제');search.parentElement.append(b);const sync=()=>b.hidden=!search.value;search.addEventListener('input',sync);b.onclick=()=>{search.value='';search.dispatchEvent(new Event('input',{bubbles:true}));search.focus();sync();};sync();}
+   if(search&&document.querySelector('#clear-search'))document.querySelector('#clear-search').hidden=!search.value;
+   document.querySelectorAll('.c-search input').forEach(input=>{if(input.dataset.clearReady)return;input.dataset.clearReady='1';const b=document.createElement('button');b.type='button';b.className='community-clear-search';b.textContent='×';b.setAttribute('aria-label','커뮤니티 검색어 전체 삭제');const sync=()=>b.hidden=!input.value;input.addEventListener('input',sync);b.onclick=()=>{input.value='';input.dispatchEvent(new Event('input',{bubbles:true}));input.form.requestSubmit();input.focus();sync();};input.after(b);sync();});
+-  if(typeof favorites!=='undefined'&&typeof actorKey==='function'){const key='campus-likes:'+String(actorKey()||'guest');if(loadedKey!==key){loadedKey=key;try{favorites.clear();JSON.parse(localStorage.getItem(key)||'[]').forEach(x=>favorites.add(Number(x)));if(typeof loaded!=='undefined'&&loaded)queueMicrotask(()=>render());}catch{}}const tools=document.querySelector('#market-tools');if(tools&&!document.querySelector('#liked-only')){const b=document.createElement('button');b.id='liked-only';b.type='button';b.onclick=()=>{onlyLiked=!onlyLiked;enhance()};tools.append(b);}const b=document.querySelector('#liked-only');if(b){const t='♡ 좋아요 모아보기 '+favorites.size;if(b.textContent!==t)b.textContent=t;b.setAttribute('aria-pressed',String(onlyLiked));}document.querySelectorAll('.product[data-product-id]').forEach(c=>c.hidden=onlyLiked&&!favorites.has(Number(c.dataset.productId)));}
+-  document.querySelectorAll('.favorite').forEach(b=>{b.title=b.getAttribute('aria-pressed')==='true'?'좋아요 취소':'좋아요';b.setAttribute('aria-label',b.getAttribute('aria-label').replace('찜','좋아요'));});
+   document.querySelectorAll('[data-site-link=student],#member-actions a,body>a').forEach(a=>{if(a.dataset.cute)return;const t=a.textContent;if(t.includes('사장센터')||t.includes('매니저센터')||t.includes('학생 사이트')){a.dataset.cute='1';a.title=t;a.setAttribute('aria-label',t);a.textContent=t.includes('학생')?'🎓 학생 페이지':'🏪 '+(t.includes('매니저')?'매니저센터':'사장센터');}});
+  }
+- document.addEventListener('click',e=>{if(e.target.closest('.favorite'))queueMicrotask(()=>{try{if(loadedKey)localStorage.setItem(loadedKey,JSON.stringify([...favorites]));}catch{}enhance();});});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{enhance();new MutationObserver(enhance).observe(document.body,{childList:true,subtree:true});});else{enhance();new MutationObserver(enhance).observe(document.body,{childList:true,subtree:true});}
+ })();
+--- before/src/main/resources/templates/market/index.html
++++ after/src/main/resources/templates/market/index.html
+@@ -5,4 +5,4 @@
+ <main><section class="hero"><div><span class="eyebrow">BACK TO CAMPUS · RE:START</span><h1>필요했던 그 물건,<br>같은 캠퍼스에 있어요.</h1><p>전공책부터 실습 준비물까지.<br>잘 쓰던 물건에 다음 학기를 선물하세요.</p><button id="hero-action">우리 학교 물건 둘러보기　↗</button></div><div class="hero-art" aria-hidden="true"><span class="orbit"></span><span class="sticker">NEW SEMESTER<br><b>새 주인을 찾아요!</b></span><div class="book b1">DESIGN<small>공간을 그리는 시간</small></div><div class="book b2">CAMPUS<small>작은 순환, 새로운 시작</small></div><div class="laptop"><div>re:use<span>다시 쓰는 우리의 캠퍼스</span></div></div><span class="spark">✳</span><span class="hero-label">GOOD THINGS, AGAIN.</span></div></section>
+ <section id="content" aria-label="서비스 콘텐츠"><div class="section-head"><div><span class="eyebrow" id="section-kicker">CAMPUS PICKS</span><h2 id="section-title">이번 학기, 가볍게 준비해요 ↗</h2><p id="section-sub">인하대학교 이웃들이 올린 물건을 만나보세요.</p></div><div class="section-actions"><button id="page-return" class="secondary" hidden>← 물건 둘러보기</button><button class="primary" id="write">＋ 판매하기</button></div></div><div class="controls"><div id="filters" class="filters" aria-label="카테고리"></div><select id="sort" aria-label="상품 정렬"><option value="latest">기본순</option><option value="low">낮은 가격순</option><option value="high">높은 가격순</option></select></div><div class="market-tools" id="market-tools"><label><input type="checkbox" id="discount-only"> 24시간 할인만 보기</label><span id="result-count"></span></div><details id="exposure-guide" class="exposure-guide"><summary>노출 순서 <b>최신 › 끌어올리기 › 판매 중(온도순) › 예약 중 › 거래 완료</b><span>안내 ⌄</span></summary><p>최신 등록·끌어올리기는 각각 24시간 동안 우선 노출해요. 끌어올리기는 게시글당 24시간에 한 번 사용할 수 있어요. 예약·완료 글은 아래 구간에 표시됩니다.</p></details><div id="results" aria-live="polite"></div></section>
+ <aside class="bottom-banner"><span>♻</span><div><b>교재는 다음 후배에게, 추억은 내 마음에.</b><p>캠퍼스 안에서 시작하는 작고 기분 좋은 순환</p></div><span>RE:MARKET ↗</span></aside></main>
+-<footer><b>campus re:market</b><a href="/preview/changes.html" target="_blank" rel="noopener">v14 변경사항 ↗</a><span>회원 로그인으로 이용하는 캠퍼스 마켓 · 실제 송금·정산은 지원하지 않습니다.</span></footer><dialog id="modal"><button class="close" aria-label="닫기">×</button><div id="modal-body"></div></dialog><div id="toast" role="status"></div><script src="/preview/session.js?v=20261102-login"></script><script src="/preview/features.js?v=14"></script><script src="/preview/manner-rating.js?v=14"></script><script src="/preview/app.js?v=20261102-community"></script><script src="/preview/integrations-live.js?v=14"></script><script src="/preview/shops.js?v=14"></script><script src="/preview/v14.js"></script><script src="/preview/trade-review-dialog.js?v=20261102"></script><script src="/preview/community.js?v=20261102-1"></script><link rel="stylesheet" href="/ux.css"><link rel="stylesheet" href="/vendor/leaflet.css"><script src="/vendor/leaflet.js"></script><script src="/location-ui.js"></script><script src="/student-ux.js"></script></body></html>
++<footer><b>campus re:market</b><a href="/preview/changes.html" target="_blank" rel="noopener">v14 변경사항 ↗</a><span>회원 로그인으로 이용하는 캠퍼스 마켓 · 실제 송금·정산은 지원하지 않습니다.</span></footer><dialog id="modal"><button class="close" aria-label="닫기">×</button><div id="modal-body"></div></dialog><div id="toast" role="status"></div><script src="/preview/session.js?v=20261102-login"></script><script src="/preview/features.js?v=14"></script><script src="/preview/manner-rating.js?v=14"></script><script src="/preview/app.js?v=20261102-community"></script><script src="/preview/integrations-live.js?v=14"></script><script src="/preview/shops.js?v=14"></script><script src="/preview/v14.js"></script><script src="/preview/trade-review-dialog.js?v=20261102"></script><script src="/preview/community.js?v=20261102-1"></script><link rel="stylesheet" href="/ux.css"><link rel="stylesheet" href="/vendor/leaflet.css"><script src="/vendor/leaflet.js"></script><script src="/location-ui.js"></script><script src="/student-ux.js"></script><link rel="stylesheet" href="/engagement.css?v=20261102-social"><script src="/engagement.js?v=20261102-social"></script></body></html>
+--- before/src/test/java/com/campus/remarket/EngagementIntegrationTests.java
++++ after/src/test/java/com/campus/remarket/EngagementIntegrationTests.java
+@@ -0,0 +1,82 @@
++package com.campus.remarket;
++
++import java.net.*;
++import java.net.http.*;
++import java.util.*;
++import java.util.concurrent.*;
++import org.junit.jupiter.api.Test;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.boot.test.context.SpringBootTest;
++import org.springframework.boot.test.web.server.LocalServerPort;
++import org.springframework.jdbc.core.JdbcTemplate;
++import tools.jackson.databind.JsonNode;
++import tools.jackson.databind.json.JsonMapper;
++import static org.junit.jupiter.api.Assertions.*;
++
++@SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT,properties={
++ "spring.datasource.url=jdbc:h2:mem:engagementtests;MODE=MySQL;DB_CLOSE_DELAY=-1",
++ "campus.notifications.initial-delay-ms=3600000"})
++class EngagementIntegrationTests {
++ @LocalServerPort int port;@Autowired JdbcTemplate db;
++ final JsonMapper json=JsonMapper.builder().build();
++ record User(HttpClient browser,String csrf){}
++ HttpClient browser(){return HttpClient.newBuilder().cookieHandler(new CookieManager()).build();}
++ JsonNode request(HttpClient client,String method,String path,String body,String token,int status)throws Exception{
++  var b=HttpRequest.newBuilder(URI.create("http://127.0.0.1:"+port+path));if(body!=null)b.header("Content-Type","application/json");if(token!=null)b.header("X-CSRF-Token",token);
++  var r=client.send(b.method(method,body==null?HttpRequest.BodyPublishers.noBody():HttpRequest.BodyPublishers.ofString(body)).build(),HttpResponse.BodyHandlers.ofString());assertEquals(status,r.statusCode(),r.body());return r.body().isBlank()?null:json.readTree(r.body());
++ }
++ User login(String id)throws Exception{
++  var c=browser();String school="null";if(id.equals("20261234"))for(var s:request(c,"GET","/api/members/schools",null,null,200))if(s.get("name").asText().equals("인하대학교"))school=s.get("id").asText();
++  request(c,"POST","/api/members/login","{\"schoolId\":"+school+",\"loginId\":\""+id+"\",\"password\":\"campus1234!\"}",null,200);
++  return new User(c,request(c,"GET","/api/engagement/session",null,null,200).get("csrfToken").asText());
++ }
++ long post(User user)throws Exception{return request(user.browser(),"POST","/api/boards","{\"categoryId\":6,\"title\":\"관심 테스트\",\"content\":\"내용\"}",user.csrf(),200).get("postId").asLong();}
++ JsonNode set(User u,String target,String kind,boolean active)throws Exception{return request(u.browser(),"PUT","/api/engagement/"+target.replace(':','/')+"/"+kind,"{\"active\":"+active+"}",u.csrf(),200);}
++ JsonNode state(User u,String target)throws Exception{return request(u.browser(),"GET","/api/engagement/state?targets="+target,null,null,200).get(0);}
++ @Test void anonymousCountsButPrivateWritesRequireLoginCsrfAndValidTargets()throws Exception{
++  var guest=browser();assertTrue(request(guest,"GET","/api/engagement/state?targets=SALE:1",null,null,200).get(0).get("available").asBoolean());
++  request(guest,"GET","/api/engagement/bookmarks",null,null,401);request(guest,"PUT","/api/engagement/SALE/1/like","{\"active\":true}",null,401);
++  var u=login("20261234");request(u.browser(),"PUT","/api/engagement/SALE/1/like","{\"active\":true}",null,403);
++  request(u.browser(),"PUT","/api/engagement/POST/999999/like","{\"active\":true}",u.csrf(),404);
++  request(u.browser(),"PUT","/api/engagement/SALE/1/like","{}",u.csrf(),400);
++  request(u.browser(),"GET","/api/engagement/state?targets=BAD:1",null,null,400);
++  request(u.browser(),"GET","/api/engagement/bookmarks?type=BAD",null,null,400);
++  request(u.browser(),"GET","/api/engagement/bookmarks?page=-1",null,null,400);
++ }
++ @Test void allFourContentTypesCountDistinctAccountsAndCancelIndependently()throws Exception{
++  var a=login("20261234");var b=login("owner1");long id=post(a);
++  long comment=request(a.browser(),"POST","/api/boards/"+id+"/comments","{\"content\":\"댓글 좋아요\"}",a.csrf(),200).get("commentId").asLong();
++  // Isolated content per test; restore shared fixture likes afterwards.
++  for(String key:List.of("POST:"+id,"COMMENT:"+comment,"SALE:2","SHOP:1")){
++   long before=state(a,key).get("likeCount").asLong();assertEquals(before+1,set(a,key,"like",true).get("likeCount").asLong());assertEquals(before+1,set(a,key,"like",true).get("likeCount").asLong());
++   assertEquals(before+2,set(b,key,"like",true).get("likeCount").asLong());var off=set(a,key,"like",false);assertEquals(before+1,off.get("likeCount").asLong());assertFalse(off.get("liked").asBoolean());assertTrue(state(b,key).get("liked").asBoolean());
++   set(b,key,"like",false);
++  }
++ }
++ @Test void bookmarksArePrivateDbBackedPaginatedAndIndependentOfLikes()throws Exception{
++  var a=login("20261234");var b=login("owner1");long id=post(a);String key="POST:"+id;
++  set(a,key,"like",true);set(a,key,"bookmark",true);set(a,key,"bookmark",true);
++  var fresh=login("20261234");assertTrue(state(fresh,key).get("bookmarked").asBoolean());
++  var mine=request(fresh.browser(),"GET","/api/engagement/bookmarks?type=POST",null,null,200);assertTrue(mine.get("total").asLong()>=1);boolean found=false;for(var item:mine.get("items"))if(item.get("id").asLong()==id)found=true;assertTrue(found);
++  var other=request(b.browser(),"GET","/api/engagement/bookmarks?type=POST",null,null,200);for(var item:other.get("items"))assertNotEquals(id,item.get("id").asLong());assertFalse(state(b,key).get("bookmarked").asBoolean());
++  assertEquals(24,mine.get("pageSize").asInt());set(a,key,"bookmark",false);assertFalse(state(a,key).get("bookmarked").asBoolean());assertTrue(state(a,key).get("liked").asBoolean());
++ }
++ @Test void concurrentDuplicateRequestsAndDatabaseConstraintAllowOnlyOneLike()throws Exception{
++  var u=login("20261234");long id=post(u);String key="POST:"+id;
++  try(var pool=Executors.newFixedThreadPool(6)){var calls=new ArrayList<Callable<JsonNode>>();for(int i=0;i<8;i++)calls.add(()->set(u,key,"like",true));for(var future:pool.invokeAll(calls))assertTrue(future.get().get("liked").asBoolean());}
++  assertEquals(1,state(u,key).get("likeCount").asInt());assertEquals(1,db.queryForObject("SELECT COUNT(*) FROM content_reactions WHERE target_type='POST' AND target_id=? AND kind='LIKE'",Integer.class,id));
++  Long member=db.queryForObject("SELECT id FROM member WHERE login_id='20261234'",Long.class);
++  assertThrows(org.springframework.dao.DataIntegrityViolationException.class,()->db.update("INSERT INTO content_reactions(member_id,target_type,target_id,kind) VALUES(?,'POST',?,'LIKE')",member,id));
++  assertEquals(0,set(u,key,"like",false).get("likeCount").asInt());assertEquals(0,set(u,key,"like",false).get("likeCount").asInt());
++ }
++ @Test void deletedAndUnpublishedContentDisappearsFromInterests()throws Exception{
++  var u=login("20261234");long id=post(u);String key="POST:"+id;set(u,key,"bookmark",true);
++  request(u.browser(),"DELETE","/api/boards/"+id,null,u.csrf(),200);assertFalse(state(u,key).get("available").asBoolean());
++  for(var item:request(u.browser(),"GET","/api/engagement/bookmarks?type=POST",null,null,200).get("items"))assertNotEquals(id,item.get("id").asLong());
++  assertFalse(set(u,key,"bookmark",false).get("available").asBoolean());
++  set(u,"SHOP:1","bookmark",true);db.update("UPDATE shops SET checked=FALSE WHERE shopId=1");try{
++   assertFalse(state(u,"SHOP:1").get("available").asBoolean());for(var item:request(u.browser(),"GET","/api/engagement/bookmarks?type=SHOP",null,null,200).get("items"))assertNotEquals(1,item.get("id").asLong());
++   request(u.browser(),"PUT","/api/engagement/SHOP/1/like","{\"active\":true}",u.csrf(),404);
++  }finally{db.update("UPDATE shops SET checked=TRUE WHERE shopId=1");set(u,"SHOP:1","bookmark",false);}
++ }
++}
+--- before/src/test/java/com/campus/remarket/MemberIntegrationTests.java
++++ after/src/test/java/com/campus/remarket/MemberIntegrationTests.java
+@@ -269,6 +269,26 @@
+         }finally{provider.stop(0);}
+     }
+ 
++    @Test void failedNotificationCanRetryWithoutResendingAcceptedDeliveries()throws Exception{
++        var seller=student("20267707");var buyer=student("20267708");reserve(buyer,sale(seller).get("selno").asLong());
++        String id=data(call(seller,"GET","/api/notifications",null,200)).get(0).get("id").asText();notificationDispatcher.dispatch();
++        var fail=new java.util.concurrent.atomic.AtomicBoolean(true);var requests=new java.util.concurrent.atomic.AtomicInteger();
++        var provider=com.sun.net.httpserver.HttpServer.create(new java.net.InetSocketAddress("127.0.0.1",0),0);
++        provider.createContext("/send",e->{requests.incrementAndGet();e.getRequestBody().readAllBytes();String body=fail.get()?"{\"groupInfo\":{\"groupId\":\"mock\"},\"failedMessageList\":[{\"message\":\"rejected\"}]}":"{\"groupInfo\":{\"groupId\":\"mock\"},\"failedMessageList\":[]}";byte[] bytes=body.getBytes(StandardCharsets.UTF_8);e.sendResponseHeaders(200,bytes.length);e.getResponseBody().write(bytes);e.close();});provider.start();
++        try{
++            var env=new org.springframework.mock.env.MockEnvironment().withProperty("campus.notifications.solapi-key","test-key").withProperty("campus.notifications.solapi-secret","test-secret").withProperty("campus.notifications.sms-from","0212345678").withProperty("campus.notifications.kakao-pf-id","test-channel").withProperty("campus.notifications.kakao-template-id","test-template").withProperty("campus.notifications.mail-from","sender@example.test").withProperty("campus.notifications.solapi-url","http://127.0.0.1:"+provider.getAddress().getPort()+"/send");
++            var sender=org.mockito.Mockito.mock(org.springframework.mail.javamail.JavaMailSender.class);org.mockito.Mockito.doThrow(new org.springframework.mail.MailSendException("mock failure")).when(sender).send(org.mockito.ArgumentMatchers.any(org.springframework.mail.SimpleMailMessage.class));
++            var beans=new org.springframework.beans.factory.support.StaticListableBeanFactory();beans.addBean("mail",sender);
++            var enabled=new com.campus.remarket.notification.NotificationService(jdbc,students,notificationMembers,true);
++            var worker=new com.campus.remarket.notification.NotificationDispatcher(jdbc,enabled,env,beans.getBeanProvider(org.springframework.mail.javamail.JavaMailSender.class),json);
++            call(buyer,"POST","/api/notifications/"+id+"/retry",null,404);call(seller,"POST","/api/notifications/"+id+"/retry",null,204);worker.dispatch();
++            assertEquals(3,jdbc.queryForObject("SELECT COUNT(*) FROM notification_deliveries WHERE notification_id=? AND status='FAILED'",Integer.class,id));
++            fail.set(false);org.mockito.Mockito.reset(sender);call(seller,"POST","/api/notifications/"+id+"/retry",null,204);worker.dispatch();
++            assertEquals(3,jdbc.queryForObject("SELECT COUNT(*) FROM notification_deliveries WHERE notification_id=? AND status='ACCEPTED'",Integer.class,id));
++            int sent=requests.get();call(seller,"POST","/api/notifications/"+id+"/retry",null,204);worker.dispatch();assertEquals(sent,requests.get());org.mockito.Mockito.verify(sender,org.mockito.Mockito.times(1)).send(org.mockito.ArgumentMatchers.any(org.springframework.mail.SimpleMailMessage.class));
++        }finally{provider.stop(0);}
++    }
++
+     HttpResponse<String> review(HttpClient client,String orderId,String csrf,String body,int expected)throws Exception{
+         var b=HttpRequest.newBuilder(URI.create("http://127.0.0.1:"+port+"/api/reviews")).header("Content-Type","application/json");if(csrf!=null)b.header("X-CSRF-Token",csrf);
+         var r=client.send(b.POST(HttpRequest.BodyPublishers.ofString(body)).build(),HttpResponse.BodyHandlers.ofString());assertEquals(expected,r.statusCode(),r.body());return r;

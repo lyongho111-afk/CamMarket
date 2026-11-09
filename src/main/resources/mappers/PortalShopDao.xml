@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campus.remarket.portal.PortalShopDao">
+  <select id="forOwner" resultMap="com.campus.remarket.dao.ShopDao.dto">SELECT * FROM shops WHERE owner_member_id=#{ownerId}</select>
+  <select id="lock" resultMap="com.campus.remarket.dao.ShopDao.dto">SELECT * FROM shops WHERE shopId=#{id} FOR UPDATE</select>
+  <insert id="create" parameterType="ShopDto" useGeneratedKeys="true" keyProperty="shopId">
+    INSERT INTO shops(school_id,owner_member_id,shopname,shopphone,address,latitude,longitude,busino,ceoname,busi_kind,bmenu,reservtime,busitime,offday,specialevent,sizeandtype,status,availablespace,checked)
+    VALUES(#{schoolId},#{ownerMemberId},#{shopname},#{shopphone},#{address},#{latitude},#{longitude},#{busino},#{ceoname},#{busiKind},#{bmenu},#{reservtime},#{busitime},#{offday},#{specialevent},#{sizeandtype},#{status},#{availablespace},FALSE)
+  </insert>
+  <update id="updateInfo">UPDATE shops SET version=version+1,shopname=#{shopname},shopphone=#{shopphone},address=#{address},latitude=#{latitude},longitude=#{longitude},busi_kind=#{busiKind},bmenu=#{bmenu},reservtime=#{reservtime},busitime=#{busitime},offday=#{offday},specialevent=#{specialevent},sizeandtype=#{sizeandtype},status=#{status},availablespace=#{availablespace} WHERE shopId=#{shopId} AND owner_member_id=#{ownerMemberId}</update>
+  <update id="updateOperations">UPDATE shops SET version=version+1,shopphone=#{shopphone},bmenu=#{bmenu},reservtime=#{reservtime},busitime=#{busitime},offday=#{offday},specialevent=#{specialevent},status=#{status},availablespace=#{availablespace} WHERE shopId=#{shopId} AND owner_member_id=#{ownerMemberId}</update>
+  <update id="updateStatus">UPDATE shops SET version=version+1,status=#{status} WHERE shopId=#{shopId} AND owner_member_id=#{ownerMemberId}</update>
+  <update id="approval">UPDATE shops SET version=version+1,checked=#{approved} WHERE shopId=#{id}</update>
+  <update id="assign">UPDATE shops SET version=version+1,school_id=COALESCE(school_id,(SELECT school_id FROM member WHERE id=#{ownerId})),owner_member_id=#{ownerId},ceoname=#{name},busino=#{businessNo} WHERE shopId=#{id}</update>
+  <select id="ratings" resultType="com.campus.remarket.dto.MannerRatingDto">SELECT * FROM manner_ratings ORDER BY created_at DESC,rating_id DESC</select>
+  <select id="reviews" resultType="com.campus.remarket.dto.TradeReviewDto">SELECT * FROM trade_reviews ORDER BY created_at DESC,review_id DESC</select>
+<update id="location">UPDATE shops SET address=#{address},latitude=#{lat},longitude=#{lng},version=version+1 WHERE shopId=#{id}</update>
+</mapper>

@@ -1,0 +1,136 @@
+-- 캠퍼스 리마켓 / 첨부 Excel 표 기준 / MySQL 8.0.16 이상
+-- 새 DB 초기화용입니다. 기존 운영 DB에 대한 자동 마이그레이션/삭제는 수행하지 않습니다.
+-- text(50) 등은 VARCHAR(50)으로, 비밀번호 필드는 해시 저장을 위해 VARCHAR(255)로 변환했습니다.
+
+-- 로그인/회원가입 공통 규격: 학번 문자열, 365 = 36.5도
+CREATE TABLE student (
+    unisno VARCHAR(50) PRIMARY KEY,
+    temp INT NOT NULL DEFAULT 365,
+    CONSTRAINT ck_student_temp CHECK(temp BETWEEN 0 AND 1000)
+);
+
+CREATE TABLE shops (
+    shopId INT AUTO_INCREMENT PRIMARY KEY,
+    shopname VARCHAR(50) NOT NULL,
+    shopphone VARCHAR(50),
+    busino VARCHAR(50),
+    ceoname VARCHAR(50),
+    ceoid VARCHAR(50),
+    ceopw VARCHAR(255), -- 비밀번호 원문이 아닌 해시
+    man1id VARCHAR(50), man1pw VARCHAR(255), man1name VARCHAR(50),
+    man2id VARCHAR(50), man2pw VARCHAR(255), man2name VARCHAR(50),
+    man3id VARCHAR(50), man3pw VARCHAR(255), man3name VARCHAR(50),
+    busi_kind VARCHAR(50),
+    bmenu VARCHAR(400),
+    reservtime VARCHAR(100),
+    busitime VARCHAR(20),
+    offday VARCHAR(20),
+    specialevent VARCHAR(50),
+    sizeandtype VARCHAR(200),
+    status VARCHAR(20) NOT NULL DEFAULT '영업종료',
+    availablespace VARCHAR(50),
+    checked BOOLEAN NOT NULL DEFAULT FALSE,
+    reputation VARCHAR(100),
+    CONSTRAINT ck_shop_status CHECK (status IN ('영업중','혼잡','영업종료','휴무'))
+);
+
+CREATE TABLE sales (
+    selno BIGINT AUTO_INCREMENT PRIMARY KEY,
+    seller VARCHAR(50) NOT NULL,
+    category VARCHAR(50) NOT NULL,
+    name VARCHAR(150) NOT NULL,
+    oprice INT NOT NULL, -- 표시가 / 할인 전 가격
+    buyprice INT, -- 판매자가 구입했던 가격 (선택)
+    wishprice INT, -- 판매자의 희망 매가 (선택, 할인 계산 기준과 별도)
+    detail VARCHAR(1500),
+    discount INT NOT NULL DEFAULT 0, -- 할인율 %, 0이면 할인 없음
+    starttime TIMESTAMP,
+    endtime TIMESTAMP,
+    regtime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(20) NOT NULL DEFAULT '판매중',
+    photo1 VARCHAR(500), photo2 VARCHAR(500), photo3 VARCHAR(500),
+    location VARCHAR(80) NOT NULL DEFAULT '인하대학교',
+    icon VARCHAR(20) NOT NULL DEFAULT 'book',
+    seller_temperature DECIMAL(5,2) NOT NULL DEFAULT 36.50,
+    bumped_at TIMESTAMP,
+    CONSTRAINT ck_sale_price CHECK (oprice >= 0 AND (buyprice IS NULL OR buyprice >= 0) AND (wishprice IS NULL OR wishprice >= 0)),
+    CONSTRAINT ck_sale_discount CHECK (discount BETWEEN 0 AND 99),
+    CONSTRAINT ck_sale_status CHECK (status IN ('판매중','예약중','거래완료')),
+    CONSTRAINT ck_sale_discount_time CHECK (
+        (discount = 0 AND starttime IS NULL AND endtime IS NULL)
+        OR (discount BETWEEN 1 AND 99 AND starttime IS NOT NULL AND endtime IS NOT NULL
+            AND endtime = DATE_ADD(starttime, INTERVAL 24 HOUR))
+    ),
+    CONSTRAINT ck_sale_discount_amount CHECK (discount = 0 OR FLOOR(CAST(oprice AS DECIMAL(18,2)) * (100 - discount) / 100) >= 1)
+);
+CREATE INDEX ix_sales_status_regtime ON sales(status, regtime);
+CREATE INDEX ix_sales_status_bumped ON sales(status, bumped_at);
+CREATE INDEX ix_sales_seller ON sales(seller);
+
+CREATE TABLE board_categories (
+    category_id INT PRIMARY KEY,
+    category_name VARCHAR(30) NOT NULL UNIQUE
+);
+CREATE TABLE board_posts (
+    post_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    category_id INT NOT NULL,
+    writer VARCHAR(50) NOT NULL,
+    title VARCHAR(150) NOT NULL,
+    content TEXT NOT NULL,
+    regtime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_post_category FOREIGN KEY(category_id) REFERENCES board_categories(category_id)
+);
+CREATE INDEX ix_posts_category_time ON board_posts(category_id, regtime);
+
+-- 기존 화면의 약속 확정 가격을 판매글 가격과 분리해 보존할 테이블입니다.
+CREATE TABLE trade_orders (
+    order_id VARCHAR(64) PRIMARY KEY,
+    selno BIGINT NOT NULL,
+    buyer VARCHAR(50) NOT NULL,
+    agreed_price INT NOT NULL CHECK(agreed_price >= 0),
+    status VARCHAR(30) NOT NULL DEFAULT 'RESERVED',
+    meeting_place VARCHAR(150),
+    meeting_time TIMESTAMP,
+    latitude DECIMAL(10,7), longitude DECIMAL(10,7),
+    payment_key VARCHAR(300),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_order_sale FOREIGN KEY(selno) REFERENCES sales(selno),
+    CONSTRAINT ck_order_status CHECK(status IN ('RESERVED','PAYMENT_READY','WAITING_FOR_DEPOSIT','PAID','COMPLETED','거래완료','CANCELED')),
+    CONSTRAINT ck_order_coordinates CHECK ((latitude IS NULL AND longitude IS NULL) OR
+        (latitude IS NOT NULL AND longitude IS NOT NULL AND latitude BETWEEN -90 AND 90 AND longitude BETWEEN -180 AND 180))
+);
+CREATE INDEX ix_orders_sale ON trade_orders(selno);
+
+-- 거래당 각 당사자가 상대방을 한 번 평가합니다.
+CREATE TABLE manner_ratings (
+    rating_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    order_id VARCHAR(64) NOT NULL,
+    reviewer_unisno VARCHAR(50) NOT NULL,
+    recipient_unisno VARCHAR(50) NOT NULL,
+    feedback VARCHAR(10) NOT NULL,
+    delta INT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_rating_order FOREIGN KEY(order_id) REFERENCES trade_orders(order_id),
+    CONSTRAINT fk_rating_reviewer FOREIGN KEY(reviewer_unisno) REFERENCES student(unisno),
+    CONSTRAINT fk_rating_recipient FOREIGN KEY(recipient_unisno) REFERENCES student(unisno),
+    CONSTRAINT uq_rating_order_reviewer UNIQUE(order_id,reviewer_unisno),
+    CONSTRAINT ck_rating_feedback CHECK(feedback IN ('GOOD','BAD')),
+    CONSTRAINT ck_rating_self CHECK(reviewer_unisno <> recipient_unisno)
+);
+
+-- 실시간 할인 가격을 계산합니다. 만료 후 저장 값을 갱신하지 않아도 조회 가격은 복구됩니다.
+CREATE VIEW sale_listing AS
+SELECT s.selno,s.seller,s.category,s.name,s.oprice,s.buyprice,s.wishprice,s.detail,s.discount,s.starttime,s.endtime,s.regtime,s.status,s.photo1,s.photo2,s.photo3,s.location,s.icon,s.bumped_at,
+    COALESCE(CAST(st.temp AS DECIMAL(5,1))/10,s.seller_temperature) AS seller_temperature,
+    CAST(CASE WHEN status = '판매중' AND discount > 0 AND starttime <= CURRENT_TIMESTAMP AND endtime > CURRENT_TIMESTAMP
+        THEN FLOOR(CAST(oprice AS DECIMAL(18,2)) * (100 - discount) / 100) ELSE oprice END AS SIGNED) AS current_price,
+    CASE WHEN status = '거래완료' THEN 4 WHEN status = '예약중' THEN 3
+         WHEN regtime > DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -24 HOUR) THEN 0
+         WHEN bumped_at IS NOT NULL AND bumped_at > DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -24 HOUR) THEN 1
+         ELSE 2 END AS exposure_priority
+FROM sales s LEFT JOIN student st ON st.unisno=s.seller;
+
+-- 기존 Product.java / ProductMapper.java의 조회 컬럼을 유지하는 호환 VIEW입니다.
+CREATE VIEW products AS
+SELECT selno AS id, name AS title, current_price AS price, category, location, icon FROM sale_listing;
+

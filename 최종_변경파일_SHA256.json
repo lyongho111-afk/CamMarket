@@ -1,0 +1,387 @@
+{
+  "originalZip": "캠퍼스리마켓_최종수정본_전체변경내역포함_20261104.zip",
+  "originalZipSha256": "9aef535bb7a969537bbb0dd9b18eb55a8c902cf8f169c7625ad99d15890a4558",
+  "tests": 91,
+  "campusUiChecks": [
+    {
+      "school": "인천대학교",
+      "centerTile": true
+    },
+    {
+      "school": "청운대학교 인천캠퍼스",
+      "centerTile": true
+    },
+    {
+      "school": "인하대학교",
+      "centerTile": true
+    }
+  ],
+  "files": [
+    {
+      "file": "src/main/java/com/campus/remarket/auth/MarketMember.java",
+      "status": "수정",
+      "originalSha256": "e8a0868a3d274dd1cbb69e4c8da159abfbdeab6481aacaf003f779ab010e6e59",
+      "finalSha256": "aa52a0eaf5b5b962f47084366929329f09f2ad7e88b98dff2a8fbf58bee62a10"
+    },
+    {
+      "file": "src/main/java/com/campus/remarket/config/CampusShopSeed.java",
+      "status": "수정",
+      "originalSha256": "2a61255ac7349fe24c8ce5f4cf767746854f504309380f58d61a868d99b93274",
+      "finalSha256": "d94d97dbbaab3958059be82e15e6ecbfbc277734d1c4e6cc192f57a71fb49232"
+    },
+    {
+      "file": "src/main/java/com/campus/remarket/config/CatalogSeed.java",
+      "status": "추가",
+      "originalSha256": null,
+      "finalSha256": "6747b71a93bb223527bbec39ab0451a98b16e6f0eebab32fb3ad8a3a667ad3a2"
+    },
+    {
+      "file": "src/main/java/com/campus/remarket/config/DemoSellerSeed.java",
+      "status": "수정",
+      "originalSha256": "9534f91f38e98f3f8e10dbc268ae3d552aa37492c04d48238e893e19ec294904",
+      "finalSha256": "93565592a033a1ba025c0ecd1924444e4ffca8d72172e054e31d3e610561e82a"
+    },
+    {
+      "file": "src/main/java/com/campus/remarket/config/MemberPageConfig.java",
+      "status": "수정",
+      "originalSha256": "417e85d9b0469fa8b1f4aa2f91110b296f3419e8a0b627a1a00ce7896c165bb8",
+      "finalSha256": "dfc7d74828df7629a2e83fa482a3cbc8d99a60a3fadcf1c2046a279fece83cdc"
+    },
+    {
+      "file": "src/main/java/com/campus/remarket/controller/AccountPageController.java",
+      "status": "추가",
+      "originalSha256": null,
+      "finalSha256": "a0f2c92acd916f2468cd2c95245f7154441d8251a9db829a61d05221448f0d7f"
+    },
+    {
+      "file": "src/main/java/com/campus/remarket/controller/ApiErrorAdvice.java",
+      "status": "수정",
+      "originalSha256": "cf717a4165ecb1ebaec4d01f4574d22f645035a2b7e6be11df9da4d0e3b45658",
+      "finalSha256": "9edfcef4161c70d8bef91fb1ce00643903144cbd7dbaa548373827c28b3d6e60"
+    },
+    {
+      "file": "src/main/java/com/campus/remarket/controller/CatalogController.java",
+      "status": "추가",
+      "originalSha256": null,
+      "finalSha256": "da8d769334538189861811de4e7feae85fc67ce19c3e23bbb30beccea6988b92"
+    },
+    {
+      "file": "src/main/java/com/campus/remarket/controller/RatingSession.java",
+      "status": "수정",
+      "originalSha256": "c7da92f64386360f514cc44c55e19a65df1a5d836dc90df61708b20ad006bda6",
+      "finalSha256": "ca1b5f12c462bd3802c61afe2daeedd0393effc8162020b7d71f7c805317f75a"
+    },
+    {
+      "file": "src/main/java/com/campus/remarket/dto/BoardDto.java",
+      "status": "수정",
+      "originalSha256": "167b65c0088a2ff65c03620e4b08c8f757fa0487a051bbff00d837433157e9da",
+      "finalSha256": "cd383a667c4065c9039a111ee455dd6ef9450b4709963c9d4cdbb69ca5a7a1a1"
+    },
+    {
+      "file": "src/main/java/com/campus/remarket/dto/SalesDto.java",
+      "status": "수정",
+      "originalSha256": "6917ed6de396382ae502a7b2fd9336b650154ba223dcb05022b3e2d1e6ff0dd9",
+      "finalSha256": "ded9d9d75c316003063758f21fd48ff2ca611ea47f14b41d521d91eebb321113"
+    },
+    {
+      "file": "src/main/java/com/campus/remarket/dto/ShopDto.java",
+      "status": "수정",
+      "originalSha256": "e2643995512b9feaaf992ee80453efffedbcc8452a50ca1abd768d69514d7c50",
+      "finalSha256": "5adde9745f13cd10545bf69e809f7082a1540caf4bfa9941cb1e556587055b4e"
+    },
+    {
+      "file": "src/main/java/com/campus/remarket/dto/TradeDto.java",
+      "status": "수정",
+      "originalSha256": "a3be469ec9670e9e0f71abd61410c90c06d1791f259b339ca4be3d949cf206c8",
+      "finalSha256": "a9cde6bae7f9cbef34e06bd1db29b5939395b184331481b3d05cc81bc609c2a3"
+    },
+    {
+      "file": "src/main/java/com/campus/remarket/portal/StaffPortalService.java",
+      "status": "수정",
+      "originalSha256": "df0806ee69a82268aff0c2313264d7f8e0224735404cace8800f189b80d9dada",
+      "finalSha256": "18f1123194743cfad26d820f24fb6a8d5680e10ab4d4a32d3f9001d12f97624b"
+    },
+    {
+      "file": "src/main/java/com/campus/remarket/service/BoardService.java",
+      "status": "수정",
+      "originalSha256": "ea76740f9bb7af08d3a9ec41a4efd1645ded2ffc65e2046b0217d49de065f9c9",
+      "finalSha256": "f52e231e3fc3081344feeb3aad164481fe30e46565352b2c8f1b43c3158ec0b6"
+    },
+    {
+      "file": "src/main/java/com/campus/remarket/service/BusinessCategoryService.java",
+      "status": "추가",
+      "originalSha256": null,
+      "finalSha256": "820aa64e0c0e829c3de6dc88d104966839278e8deb9e243d638c88b6125d9689"
+    },
+    {
+      "file": "src/main/java/com/campus/remarket/service/CampusScope.java",
+      "status": "추가",
+      "originalSha256": null,
+      "finalSha256": "e229301c0a895dd2b3264fd8103c514f3dfb8be2c10ee4b9b1b032c348c95b1c"
+    },
+    {
+      "file": "src/main/java/com/campus/remarket/service/EngagementService.java",
+      "status": "수정",
+      "originalSha256": "713ff84b8888ffa4057cded4f5ea66e8f152bd3c0fea7deb50b87ed603a9951c",
+      "finalSha256": "542de8e907a7681e0caae6cd05be0e6051e29bf88eb6522c558581a0b4a1997b"
+    },
+    {
+      "file": "src/main/java/com/campus/remarket/service/OwnerShopLink.java",
+      "status": "수정",
+      "originalSha256": "86b7dc3d46b97e8365b9cc11df43c8aef7b4e557192f2679a362d4fba4f1680e",
+      "finalSha256": "6140e36d92e889b0eefd76a6c5e4fae22c4bfdf76bea8d4387d1b6e46010da09"
+    },
+    {
+      "file": "src/main/java/com/campus/remarket/service/SalesService.java",
+      "status": "수정",
+      "originalSha256": "4a891117a0ee5d0bc48360e1d931236c2e7b41a5dbb475a74d55c71821af9559",
+      "finalSha256": "81c60c69ed3353c909df3cf8a49f0d4d5020c95b87d542df0a61983eba0f93d5"
+    },
+    {
+      "file": "src/main/java/com/campus/remarket/service/SchoolCatalogService.java",
+      "status": "추가",
+      "originalSha256": null,
+      "finalSha256": "0ea37442a36ce5f1a2dd68afa82860d3f66ca1ca1aa15b927b3a3b444bde49e2"
+    },
+    {
+      "file": "src/main/java/com/campus/remarket/service/SchoolImages.java",
+      "status": "추가",
+      "originalSha256": null,
+      "finalSha256": "fc13b37c3eb7084b94cf9640086cbd56928b26e1db839d164614b62b39392b72"
+    },
+    {
+      "file": "src/main/java/com/campus/remarket/service/ShopService.java",
+      "status": "수정",
+      "originalSha256": "d08a6f2b7f8cc74f4791b81134d4345df1d427fe80f65457f2c3e8ba1dbe436b",
+      "finalSha256": "28a22ef7fe5bb4a48646edee6eeb0cab62bc070cae2a9534f8d2e6c376cca3d4"
+    },
+    {
+      "file": "src/main/java/com/campus/remarket/service/StudentMemberLink.java",
+      "status": "수정",
+      "originalSha256": "ab7d3c5a90ac7543abfc8f619e6d11077243d440cb1ccdfc5d2cf38b6c569b05",
+      "finalSha256": "5f11768b504f5eac8ac6195617a46b6e0f9d4812314f18ebca7296df2ff22f3f"
+    },
+    {
+      "file": "src/main/java/com/campus/remarket/service/TradeService.java",
+      "status": "수정",
+      "originalSha256": "4509e2bd9b0487917b2ab69f9397d61200c95543d231f82556e7ef3a245c761d",
+      "finalSha256": "1d96c72a13f81411b9ba842d67ddcc29442019720385c3ac4b7a901a4ce091dd"
+    },
+    {
+      "file": "src/main/java/demo/campus/campusremarketmember/member/config/MemberSeed.java",
+      "status": "수정",
+      "originalSha256": "7545ed549f29b36a1bae8c5a3c0326263d3dc05ba868cb284394550e4da02ae2",
+      "finalSha256": "52ed35cbbf5bb0c1cc8eec01258e1791097b3191a5e523b5ea59950abf85df25"
+    },
+    {
+      "file": "src/main/java/demo/campus/campusremarketmember/member/controller/MemberController.java",
+      "status": "수정",
+      "originalSha256": "fab72ee45e1e25d2c2c8663f49bdc32ee9d9a086e5f3ce744938864ae94351df",
+      "finalSha256": "b27c0606d6cd6f549535b61a6128a89a32d3847d2194da9d97402cf5ee9a4645"
+    },
+    {
+      "file": "src/main/java/demo/campus/campusremarketmember/member/dto/SchoolView.java",
+      "status": "수정",
+      "originalSha256": "ed5f031707915c8aa80013862f4be1142be8809a2fec36386631cb0d12d2a54c",
+      "finalSha256": "0c85628cc5720d2c3152c70d8cd3f6a205ac20f62618e6c3370d15aef876536b"
+    },
+    {
+      "file": "src/main/java/demo/campus/campusremarketmember/member/entity/School.java",
+      "status": "수정",
+      "originalSha256": "70174b4539a01cdbc64f267899534efd815c25c07c4869a6fcd5b9db05990a0a",
+      "finalSha256": "5159d0fc4ef16a3f0d5c48698127e1f0b6157af7276181077902182a2a33db34"
+    },
+    {
+      "file": "src/main/java/demo/campus/campusremarketmember/member/repository/SchoolRepository.java",
+      "status": "수정",
+      "originalSha256": "fee3fe4d8c2f429077c717a2de74601e1156ae2f1cdfbc75f20aff45e0797922",
+      "finalSha256": "c1975e55f3cc08ae24e4d13e5340f8b67af20f068a4e1de5881829f74b5d10c1"
+    },
+    {
+      "file": "src/main/java/demo/campus/campusremarketmember/member/service/MemberService.java",
+      "status": "수정",
+      "originalSha256": "b761072b393a4c9a74a756d61336b36405af386fae6db80abdecba0e7c592843",
+      "finalSha256": "b31d3a0289682d0b7885fd699f6649f4a7b3dd8ec6173a774856a1786ea44bde"
+    },
+    {
+      "file": "src/main/resources/campus-catalog-migration.sql",
+      "status": "추가",
+      "originalSha256": null,
+      "finalSha256": "c7a31931df31db3113f0496fff7f04461a6c1a74c26966370a8c60610ff302cf"
+    },
+    {
+      "file": "src/main/resources/mappers/BoardDao.xml",
+      "status": "수정",
+      "originalSha256": "21e97126cd4a304f509f0a173fd44ca61328ef8988683744c2dd79a429b6b95d",
+      "finalSha256": "a2fb466b9666325d7df4cf0d5f7a2da7e3e52238724a31b26bec0363222c4886"
+    },
+    {
+      "file": "src/main/resources/mappers/PortalShopDao.xml",
+      "status": "수정",
+      "originalSha256": "8be8a1577de7b7b03cdc521546e36a2fe3411cfe01a82554f206545871b8cca2",
+      "finalSha256": "bb66fcaed267605dd62fb94186b7a2a0074fc5c4266977d64802389c575bf475"
+    },
+    {
+      "file": "src/main/resources/mappers/SalesDao.xml",
+      "status": "수정",
+      "originalSha256": "30a7da777a1476f3ef0e39063f333e88c7a10131376230bea999e12a979d4b49",
+      "finalSha256": "302695f1c790977187c7b610366cad4bfd98f7b3684ecae172e46b28c9b20437"
+    },
+    {
+      "file": "src/main/resources/mappers/ShopDao.xml",
+      "status": "수정",
+      "originalSha256": "7be29b47693035654a49beb0ef951fe27ae4506e64979675c3a5cb9fd6b2b8b3",
+      "finalSha256": "276e6d0bfa516fb270d6f8af3f1dc4a2a386df22e3f9a5752cedc9f6bfcc3f3a"
+    },
+    {
+      "file": "src/main/resources/mappers/TradeDao.xml",
+      "status": "수정",
+      "originalSha256": "8828b84e596876413466c192393835f33d62556b09d3a1bd2603d31e14201dd5",
+      "finalSha256": "48c5bd2fdeb9d14edd894e6c4ddedf55d7cfcd32d1528a3aed92459c0da996df"
+    },
+    {
+      "file": "src/main/resources/portal-sites/admin/app.js",
+      "status": "수정",
+      "originalSha256": "9c86a74939958eb4215aab9e78c526345e1e8ad01360d0fef777d2b449d41bd1",
+      "finalSha256": "7c86147a9edec686cbd118c35d57ec2ec732fc188582d99bd8a242dc8df415d4"
+    },
+    {
+      "file": "src/main/resources/portal-sites/admin/catalog.js",
+      "status": "추가",
+      "originalSha256": null,
+      "finalSha256": "9176b01ed2605fc08040ac21b6ce2288b6cbfbf511fa1999d370610d9b35828b"
+    },
+    {
+      "file": "src/main/resources/portal-sites/admin/index.html",
+      "status": "수정",
+      "originalSha256": "5632697a65b9a665c62e0ed46502364aa5044670898ae869ec3f48865e863e74",
+      "finalSha256": "e2154ad15a7693258c8984f0111aebdbaaea52672f02797a0e73d952e02a30c9"
+    },
+    {
+      "file": "src/main/resources/portal-sites/owner/index.html",
+      "status": "수정",
+      "originalSha256": "0b7e2e89414df41f82cd96449e244ed37c4502577a93f11568324a4cd5c9f31f",
+      "finalSha256": "46a670c44db0faf65b70a6882853b150dcb14b3ce74dfd1712185922c561b06d"
+    },
+    {
+      "file": "src/main/resources/schema.sql",
+      "status": "수정",
+      "originalSha256": "d9e9ce037c7ca998f1d51cd94a26b10245faf152640f6f77d1a147d95b924cb6",
+      "finalSha256": "0c49e9134e5b9a007033dab7ab20c1e6684f07006f03f322f15d91f2b5ef1f68"
+    },
+    {
+      "file": "src/main/resources/static/account-settings.css",
+      "status": "추가",
+      "originalSha256": null,
+      "finalSha256": "ebff3f9193ee34041a9a31e8e32bf095ca11987bfe516ae76be5e2c03ac4bfb4"
+    },
+    {
+      "file": "src/main/resources/static/account-settings.js",
+      "status": "추가",
+      "originalSha256": null,
+      "finalSha256": "2ae3e1dd12afc0fe27d647539ce1f89fde36ee12ebf66a8f0c4b2bc846bd3cd2"
+    },
+    {
+      "file": "src/main/resources/static/account-ui.js",
+      "status": "수정",
+      "originalSha256": "f5c43cd73ffe31d33bc0799028e73e69e47fcf42accce6378a7b222f6a12d215",
+      "finalSha256": "7b2b5d8611d39d0f833fb2245ba564ce503c5c76268613d6d07c6cc09ae521bb"
+    },
+    {
+      "file": "src/main/resources/static/campus-ui.js",
+      "status": "추가",
+      "originalSha256": null,
+      "finalSha256": "3c85dd8afb3237789a1402d87ccb084b21bcdf0e99d44acd8842bedf076d7f32"
+    },
+    {
+      "file": "src/main/resources/static/catalog.css",
+      "status": "추가",
+      "originalSha256": null,
+      "finalSha256": "4879f3d1d16826df588e870e17f436016347cf056fee6067a9d5f2cd41750eb9"
+    },
+    {
+      "file": "src/main/resources/static/category-select.js",
+      "status": "추가",
+      "originalSha256": null,
+      "finalSha256": "2d08333c548731c6e1377a2371f8c787716d788947d87e62b54a65ece23aa66d"
+    },
+    {
+      "file": "src/main/resources/static/location-ui.js",
+      "status": "수정",
+      "originalSha256": "bf25b485d4f024b2a1676d7d23cc1548b04e7640dce69ee5be1be6eaebd69365",
+      "finalSha256": "5f14063ab1411af392fb1c0349c602ba4cf663eb314c79c1c65a7163a20b6da5"
+    },
+    {
+      "file": "src/main/resources/static/preview/app.js",
+      "status": "수정",
+      "originalSha256": "17b9103fe3a5d988b6d3cec1b23c367e0f871627c9a3868a37149300ef1cec83",
+      "finalSha256": "0ac5836b81dacc7d459eeff095322da94185208d7a67d4810155d94a32be695b"
+    },
+    {
+      "file": "src/main/resources/static/preview/community.js",
+      "status": "수정",
+      "originalSha256": "a10ac7c4855e797cb90e72163e74b038f29bca0e747386cc696ba1a95d138994",
+      "finalSha256": "981926c2393d73df309518f1c7dc329e366a8e3c3d982eeb04dd97f695f1b4cc"
+    },
+    {
+      "file": "src/main/resources/static/preview/index.html",
+      "status": "수정",
+      "originalSha256": "04e51d95267ecf7829cbb9af46cc253f29f861bbf1db8524cae4dbfdf72cbd71",
+      "finalSha256": "d0de68c20a435fd9ef6a449f8111cbebfb38a923e767d092b02c317573565c8d"
+    },
+    {
+      "file": "src/main/resources/static/preview/integrations-live.js",
+      "status": "수정",
+      "originalSha256": "2431a1a33a86bf79618e276477574f1170f37b9f2357dec9ec58f3c254314e5d",
+      "finalSha256": "63d7c9a71082d1a43cf04502ceff90cb4baadf3bbc697395d824201671d38b1f"
+    },
+    {
+      "file": "src/main/resources/static/preview/profile.js",
+      "status": "수정",
+      "originalSha256": "1536cc90f1ae374747c756b904acb4aa9044a25ee5dbe725fbd544d5d172a195",
+      "finalSha256": "749054f4c045e031722db0fd03ab455c23f0cbd03fce5dc04a9eeea875dd48fd"
+    },
+    {
+      "file": "src/main/resources/static/preview/session.js",
+      "status": "수정",
+      "originalSha256": "36903d3d6128f24e685c191d0919044ead499676ba0176a4d3a6eaab3529f1d7",
+      "finalSha256": "ac2a0f023356179914feab96a8146d23e50237f25b1393b3cf8fc91e87fa2062"
+    },
+    {
+      "file": "src/main/resources/static/preview/shops.js",
+      "status": "수정",
+      "originalSha256": "3c52aa568444e58c900b7fdeedc1797d355fcb208c3e26674e4865eea17d2c1a",
+      "finalSha256": "6d4e5623f6767dad758e840e85d73dd5f71b092d34927cf0feaf574e5b8eb749"
+    },
+    {
+      "file": "src/main/resources/templates/account/settings.html",
+      "status": "추가",
+      "originalSha256": null,
+      "finalSha256": "f43a998de5be854ca39a18a0792c6787a8c93ac0ac39ad9552328d1740960652"
+    },
+    {
+      "file": "src/main/resources/templates/market/index.html",
+      "status": "수정",
+      "originalSha256": "a14b1a779aea75bd8c07bb6d934adb62380db8882ab8cd912ee1a19004525406",
+      "finalSha256": "d83baa9bab017f7f2735344514a1d3f24a244298e7fc3a89447ff86951c1a40e"
+    },
+    {
+      "file": "src/test/java/com/campus/remarket/AdminCampusIntegrationTests.java",
+      "status": "추가",
+      "originalSha256": null,
+      "finalSha256": "2c2705ffe876c4207fd0217769b66d1b85e68b5c748bb0b44f82d35555c13ea1"
+    },
+    {
+      "file": "src/test/java/com/campus/remarket/MemberIntegrationTests.java",
+      "status": "수정",
+      "originalSha256": "c2de282fd008326efe0d0795e7c0fc27a2348df556ea97f297721f7bbdd1da62",
+      "finalSha256": "049779b329af80bdc12bcd473e3d773d7ea9356ac019302fd4ded2f478afb04d"
+    },
+    {
+      "file": "src/test/resources/fixtures/staff-shop.sql",
+      "status": "수정",
+      "originalSha256": "b5026f2cf448f4c20a1feb9b07ac6f019c971cdf1a3232f1a0aacc6e8d1a47ac",
+      "finalSha256": "92acc7380b643e5321d185f530065c06a36d7cdc9206dd6556aabe676d2ac97f"
+    }
+  ]
+}

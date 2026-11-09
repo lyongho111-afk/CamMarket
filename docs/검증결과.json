@@ -1,0 +1,14 @@
+{
+  "java": "25",
+  "spring_boot": "4.0.2",
+  "mybatis": "4.0.1",
+  "gradle": "9.3.0",
+  "build": "SUCCESS",
+  "service_tests": 9,
+  "service_failures": 0,
+  "http_checks": 27,
+  "http_failures": 0,
+  "windows_runtime_boot": "PASS",
+  "main_ui": "card_design_connected_to_mybatis",
+  "toss_live_approval": "NOT_TESTED_NO_ISSUED_TEST_KEYS"
+}

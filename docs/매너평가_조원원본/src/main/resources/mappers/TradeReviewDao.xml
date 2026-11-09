@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.campus.remarket.dao.TradeReviewDao">
+
+    <insert id="insert" parameterType="com.campus.remarket.dto.TradeReviewDto" useGeneratedKeys="true" keyProperty="reviewId">
+        INSERT INTO trade_reviews (order_id, reviewer_id, target_id, score, attitude, content, temperature_delta, created_at)
+        VALUES (#{orderId}, #{reviewerId}, #{targetId}, #{score}, #{attitude}, #{content}, #{temperatureDelta}, CURRENT_TIMESTAMP)
+    </insert>
+
+    <select id="countByOrderAndReviewer" resultType="int">
+        SELECT COUNT(*)
+        FROM trade_reviews
+        WHERE order_id = #{orderId} AND reviewer_id = #{reviewerId}
+    </select>
+
+    <select id="getStudentTemperature" resultType="java.lang.Integer">
+        SELECT temp
+        FROM student
+        WHERE unisno = #{userId}
+        LIMIT 1
+    </select>
+
+    <!-- 매너온도 증감 (0도 미만, 99도 초과 방지 Clamping 처리) -->
+    <update id="updateStudentTemperature">
+        UPDATE student
+        SET temp = CASE
+        WHEN temp + #{delta} &lt; 0 THEN 0
+        WHEN temp + #{delta} &gt; 990 THEN 990
+        ELSE temp + #{delta}
+        END
+        WHERE unisno = #{userId}
+    </update>
+
+    <select id="selectByTargetId" resultType="com.campus.remarket.dto.TradeReviewDto">
+        SELECT review_id, order_id, reviewer_id, target_id, score, attitude, content, temperature_delta, created_at
+        FROM trade_reviews
+        WHERE target_id = #{targetId}
+        ORDER BY created_at DESC
+    </select>
+
+</mapper>

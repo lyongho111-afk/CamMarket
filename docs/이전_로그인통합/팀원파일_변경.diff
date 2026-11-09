@@ -1,0 +1,11 @@
+--- member-original/src/main/resources/static/member.js
++++ integrated/src/main/resources/static/member.js
+@@ -59,7 +59,7 @@
+       });
+       toast(`${me.name}님, 반가워요!`);
+       const next = me.role === 'OWNER' ? 'manager.html'   // 사장 → 매니저 관리 화면
+-                 : '/api/members/me';                     // 연습용: 내 정보 확인 (통합본에선 '/')
++                 : '/';                     // 연습용: 내 정보 확인 (통합본에선 '/')
+       setTimeout(() => location.href = next, 700);
+     } catch (err) { toast(err.message); b.disabled = false; }
+   };

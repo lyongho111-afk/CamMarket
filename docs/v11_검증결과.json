@@ -1,0 +1,58 @@
+{
+  "date": "2026-10-30",
+  "tests": [
+    {
+      "name": "com.campus.remarket.MannerRatingTests",
+      "tests": "8",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-10-30T02:10:57.620Z",
+      "hostname": "DESKTOP-5NRA95L",
+      "time": "8.395"
+    },
+    {
+      "name": "com.campus.remarket.MemberIntegrationTests",
+      "tests": "7",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-10-30T02:11:06.022Z",
+      "hostname": "DESKTOP-5NRA95L",
+      "time": "6.577"
+    },
+    {
+      "name": "com.campus.remarket.MyBatisFlowTests",
+      "tests": "9",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-10-30T02:11:12.600Z",
+      "hostname": "DESKTOP-5NRA95L",
+      "time": "0.1"
+    },
+    {
+      "name": "com.campus.remarket.StaffPortalTests",
+      "tests": "6",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-10-30T02:11:12.701Z",
+      "hostname": "DESKTOP-5NRA95L",
+      "time": "2.516"
+    }
+  ],
+  "studentFrontendUnchanged": 36,
+  "jarSmoke": "PASS: three processes, independent sessions/logout, owner changes visible in shared student/admin data",
+  "browserQA": "PASS: two sign-ins/dashboards, owner operations save, admin member role filter, shop assignment and manager forms",
+  "externalPublication": {
+    "status": "PASS",
+    "urls": {
+      "admin": "https://numerous-markers-journalist-build.trycloudflare.com",
+      "owner": "https://closure-sentences-objectives-dressing.trycloudflare.com",
+      "student": "https://vice-rapidly-weeks-hydrocodone.trycloudflare.com"
+    },
+    "verification": "HTTPS pages and separate owner/admin role login"
+  },
+  "mobileDeviceQA": "not performed"
+}

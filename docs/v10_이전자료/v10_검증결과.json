@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-30",
+  "version": "v10",
+  "httpChecks": [
+    {
+      "check": "완료 거래 HTML 평가 폼 렌더링",
+      "passed": true
+    },
+    {
+      "check": "미완료 거래 HTML 평가 비활성",
+      "passed": true
+    },
+    {
+      "check": "세션 및 CSRF 발급",
+      "passed": true
+    },
+    {
+      "check": "토큰 없는 평가 차단",
+      "passed": true
+    },
+    {
+      "check": "평가 저장과 온도 갱신",
+      "passed": true
+    },
+    {
+      "check": "중복 HTTP 평가 차단",
+      "passed": true
+    },
+    {
+      "check": "상품 온도에 평가 반영",
+      "passed": true
+    },
+    {
+      "check": "메인 페이지 및 평가 스크립트 연결",
+      "passed": true
+    }
+  ],
+  "junit": [
+    {
+      "name": "com.campus.remarket.MannerRatingTests",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.campus.remarket.MyBatisFlowTests",
+      "tests": "9",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ],
+  "limitations": [
+    "실제 지도·토스 키 없음: 외부 API 테스트 미실행",
+    "실사용자 인증은 조원 연결 필요",
+    "HTTP 및 자동 테스트 검증, 브라우저 시각 검증 미실행"
+  ],
+  "javascriptChecks": {
+    "passed": true,
+    "cases": [
+      "COMPLETED 주문 카드 평가 활성",
+      "거래완료 주문 카드 평가 활성",
+      "RESERVED 주문 카드 평가 비활성",
+      "0도 값 보존",
+      "app.js/manner-rating.js/integrations-live.js 문법 검사"
+    ]
+  }
+}

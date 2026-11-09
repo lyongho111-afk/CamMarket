@@ -1,0 +1,8 @@
+(()=>{
+ function enhance(){const search=document.querySelector('#search');if(search&&!document.querySelector('#clear-search')){const b=document.createElement('button');b.id='clear-search';b.type='button';b.textContent='×';b.setAttribute('aria-label','검색어 전체 삭제');search.parentElement.append(b);const sync=()=>b.hidden=!search.value;search.addEventListener('input',sync);b.onclick=()=>{search.value='';search.dispatchEvent(new Event('input',{bubbles:true}));search.focus();sync();};sync();}
+  if(search&&document.querySelector('#clear-search'))document.querySelector('#clear-search').hidden=!search.value;
+  document.querySelectorAll('.c-search input').forEach(input=>{if(input.dataset.clearReady)return;input.dataset.clearReady='1';const b=document.createElement('button');b.type='button';b.className='community-clear-search';b.textContent='×';b.setAttribute('aria-label','커뮤니티 검색어 전체 삭제');const sync=()=>b.hidden=!input.value;input.addEventListener('input',sync);b.onclick=()=>{input.value='';input.dispatchEvent(new Event('input',{bubbles:true}));input.form.requestSubmit();input.focus();sync();};input.after(b);sync();});
+  document.querySelectorAll('[data-site-link=student],#member-actions a,body>a').forEach(a=>{if(a.dataset.cute)return;const t=a.textContent;if(t.includes('사장센터')||t.includes('매니저센터')||t.includes('학생 사이트')){a.dataset.cute='1';a.title=t;a.setAttribute('aria-label',t);a.textContent=t.includes('학생')?'🎓 학생 페이지':'🏪 '+(t.includes('매니저')?'매니저센터':'사장센터');}});
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{enhance();new MutationObserver(enhance).observe(document.body,{childList:true,subtree:true});});else{enhance();new MutationObserver(enhance).observe(document.body,{childList:true,subtree:true});}
+})();

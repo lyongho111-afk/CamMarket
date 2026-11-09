@@ -1,0 +1,56 @@
+[
+  {
+    "file": "src/main/java/com/campus/remarket/controller/ShopPhotoController.java",
+    "identicalToTeammate": true,
+    "originalSHA256": "b8329df5b51ab57226c7c339808534f9c51b6dd1c42f6e0d1570b5d38ffccf68",
+    "integratedSHA256": "b8329df5b51ab57226c7c339808534f9c51b6dd1c42f6e0d1570b5d38ffccf68"
+  },
+  {
+    "file": "src/main/java/com/campus/remarket/service/OwnerShopLink.java",
+    "identicalToTeammate": false,
+    "originalSHA256": "fe0fb5fc4e14db5732610536c88cb0b8d9ec54f41b057fa123ceeffc64af7112",
+    "integratedSHA256": "9db0d1d2f731ed31e296244478bac12ad6f9de3ce213a9d10aad3caa98752944"
+  },
+  {
+    "file": "src/main/java/demo/campus/campusremarketmember/member/controller/MemberController.java",
+    "identicalToTeammate": false,
+    "originalSHA256": "936f1280b6f04d25c46e5f2a787b7d34520799dc7bcc7581419197facd19dec8",
+    "integratedSHA256": "139030346574abc68a6b8e9ee7b1646521f89db9dd73456d334e472e84d30a6c"
+  },
+  {
+    "file": "src/main/java/demo/campus/campusremarketmember/member/dto/OwnerSignupDto.java",
+    "identicalToTeammate": true,
+    "originalSHA256": "948419912ccbaf72c14afb06953bf4602a3f4106fd85dfabdd5e64184c1d01f7",
+    "integratedSHA256": "948419912ccbaf72c14afb06953bf4602a3f4106fd85dfabdd5e64184c1d01f7"
+  },
+  {
+    "file": "src/main/java/demo/campus/campusremarketmember/member/entity/Member.java",
+    "identicalToTeammate": true,
+    "originalSHA256": "5e22e842963841c057ce47e8641fcdb87e606abd88988e297e3098c977511141",
+    "integratedSHA256": "5e22e842963841c057ce47e8641fcdb87e606abd88988e297e3098c977511141"
+  },
+  {
+    "file": "src/main/java/demo/campus/campusremarketmember/member/service/MemberService.java",
+    "identicalToTeammate": false,
+    "originalSHA256": "424f93525b9083abd96cd12a577da806aaeb5c16d9f6aa6a6e0d5ede5e6cb947",
+    "integratedSHA256": "6d26bf49fc08567ab1ccf59f37639bb9bb814c2270e120b2ab1268f006d81592"
+  },
+  {
+    "file": "src/main/resources/static/member.js",
+    "identicalToTeammate": true,
+    "originalSHA256": "59e3cf561a684417ec214dc0dbb3b3f1f9d37caf514e59794b2aaa8c5521aa68",
+    "integratedSHA256": "59e3cf561a684417ec214dc0dbb3b3f1f9d37caf514e59794b2aaa8c5521aa68"
+  },
+  {
+    "file": "src/main/resources/static/signup.html",
+    "identicalToTeammate": true,
+    "originalSHA256": "812cf090661215c3b1b4779feff486aa34049e583eafd27da287bdd0ac069b8a",
+    "integratedSHA256": "812cf090661215c3b1b4779feff486aa34049e583eafd27da287bdd0ac069b8a"
+  },
+  {
+    "file": "src/main/resources/static/style.css",
+    "identicalToTeammate": true,
+    "originalSHA256": "e9eff735ce2c5dab80469e70931ce205e4a35d089ed40a13deaf06f2f5a657c7",
+    "integratedSHA256": "e9eff735ce2c5dab80469e70931ce205e4a35d089ed40a13deaf06f2f5a657c7"
+  }
+]

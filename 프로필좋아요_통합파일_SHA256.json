@@ -1,0 +1,136 @@
+{
+  "original": "캠퍼스리마켓_최종수정본_좋아요통합.zip",
+  "original_sha256": "ff35f3c0043fa4e7551d687ce28a8139abf6e91561bbcd10622627e80d46e2c7",
+  "validation": {
+    "full_java_suite": {
+      "total": 81,
+      "failures": 0,
+      "errors": 0
+    },
+    "strengthened_profile_tests_rerun": {
+      "total": 2,
+      "failures": 0,
+      "errors": 0
+    },
+    "javascript_syntax_files": 4,
+    "existing_database_migration_applied_twice": true
+  },
+  "changes": [
+    {
+      "path": "campus-remarket/00_프로필_매너온도_통합안내.md",
+      "sha256": "25981b1a65ad5d5faaa8cf06cb68acb8433f726bb0b9a89a27ff8043c240f1a5"
+    },
+    {
+      "path": "campus-remarket/README.md",
+      "sha256": "a369b2aa4f17fb7a20ed7b9802ad754d1c5f80046be0f4215906480879bec170"
+    },
+    {
+      "path": "campus-remarket/app/campus-remarket.jar",
+      "sha256": "e2a858626a4eca254f355adc67fcce0bcbc749af37ab04a372b4f1b2b25732b4"
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/auth/MarketMember.java",
+      "sha256": "e8a0868a3d274dd1cbb69e4c8da159abfbdeab6481aacaf003f779ab010e6e59"
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/config/DemoSellerSeed.java",
+      "sha256": "582379ca6b63cfaa641b18fbd42ba841fa152137eda0b85c55f4b5b40192cd37"
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/controller/ApiErrorAdvice.java",
+      "sha256": "cf717a4165ecb1ebaec4d01f4574d22f645035a2b7e6be11df9da4d0e3b45658"
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/controller/MemberProfileApiController.java",
+      "sha256": "a5642d3416a99188d83e766f835b53e493bcba274b3ca2fbd57ce80bd79fc6f8"
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/controller/ProductApiController.java",
+      "sha256": "65735f72b478eeb91cbfebb13b24ef245143061f817ae643ae680fed4d74cc64"
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/controller/SalesController.java",
+      "sha256": "fa2971bf855312754b9f4d22823c1e7d8a489c4a45eb5186cdebee8ecdaa6a13"
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/dao/StudentDao.java",
+      "sha256": "81919dacf37b0feece1409885f5ab9973d758fe392dc9b7a348a95760bf1216e"
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/dto/SalesDto.java",
+      "sha256": "6917ed6de396382ae502a7b2fd9336b650154ba223dcb05022b3e2d1e6ff0dd9"
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/service/MannerRatingService.java",
+      "sha256": "c9584fc8b6d104191554ccffc5eab279c68714520779a2ab7bc25e8962517e06"
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/service/MemberProfileService.java",
+      "sha256": "1724bbb592cd19811a04e2f10d5bed7498c0d61f3fbe4dd963c40d6a73c4bd31"
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/service/SalesService.java",
+      "sha256": "4a891117a0ee5d0bc48360e1d931236c2e7b41a5dbb475a74d55c71821af9559"
+    },
+    {
+      "path": "campus-remarket/src/main/java/demo/campus/campusremarketmember/member/config/MemberSeed.java",
+      "sha256": "7545ed549f29b36a1bae8c5a3c0326263d3dc05ba868cb284394550e4da02ae2"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/data.sql",
+      "sha256": "74652ab828666688ddaa8df2662e68b7edf8e4d3819fd371bff647b1af4885bd"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/mappers/SalesDao.xml",
+      "sha256": "30a7da777a1476f3ef0e39063f333e88c7a10131376230bea999e12a979d4b49"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/mappers/StudentDao.xml",
+      "sha256": "3620de12d716f735dce022933d2194cb62bb17d8a622015489115647b498701c"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/profile-member-migration.sql",
+      "sha256": "baf1df08ca192c6950e15d03a3303b10b93c55321de3f294154c093a7aa1532e"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/schema.sql",
+      "sha256": "d9e9ce037c7ca998f1d51cd94a26b10245faf152640f6f77d1a147d95b924cb6"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/preview/app.js",
+      "sha256": "1ddafb929faa26417540a1010a21c662accbcf2ce80ae4acdcf7b4b0a19495bc"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/preview/features.js",
+      "sha256": "c30992a5b54c278ea5cf5e8df305da177c0276f942340b6ebc60cccbac8a3fdc"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/preview/index.html",
+      "sha256": "140be0091086ad9ded4c1925fb43d045dbb0141fa4b2cea02e5b0445d1cdbf12"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/preview/profile.css",
+      "sha256": "43a29bdb18f7ba77ae647a12522af6bcbbfafc7f8a63a324479bd6477107d6f0"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/preview/profile.js",
+      "sha256": "7130b473600003f0982b9141c5665de24f54166bfc4b22a636baa94eea13d6fe"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/preview/session.js",
+      "sha256": "36903d3d6128f24e685c191d0919044ead499676ba0176a4d3a6eaab3529f1d7"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/templates/market/index.html",
+      "sha256": "dd5c6f687b34f6fc665a4dce4a32542a65e248da2f75fc6cd57565eb369571fc"
+    },
+    {
+      "path": "campus-remarket/src/test/java/com/campus/remarket/MannerRatingTests.java",
+      "sha256": "22ab34f30b05e74ab5dc4a1db53aef6f8d3fb69b226547c1bf6ad79a751f47e8"
+    },
+    {
+      "path": "campus-remarket/src/test/java/com/campus/remarket/MemberProfileTests.java",
+      "sha256": "816391dd9b1e2c5c96f1b559a30668b0d5cfc615b1dbcd2929a21c9764f7ca31"
+    }
+  ]
+}

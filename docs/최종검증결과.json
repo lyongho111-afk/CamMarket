@@ -1,0 +1,191 @@
+{
+  "passed": true,
+  "counts": {
+    "members": 26,
+    "students": 12,
+    "shops": 5,
+    "pendingShops": 0,
+    "sales": 24,
+    "trades": 2,
+    "completed": 1,
+    "ratings": 0
+  },
+  "photos": [
+    {
+      "id": 48,
+      "path": "/preview/images/products/sellers/03_CHUNGWOON/B_20251232/04_chung_b_04.png",
+      "http": 200
+    },
+    {
+      "id": 47,
+      "path": "/preview/images/products/sellers/03_CHUNGWOON/B_20251232/03_chung_b_03.png",
+      "http": 200
+    },
+    {
+      "id": 46,
+      "path": "/preview/images/products/sellers/03_CHUNGWOON/B_20251232/02_chung_b_02.png",
+      "http": 200
+    },
+    {
+      "id": 45,
+      "path": "/preview/images/products/sellers/03_CHUNGWOON/B_20251232/01_chung_b_01.png",
+      "http": 200
+    },
+    {
+      "id": 44,
+      "path": "/preview/images/products/sellers/03_CHUNGWOON/A_20251231/04_chung_a_04.png",
+      "http": 200
+    },
+    {
+      "id": 43,
+      "path": "/preview/images/products/sellers/03_CHUNGWOON/A_20251231/03_chung_a_03.png",
+      "http": 200
+    },
+    {
+      "id": 42,
+      "path": "/preview/images/products/sellers/03_CHUNGWOON/A_20251231/02_chung_a_02.png",
+      "http": 200
+    },
+    {
+      "id": 41,
+      "path": "/preview/images/products/sellers/03_CHUNGWOON/A_20251231/01_chung_a_01.png",
+      "http": 200
+    },
+    {
+      "id": 40,
+      "path": "/preview/images/products/sellers/02_INU/B_20231232/04_inu_b_04.png",
+      "http": 200
+    },
+    {
+      "id": 39,
+      "path": "/preview/images/products/sellers/02_INU/B_20231232/03_inu_b_03.png",
+      "http": 200
+    },
+    {
+      "id": 38,
+      "path": "/preview/images/products/sellers/02_INU/B_20231232/02_inu_b_02.png",
+      "http": 200
+    },
+    {
+      "id": 37,
+      "path": "/preview/images/products/sellers/02_INU/B_20231232/01_inu_b_01.png",
+      "http": 200
+    },
+    {
+      "id": 36,
+      "path": "/preview/images/products/sellers/02_INU/A_20231231/04_inu_a_04.png",
+      "http": 200
+    },
+    {
+      "id": 35,
+      "path": "/preview/images/products/sellers/02_INU/A_20231231/03_inu_a_03.png",
+      "http": 200
+    },
+    {
+      "id": 34,
+      "path": "/preview/images/products/sellers/02_INU/A_20231231/02_inu_a_02.png",
+      "http": 200
+    },
+    {
+      "id": 33,
+      "path": "/preview/images/products/sellers/02_INU/A_20231231/01_inu_a_01.png",
+      "http": 200
+    },
+    {
+      "id": 8,
+      "path": "/preview/images/products/sellers/01_INHA/B_20261232/04_inha_b_04.png",
+      "http": 200
+    },
+    {
+      "id": 7,
+      "path": "/preview/images/products/sellers/01_INHA/B_20261232/03_inha_b_03.png",
+      "http": 200
+    },
+    {
+      "id": 6,
+      "path": "/preview/images/products/sellers/01_INHA/B_20261232/02_inha_b_02.png",
+      "http": 200
+    },
+    {
+      "id": 5,
+      "path": "/preview/images/products/sellers/01_INHA/B_20261232/01_inha_b_01.png",
+      "http": 200
+    },
+    {
+      "id": 4,
+      "path": "/preview/images/products/sellers/01_INHA/A_20261231/04_architecture_books.png",
+      "http": 200
+    },
+    {
+      "id": 3,
+      "path": "/preview/images/products/sellers/01_INHA/A_20261231/03_chef_uniform_L.png",
+      "http": 200
+    },
+    {
+      "id": 2,
+      "path": "/preview/images/products/sellers/01_INHA/A_20261231/02_drafting_pencils_rulers.png",
+      "http": 200
+    },
+    {
+      "id": 1,
+      "path": "/preview/images/products/sellers/01_INHA/A_20261231/01_ipad_air.png",
+      "http": 200
+    }
+  ],
+  "schools": [
+    {
+      "school": "INHA",
+      "count": 8,
+      "loginId": "20261234"
+    },
+    {
+      "school": "INU",
+      "count": 8,
+      "loginId": "20231234"
+    },
+    {
+      "school": "CHUNGWOON",
+      "count": 8,
+      "loginId": "20251235"
+    }
+  ],
+  "managers": [
+    {
+      "manager": "manager1",
+      "owner": "owner1",
+      "shopId": 66,
+      "shop": "포케품은초밥 인하대점"
+    },
+    {
+      "manager": "manager_italy",
+      "owner": "owner_italy",
+      "shopId": 33,
+      "shop": "이태리부대찌개 인하대역점"
+    },
+    {
+      "manager": "manager_gosu",
+      "owner": "owner_gosu",
+      "shopId": 34,
+      "shop": "고수찜닭 본점"
+    },
+    {
+      "manager": "manager_mala",
+      "owner": "owner_mala",
+      "shopId": 35,
+      "shop": "양궈푸마라탕 인하대점"
+    },
+    {
+      "manager": "manager_mengi",
+      "owner": "mengi",
+      "shopId": 65,
+      "shop": "멘지"
+    }
+  ],
+  "originalTradesPreserved": true,
+  "originalListingOwnershipPriceStatusPreserved": true,
+  "shopOwnershipAndStatusPreserved": true,
+  "guestProducts": 24,
+  "guestReactionsAvailable": 24,
+  "shopPhoto": 200,
+  "publicPages": 3
+}

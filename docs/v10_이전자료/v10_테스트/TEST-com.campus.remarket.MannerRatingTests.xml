@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.campus.remarket.MannerRatingTests" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-30T00:58:51.736Z" time="4.462">
+  <properties/>
+  <testcase name="participantsCanEachRateTheirCounterpartyOnce()" classname="com.campus.remarket.MannerRatingTests" time="0.863"/>
+  <testcase name="completingThroughTradeServiceActivatesRating()" classname="com.campus.remarket.MannerRatingTests" time="0.019"/>
+  <testcase name="studentIdPreservesLeadingZerosAndTemperatureDefaults()" classname="com.campus.remarket.MannerRatingTests" time="0.012"/>
+  <testcase name="realLoginModeUsesSessionIdentityAndRequiresCsrf()" classname="com.campus.remarket.MannerRatingTests" time="0.01"/>
+  <testcase name="serverRejectsPrematureOutsiderAndInvalidRatings()" classname="com.campus.remarket.MannerRatingTests" time="0.011"/>
+  <testcase name="temperatureBoundsAreRespected()" classname="com.campus.remarket.MannerRatingTests" time="0.012"/>
+  <testcase name="completedTradeRatesOnceAndUpdatesAllSellerCards()" classname="com.campus.remarket.MannerRatingTests" time="0.022"/>
+  <testcase name="koreanCompletionStatusAlsoActivatesRating()" classname="com.campus.remarket.MannerRatingTests" time="0.012"/>
+  <system-out/>
+  <system-err/>
+</testsuite>

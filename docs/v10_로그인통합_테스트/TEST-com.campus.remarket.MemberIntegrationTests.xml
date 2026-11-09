@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.campus.remarket.MemberIntegrationTests" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-30T01:22:32.218Z" hostname="DESKTOP-5NRA95L" time="5.517">
+  <properties/>
+  <testcase name="verifiedSignupAndDuplicateProtection()" classname="com.campus.remarket.MemberIntegrationTests" time="0.716"/>
+  <testcase name="concurrentDuplicateRatingStoresOnlyOneDelta()" classname="com.campus.remarket.MemberIntegrationTests" time="0.484"/>
+  <testcase name="signupPreservesLeadingZerosAndRejectsCrossSchoolIdentityCollisionAtomically()" classname="com.campus.remarket.MemberIntegrationTests" time="0.387"/>
+  <testcase name="loginSessionLogoutAndOriginalPages()" classname="com.campus.remarket.MemberIntegrationTests" time="0.461"/>
+  <testcase name="realStudentTradeRatingSupportsBothCompletionStatusesHtmlAndSessionCsrf()" classname="com.campus.remarket.MemberIntegrationTests" time="1.054"/>
+  <testcase name="managersAndAdminKeepOriginalPermissions()" classname="com.campus.remarket.MemberIntegrationTests" time="0.531"/>
+  <testcase name="marketIdentityOwnershipAndTradeFlow()" classname="com.campus.remarket.MemberIntegrationTests" time="0.608"/>
+  <system-out><![CDATA[2026-10-30T10:22:32.219+09:00  INFO 17052 --- [campus-remarket-mybatis] [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.campus.remarket.MemberIntegrationTests]: MemberIntegrationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-30T10:22:32.221+09:00  INFO 17052 --- [campus-remarket-mybatis] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.campus.remarket.CampusApplication for test class com.campus.remarket.MemberIntegrationTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.2)
+
+2026-10-30T10:22:32.269+09:00  INFO 17052 --- [campus-remarket-mybatis] [    Test worker] c.c.remarket.MemberIntegrationTests      : Starting MemberIntegrationTests using Java 25.0.4.1 with PID 17052 (started by tj-bu-705-07 in C:\Users\tj-bu-705-07\Documents\Codex\2026-10-30\build-gradle-idea\work\campus-remarket-v10-login)
+2026-10-30T10:22:32.269+09:00  INFO 17052 --- [campus-remarket-mybatis] [    Test worker] c.c.remarket.MemberIntegrationTests      : No active profile set, falling back to 1 default profile: "default"
+2026-10-30T10:22:32.502+09:00  INFO 17052 --- [campus-remarket-mybatis] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-30T10:22:32.527+09:00  INFO 17052 --- [campus-remarket-mybatis] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 22 ms. Found 3 JPA repository interfaces.
+2026-10-30T10:22:32.797+09:00  INFO 17052 --- [campus-remarket-mybatis] [    Test worker] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 0 (http)
+2026-10-30T10:22:32.817+09:00  INFO 17052 --- [campus-remarket-mybatis] [    Test worker] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-30T10:22:32.818+09:00  INFO 17052 --- [campus-remarket-mybatis] [    Test worker] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.15]
+2026-10-30T10:22:32.895+09:00  INFO 17052 --- [campus-remarket-mybatis] [    Test worker] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 624 ms
+2026-10-30T10:22:32.964+09:00  INFO 17052 --- [campus-remarket-mybatis] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2026-10-30T10:22:32.967+09:00  INFO 17052 --- [campus-remarket-mybatis] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection conn10: url=jdbc:h2:mem:memberintegration user=SA
+2026-10-30T10:22:32.967+09:00  INFO 17052 --- [campus-remarket-mybatis] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2026-10-30T10:22:33.011+09:00  INFO 17052 --- [campus-remarket-mybatis] [    Test worker] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-10-30T10:22:33.040+09:00  INFO 17052 --- [campus-remarket-mybatis] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-30T10:22:33.043+09:00  INFO 17052 --- [campus-remarket-mybatis] [    Test worker] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:memberintegration]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: MEMBERINTEGRATION/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-30T10:22:33.089+09:00  INFO 17052 --- [campus-remarket-mybatis] [    Test worker] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-30T10:22:33.096+09:00  INFO 17052 --- [campus-remarket-mybatis] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-30T10:22:33.349+09:00  INFO 17052 --- [campus-remarket-mybatis] [    Test worker] o.s.b.h.a.H2ConsoleAutoConfiguration     : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:memberintegration'
+2026-10-30T10:22:33.373+09:00  INFO 17052 --- [campus-remarket-mybatis] [    Test worker] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 54730 (http) with context path '/'
+2026-10-30T10:22:33.376+09:00  INFO 17052 --- [campus-remarket-mybatis] [    Test worker] c.c.remarket.MemberIntegrationTests      : Started MemberIntegrationTests in 1.149 seconds (process running for 9.86)
+2026-10-30T10:22:33.706+09:00  INFO 17052 --- [campus-remarket-mybatis] [1-auto-1-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-30T10:22:33.707+09:00  INFO 17052 --- [campus-remarket-mybatis] [1-auto-1-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-30T10:22:33.708+09:00  INFO 17052 --- [campus-remarket-mybatis] [1-auto-1-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-10-30T10:22:33.931+09:00  INFO 17052 --- [campus-remarket-mybatis] [1-auto-1-exec-1] d.c.c.member.service.MemberService       : [모의 메일] integration@inha.edu 인증번호: 143657
+2026-10-30T10:22:34.221+09:00  INFO 17052 --- [campus-remarket-mybatis] [-auto-1-exec-10] d.c.c.member.service.MemberService       : [모의 메일] s00202020@inha.edu 인증번호: 817245
+2026-10-30T10:22:34.408+09:00  INFO 17052 --- [campus-remarket-mybatis] [1-auto-1-exec-5] d.c.c.member.service.MemberService       : [모의 메일] s00303030@inha.edu 인증번호: 563715
+2026-10-30T10:22:34.705+09:00  INFO 17052 --- [campus-remarket-mybatis] [1-auto-1-exec-6] d.c.c.member.service.MemberService       : [모의 메일] s00123457@inha.edu 인증번호: 770785
+2026-10-30T10:22:34.982+09:00  INFO 17052 --- [campus-remarket-mybatis] [1-auto-1-exec-5] d.c.c.member.service.MemberService       : [모의 메일] collision@inu.ac.kr 인증번호: 096543
+2026-10-30T10:22:35.555+09:00  INFO 17052 --- [campus-remarket-mybatis] [-auto-1-exec-10] d.c.c.member.service.MemberService       : [모의 메일] s00102030@inha.edu 인증번호: 887938
+2026-10-30T10:22:35.736+09:00  INFO 17052 --- [campus-remarket-mybatis] [1-auto-1-exec-3] d.c.c.member.service.MemberService       : [모의 메일] s00908070@inha.edu 인증번호: 870639
+2026-10-30T10:22:35.916+09:00  INFO 17052 --- [campus-remarket-mybatis] [-auto-1-exec-10] d.c.c.member.service.MemberService       : [모의 메일] s00909090@inha.edu 인증번호: 652972
+2026-10-30T10:22:37.227+09:00  INFO 17052 --- [campus-remarket-mybatis] [1-auto-1-exec-9] d.c.c.member.service.MemberService       : [모의 메일] s20262222@inha.edu 인증번호: 279283
+2026-10-30T10:22:37.406+09:00  INFO 17052 --- [campus-remarket-mybatis] [1-auto-1-exec-1] d.c.c.member.service.MemberService       : [모의 메일] s20263333@inha.edu 인증번호: 559332
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

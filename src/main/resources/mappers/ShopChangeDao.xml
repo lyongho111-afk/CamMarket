@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campus.remarket.portal.ShopChangeDao">
+  <insert id="insert" parameterType="ShopChangeDto">
+    INSERT INTO shop_change_logs(shop_id,actor_member_id,actor_name,actor_role,field_key,field_label,before_value,after_value)
+    VALUES(#{shopId},#{actorMemberId},#{actorName},#{actorRole},#{fieldKey},#{fieldLabel},#{beforeValue},#{afterValue})
+  </insert>
+  <select id="forOwner" resultType="ShopChangeDto">
+    SELECT c.* FROM shop_change_logs c JOIN shops s ON s.shopId=c.shop_id
+    WHERE s.owner_member_id=#{ownerId} ORDER BY c.changed_at DESC,c.change_id DESC LIMIT 200
+  </select>
+</mapper>

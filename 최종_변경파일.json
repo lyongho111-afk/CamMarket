@@ -1,0 +1,151 @@
+{
+  "original": "캠퍼스리마켓_1-9번_최종본.zip",
+  "original_sha256": "4cb005dd284e51bbe4011afefc00a80b70c5b91efd5eee1f1222b5c4404ab5af",
+  "tests": {
+    "total": 79,
+    "failures": 0,
+    "errors": 0
+  },
+  "changes": [
+    {
+      "path": "campus-remarket/src/main/resources/application-local-demo.properties",
+      "sha256": "403434dc12df9329c5a782bc6506a2ecf8e1ae3e33b52a599a14613b62e9017f"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/schema.sql",
+      "sha256": "7fa28753e5294c02f5d4c35ffe078bfde1d37258af31fb0011423a253a54d9e2"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/selected-shops-migration.sql",
+      "sha256": "6e9db53af1215d7b7a1ebbfca14573f3a3cd1f6e77c97dc91e9114ee7bde1f93"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/local-demo/inbox.html",
+      "sha256": "4e493255ee8baba50bc619c175cb337a751c56e70c1cc028554223c4e9ab54c4"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/account-ui.js",
+      "sha256": "f5c43cd73ffe31d33bc0799028e73e69e47fcf42accce6378a7b222f6a12d215"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/engagement.css",
+      "sha256": "75e28ed030535d09007d4d4aabf3d702aff177980a51dc005764c6d86d0da685"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/engagement.js",
+      "sha256": "21ecf73dc622c4ba58d2ec755d1cd5249101bfb7e37cd62b2cf13198b5e80566"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/templates/market/index.html",
+      "sha256": "f53df6c69a57a8f1d5b2483f10c65387ff2b98c2a8895fbf2adad18bc8c2dd9a"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/preview/app.js",
+      "sha256": "ee8ea75837228cb86263e6ba6994220f1ea3bb561bb329634406f7bd4e3fc6ca"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/preview/features.js",
+      "sha256": "ad93aff66191835d34f91465c60acdd0c784bfbc4cab01025027a6a867212d5c"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/preview/index.html",
+      "sha256": "a720fbd20f3ace8e9e232e0cc381aa1b1bf1892ce435e365275628c1df9343cd"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/preview/shops.js",
+      "sha256": "e14f5108113f711204a598841ac295e6c8844631dc47fe4baaf51a7e27d4ef7a"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/portal-sites/owner/app.js",
+      "sha256": "9aa895fb4768f02347fa41e0cefb4f993161b531b58acc04a49a1ee0e6bebcf4"
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/config/CampusShopSeed.java",
+      "sha256": "2a61255ac7349fe24c8ce5f4cf767746854f504309380f58d61a868d99b93274"
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/config/LikeMigration.java",
+      "sha256": "49140f979c89194a279b37469909fde9f60f53ddc0ad66092a628cb6a8fcaddb"
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/config/LocalDemoMailConfig.java",
+      "sha256": "7666ca2c79e88d3f9da8cb48a040510a75471c587f4e79e3961a67e91719f798"
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/controller/AccountController.java",
+      "sha256": "66c5431f1a7d107eef989ceae01a4603ad2b93838e6eefac8ddc761a1e8dcfc9"
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/controller/EngagementController.java",
+      "sha256": "e4c003f3c1872f37e3155dc5f8ea887bfd157eb53d42536ecb8bbb9992c19e9a"
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/controller/LocalDemoInboxController.java",
+      "sha256": "b77fc9292fee1eb3abb34f1e947b56114936247878518dc66203a9875fd40cb9"
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/notification/NotificationDispatcher.java",
+      "sha256": "0f776a81d342b8f0cf36083f9134c32183489c9f35705b53e06404a07bcff1e6"
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/portal/PortalDemoSeed.java",
+      "sha256": "37a604cd544a9515a344b0e6ba29a102594f094549a51a60f82c810af88a0987"
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/portal/StaffPortalService.java",
+      "sha256": "df0806ee69a82268aff0c2313264d7f8e0224735404cace8800f189b80d9dada"
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/service/AccountService.java",
+      "sha256": "b940009101d1e0d30c08dc2a6d37c862a5c93c92e44bceb5106bcb37dcff33c6"
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/service/EngagementService.java",
+      "sha256": "713ff84b8888ffa4057cded4f5ea66e8f152bd3c0fea7deb50b87ed603a9951c"
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/service/OwnerShopLink.java",
+      "sha256": "86b7dc3d46b97e8365b9cc11df43c8aef7b4e557192f2679a362d4fba4f1680e"
+    },
+    {
+      "path": "campus-remarket/src/test/java/com/campus/remarket/EngagementIntegrationTests.java",
+      "sha256": "4ba54f05944a92c08f307d0ed76095cf7444d744d34a8e98877a360bf150400b"
+    },
+    {
+      "path": "campus-remarket/src/test/java/com/campus/remarket/LocalDemoTests.java",
+      "sha256": "3b16549471646c828fdd40f9bb8224374cc7f506a07069ec66670a133a068a89"
+    },
+    {
+      "path": "campus-remarket/src/test/java/com/campus/remarket/MemberIntegrationTests.java",
+      "sha256": "91a718151fa1ccf678b0a98fd98afc535b01d07947a25054fcad0bf078af9063"
+    },
+    {
+      "path": "campus-remarket/src/test/java/com/campus/remarket/MyBatisFlowTests.java",
+      "sha256": "898ce6e6312f116da7d7ac29e21faafd7a304ce109a3345b65893d28b9deda50"
+    },
+    {
+      "path": "campus-remarket/무료기능_테스트실행.cmd",
+      "sha256": "2d514d7e39332dfc43288b197ea5aeefe72ed7d95c7a28bcda37543320c405b5"
+    },
+    {
+      "path": "campus-remarket/00_무료기능_추가안내.md",
+      "sha256": "b63a261529a38d79cdee6deda45f70340a378e5eb7acb1bb0c689fa71b1577ee"
+    },
+    {
+      "path": "campus-remarket/00_최종수정내역_먼저읽기.md",
+      "sha256": "f739e8157bd36e2d6f4964453006ee9136cfe2bbbb83f400574beb7b727fe2f8"
+    },
+    {
+      "path": "campus-remarket/00_좋아요통합_변경사항.md",
+      "sha256": "de958b66667362b9f951f4b3757c8a0f9c3df92d2fbeccd23155df8133f74086"
+    },
+    {
+      "path": "campus-remarket/README.md",
+      "sha256": "d39fe7db63098d13f008406cf680a6ea7397cb6b594161968b9ea7054606acb5"
+    },
+    {
+      "path": "campus-remarket/app/campus-remarket.jar",
+      "sha256": "1261032bcbdd42cf0862ac7d3c0078a520e258136e4b4001a7d61d61e36a0494"
+    }
+  ]
+}

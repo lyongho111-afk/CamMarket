@@ -1,0 +1,158 @@
+[
+  {
+    "path": "src/main/java/demo/campus/campusremarketmember/member/config/MemberSeed.java",
+    "unchanged": true,
+    "originalSha256": "2cb8707a92154e0d203702801b1ee8103554afcd027f0f769a8d60ff1805413f",
+    "v11Sha256": "2cb8707a92154e0d203702801b1ee8103554afcd027f0f769a8d60ff1805413f"
+  },
+  {
+    "path": "src/main/java/demo/campus/campusremarketmember/member/config/PasswordConfig.java",
+    "unchanged": true,
+    "originalSha256": "85cb6ba0cdee71e7424c653cdfd602f3206e5498e8eb130098fa8fb03fa29528",
+    "v11Sha256": "85cb6ba0cdee71e7424c653cdfd602f3206e5498e8eb130098fa8fb03fa29528"
+  },
+  {
+    "path": "src/main/java/demo/campus/campusremarketmember/member/controller/MemberController.java",
+    "unchanged": false,
+    "originalSha256": "cb0690feac321984f57a333b9a8ad50baefcec9179166f7f154c973df9706caf",
+    "v11Sha256": "fc6d0b6f3d9474ccd57a4ae5d575c4ea80942d32c43d5454ceac5cab19ce41b9"
+  },
+  {
+    "path": "src/main/java/demo/campus/campusremarketmember/member/dto/EmailCodeDto.java",
+    "unchanged": true,
+    "originalSha256": "d768c1b235eba2788991ce5e8df355505cbc3140395313b9caaecb85a23fad66",
+    "v11Sha256": "d768c1b235eba2788991ce5e8df355505cbc3140395313b9caaecb85a23fad66"
+  },
+  {
+    "path": "src/main/java/demo/campus/campusremarketmember/member/dto/EmailVerifyDto.java",
+    "unchanged": true,
+    "originalSha256": "5161059a4652623d44debc8db11ec7ae764a21588d7e9ac97d0fbe5c6270bfc1",
+    "v11Sha256": "5161059a4652623d44debc8db11ec7ae764a21588d7e9ac97d0fbe5c6270bfc1"
+  },
+  {
+    "path": "src/main/java/demo/campus/campusremarketmember/member/dto/LoginDto.java",
+    "unchanged": true,
+    "originalSha256": "7c9f99eb510513e6a79bd29b4b06b00bcd7efd70debf1f50437581f3432104c9",
+    "v11Sha256": "7c9f99eb510513e6a79bd29b4b06b00bcd7efd70debf1f50437581f3432104c9"
+  },
+  {
+    "path": "src/main/java/demo/campus/campusremarketmember/member/dto/ManagerDto.java",
+    "unchanged": true,
+    "originalSha256": "adcf52f676ffda6dab30dba43433489595663a98b72ded27d984d3436f749177",
+    "v11Sha256": "adcf52f676ffda6dab30dba43433489595663a98b72ded27d984d3436f749177"
+  },
+  {
+    "path": "src/main/java/demo/campus/campusremarketmember/member/dto/MemberView.java",
+    "unchanged": true,
+    "originalSha256": "88c756a494457f1f078def7265042eb2651bf4b53c751ffb4e7286d07ec5f79a",
+    "v11Sha256": "88c756a494457f1f078def7265042eb2651bf4b53c751ffb4e7286d07ec5f79a"
+  },
+  {
+    "path": "src/main/java/demo/campus/campusremarketmember/member/dto/OwnerSignupDto.java",
+    "unchanged": true,
+    "originalSha256": "bf89fa0547415079d5f6c2c4bfdd10e078df165f86fb79e64f011e1e6be57631",
+    "v11Sha256": "bf89fa0547415079d5f6c2c4bfdd10e078df165f86fb79e64f011e1e6be57631"
+  },
+  {
+    "path": "src/main/java/demo/campus/campusremarketmember/member/dto/SchoolView.java",
+    "unchanged": true,
+    "originalSha256": "ed5f031707915c8aa80013862f4be1142be8809a2fec36386631cb0d12d2a54c",
+    "v11Sha256": "ed5f031707915c8aa80013862f4be1142be8809a2fec36386631cb0d12d2a54c"
+  },
+  {
+    "path": "src/main/java/demo/campus/campusremarketmember/member/dto/StudentSignupDto.java",
+    "unchanged": true,
+    "originalSha256": "db7c3dc6781aaf0c9450aa67183fcd4dd2edfc216acfb71d22e0d75a5968ba18",
+    "v11Sha256": "db7c3dc6781aaf0c9450aa67183fcd4dd2edfc216acfb71d22e0d75a5968ba18"
+  },
+  {
+    "path": "src/main/java/demo/campus/campusremarketmember/member/entity/EmailVerification.java",
+    "unchanged": true,
+    "originalSha256": "73294c3db5380c29c35342218180841215db7cfbd12cfb534b740420f3a62ce9",
+    "v11Sha256": "73294c3db5380c29c35342218180841215db7cfbd12cfb534b740420f3a62ce9"
+  },
+  {
+    "path": "src/main/java/demo/campus/campusremarketmember/member/entity/Member.java",
+    "unchanged": true,
+    "originalSha256": "c7a3d3bf2a4d13b6cfd61bdc7abeeedd63f6e4f341980abcee49226d5426faee",
+    "v11Sha256": "c7a3d3bf2a4d13b6cfd61bdc7abeeedd63f6e4f341980abcee49226d5426faee"
+  },
+  {
+    "path": "src/main/java/demo/campus/campusremarketmember/member/entity/Role.java",
+    "unchanged": true,
+    "originalSha256": "9ffce95ce16f693c5d5f69363c06b7b83ce8f7f85c4334fac8f8cc9e1d016657",
+    "v11Sha256": "9ffce95ce16f693c5d5f69363c06b7b83ce8f7f85c4334fac8f8cc9e1d016657"
+  },
+  {
+    "path": "src/main/java/demo/campus/campusremarketmember/member/entity/School.java",
+    "unchanged": true,
+    "originalSha256": "70174b4539a01cdbc64f267899534efd815c25c07c4869a6fcd5b9db05990a0a",
+    "v11Sha256": "70174b4539a01cdbc64f267899534efd815c25c07c4869a6fcd5b9db05990a0a"
+  },
+  {
+    "path": "src/main/java/demo/campus/campusremarketmember/member/entity/StudentStatus.java",
+    "unchanged": true,
+    "originalSha256": "b948f1281369d3085fc614cdf1920cfa1a0a9d61932d244bc3f841da5e7d9a00",
+    "v11Sha256": "b948f1281369d3085fc614cdf1920cfa1a0a9d61932d244bc3f841da5e7d9a00"
+  },
+  {
+    "path": "src/main/java/demo/campus/campusremarketmember/member/repository/EmailVerificationRepository.java",
+    "unchanged": true,
+    "originalSha256": "f61dd1f336f2797d3168cd4dd18531dda25840dfcab2cc1abb7f080d1adedcce",
+    "v11Sha256": "f61dd1f336f2797d3168cd4dd18531dda25840dfcab2cc1abb7f080d1adedcce"
+  },
+  {
+    "path": "src/main/java/demo/campus/campusremarketmember/member/repository/MemberRepository.java",
+    "unchanged": true,
+    "originalSha256": "068001a590761e5c12c70648931359f321017428b02294ec60a8dbddf84a06f8",
+    "v11Sha256": "068001a590761e5c12c70648931359f321017428b02294ec60a8dbddf84a06f8"
+  },
+  {
+    "path": "src/main/java/demo/campus/campusremarketmember/member/repository/SchoolRepository.java",
+    "unchanged": true,
+    "originalSha256": "fee3fe4d8c2f429077c717a2de74601e1156ae2f1cdfbc75f20aff45e0797922",
+    "v11Sha256": "fee3fe4d8c2f429077c717a2de74601e1156ae2f1cdfbc75f20aff45e0797922"
+  },
+  {
+    "path": "src/main/java/demo/campus/campusremarketmember/member/service/MemberService.java",
+    "unchanged": false,
+    "originalSha256": "6338b254aebd6101074a274050753e9e51856a22de4d5f47e13750be2ea4fcee",
+    "v11Sha256": "f3f5e60e631340bd9c135b3e2fe59bc7918cefdaab26695b4f9fabacb2fec1a4"
+  },
+  {
+    "path": "src/main/java/demo/campus/campusremarketmember/member/util/LoginSession.java",
+    "unchanged": true,
+    "originalSha256": "0fbc5822f2d3b0096395fbb614c5c1da70f55124220755b0187d6c69049f9faf",
+    "v11Sha256": "0fbc5822f2d3b0096395fbb614c5c1da70f55124220755b0187d6c69049f9faf"
+  },
+  {
+    "path": "src/main/resources/static/login.html",
+    "unchanged": true,
+    "originalSha256": "420fe93767bc2395ce019533e56020f4db9de23261c3733b7784a51538df7ad5",
+    "v11Sha256": "420fe93767bc2395ce019533e56020f4db9de23261c3733b7784a51538df7ad5"
+  },
+  {
+    "path": "src/main/resources/static/manager.html",
+    "unchanged": true,
+    "originalSha256": "c42111c7aca313c7cf595b9b9a67f2b3cf25f947f0a5a355fd0cde6410040b3d",
+    "v11Sha256": "c42111c7aca313c7cf595b9b9a67f2b3cf25f947f0a5a355fd0cde6410040b3d"
+  },
+  {
+    "path": "src/main/resources/static/member.js",
+    "unchanged": false,
+    "originalSha256": "6cc32b7dc58570b464059fbeeb7c72308daede1451b9425702f0b28fbb7d903d",
+    "v11Sha256": "bed5e20ce6ccf0fb0ee388873d9886b89d0a69233f059f1ba27d55a967d31a7c"
+  },
+  {
+    "path": "src/main/resources/static/signup.html",
+    "unchanged": true,
+    "originalSha256": "817a7543c0aa57217a9ffc00aaf7dee9734273db730881cff3f65f664720e3ba",
+    "v11Sha256": "817a7543c0aa57217a9ffc00aaf7dee9734273db730881cff3f65f664720e3ba"
+  },
+  {
+    "path": "src/main/resources/static/style.css",
+    "unchanged": true,
+    "originalSha256": "e9eff735ce2c5dab80469e70931ce205e4a35d089ed40a13deaf06f2f5a657c7",
+    "v11Sha256": "e9eff735ce2c5dab80469e70931ce205e4a35d089ed40a13deaf06f2f5a657c7"
+  }
+]

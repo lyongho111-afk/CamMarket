@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.campus.remarket.StaffPortalTests" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-30T03:12:26.001Z" hostname="DESKTOP-5NRA95L" time="4.356">
+  <properties/>
+  <testcase name="auditFailureRollsBackShopChangeInSameTransaction()" classname="com.campus.remarket.StaffPortalTests" time="0.36"/>
+  <testcase name="ownerAndAdminRolesAreSeparatedAndSensitiveFieldsAreOmitted()" classname="com.campus.remarket.StaffPortalTests" time="0.196"/>
+  <testcase name="managerCanUpdateOperationsButCannotEditShopIdentityOrCreateManagers()" classname="com.campus.remarket.StaffPortalTests" time="0.126"/>
+  <testcase name="shopFieldLimitsAreValidatedBeforeDatabaseWrites()" classname="com.campus.remarket.StaffPortalTests" time="0.181"/>
+  <testcase name="shopAssignmentCannotGrantStudentOrManagerOwnershipAndOldOwnerLosesAccess()" classname="com.campus.remarket.StaffPortalTests" time="0.46"/>
+  <testcase name="managerHistoryRetainsActorAfterDeletionAndOtherOwnersCannotReadIt()" classname="com.campus.remarket.StaffPortalTests" time="0.595"/>
+  <testcase name="historyRecordsRealChangesOnlyAndRejectsFailedEdits()" classname="com.campus.remarket.StaffPortalTests" time="0.199"/>
+  <testcase name="anonymousAndStudentCannotReadStaffData()" classname="com.campus.remarket.StaffPortalTests" time="0.106"/>
+  <testcase name="newShopRequiresAdminApprovalAndOwnerCannotApproveSelf()" classname="com.campus.remarket.StaffPortalTests" time="0.335"/>
+  <system-out><![CDATA[2026-10-30T12:12:26.002+09:00  INFO 25152 --- [campus-remarket-mybatis] [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.campus.remarket.StaffPortalTests]: StaffPortalTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-30T12:12:26.004+09:00  INFO 25152 --- [campus-remarket-mybatis] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.campus.remarket.CampusApplication for test class com.campus.remarket.StaffPortalTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.2)
+
+2026-10-30T12:12:26.041+09:00  INFO 25152 --- [campus-remarket-mybatis] [    Test worker] com.campus.remarket.StaffPortalTests     : Starting StaffPortalTests using Java 25.0.4.1 with PID 25152 (started by tj-bu-705-07 in C:\Users\tj-bu-705-07\Documents\Codex\2026-10-30\build-gradle-idea\work\campus-remarket-v12-history)
+2026-10-30T12:12:26.042+09:00  INFO 25152 --- [campus-remarket-mybatis] [    Test worker] com.campus.remarket.StaffPortalTests     : No active profile set, falling back to 1 default profile: "default"
+2026-10-30T12:12:27.194+09:00  INFO 25152 --- [campus-remarket-mybatis] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-30T12:12:27.202+09:00  INFO 25152 --- [campus-remarket-mybatis] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 5 ms. Found 3 JPA repository interfaces.
+2026-10-30T12:12:27.284+09:00  INFO 25152 --- [campus-remarket-mybatis] [    Test worker] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 0 (http)
+2026-10-30T12:12:27.286+09:00  INFO 25152 --- [campus-remarket-mybatis] [    Test worker] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-30T12:12:27.286+09:00  INFO 25152 --- [campus-remarket-mybatis] [    Test worker] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.15]
+2026-10-30T12:12:27.319+09:00  INFO 25152 --- [campus-remarket-mybatis] [    Test worker] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1275 ms
+2026-10-30T12:12:27.338+09:00  INFO 25152 --- [campus-remarket-mybatis] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Starting...
+2026-10-30T12:12:27.341+09:00  INFO 25152 --- [campus-remarket-mybatis] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Added connection conn20: url=jdbc:h2:mem:staffportal user=SA
+2026-10-30T12:12:27.341+09:00  INFO 25152 --- [campus-remarket-mybatis] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Start completed.
+2026-10-30T12:12:27.382+09:00  INFO 25152 --- [campus-remarket-mybatis] [    Test worker] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-10-30T12:12:27.423+09:00  INFO 25152 --- [campus-remarket-mybatis] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-30T12:12:27.427+09:00  INFO 25152 --- [campus-remarket-mybatis] [    Test worker] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:staffportal]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: STAFFPORTAL/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-30T12:12:27.471+09:00  INFO 25152 --- [campus-remarket-mybatis] [    Test worker] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-30T12:12:27.479+09:00  INFO 25152 --- [campus-remarket-mybatis] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-30T12:12:27.666+09:00  INFO 25152 --- [campus-remarket-mybatis] [    Test worker] o.s.b.h.a.H2ConsoleAutoConfiguration     : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:staffportal'
+2026-10-30T12:12:27.677+09:00  INFO 25152 --- [campus-remarket-mybatis] [    Test worker] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 56482 (http) with context path '/'
+2026-10-30T12:12:27.680+09:00  INFO 25152 --- [campus-remarket-mybatis] [    Test worker] com.campus.remarket.StaffPortalTests     : Started StaffPortalTests in 1.672 seconds (process running for 16.243)
+2026-10-30T12:12:27.797+09:00  INFO 25152 --- [campus-remarket-mybatis] [1-auto-2-exec-1] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-30T12:12:27.798+09:00  INFO 25152 --- [campus-remarket-mybatis] [1-auto-2-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-30T12:12:27.798+09:00  INFO 25152 --- [campus-remarket-mybatis] [1-auto-2-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+2026-10-30T12:12:28.118+09:00 ERROR 25152 --- [campus-remarket-mybatis] [1-auto-2-exec-5] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: org.springframework.dao.DataIntegrityViolationException: 
+### Error updating database.  Cause: org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException: Check constraint violation: "CK_HISTORY_TEST: "; SQL statement:
+INSERT INTO shop_change_logs(shop_id,actor_member_id,actor_name,actor_role,field_key,field_label,before_value,after_value)
+    VALUES(?,?,?,?,?,?,?,?) [23513-240]
+### The error may exist in file [C:\Users\tj-bu-705-07\Documents\Codex\2026-10-30\build-gradle-idea\work\campus-remarket-v12-history\build\resources\main\mappers\ShopChangeDao.xml]
+### The error may involve com.campus.remarket.portal.ShopChangeDao.insert-Inline
+### The error occurred while setting parameters
+### SQL: INSERT INTO shop_change_logs(shop_id,actor_member_id,actor_name,actor_role,field_key,field_label,before_value,after_value)     VALUES(?,?,?,?,?,?,?,?)
+### Cause: org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException: Check constraint violation: "CK_HISTORY_TEST: "; SQL statement:
+INSERT INTO shop_change_logs(shop_id,actor_member_id,actor_name,actor_role,field_key,field_label,before_value,after_value)
+    VALUES(?,?,?,?,?,?,?,?) [23513-240]
+; Check constraint violation: "CK_HISTORY_TEST: "; SQL statement:
+INSERT INTO shop_change_logs(shop_id,actor_member_id,actor_name,actor_role,field_key,field_label,before_value,after_value)
+    VALUES(?,?,?,?,?,?,?,?) [23513-240]] with root cause
+
+org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException: Check constraint violation: "CK_HISTORY_TEST: "; SQL statement:
+INSERT INTO shop_change_logs(shop_id,actor_member_id,actor_name,actor_role,field_key,field_label,before_value,after_value)
+    VALUES(?,?,?,?,?,?,?,?) [23513-240]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:520) ~[h2-2.4.240.jar:2.4.240]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489) ~[h2-2.4.240.jar:2.4.240]
+	at org.h2.message.DbException.get(DbException.java:223) ~[h2-2.4.240.jar:2.4.240]
+	at org.h2.message.DbException.get(DbException.java:199) ~[h2-2.4.240.jar:2.4.240]
+	at org.h2.constraint.ConstraintCheck.checkRow(ConstraintCheck.java:107) ~[h2-2.4.240.jar:2.4.240]
+	at org.h2.table.Table.fireConstraints(Table.java:1208) ~[h2-2.4.240.jar:2.4.240]
+	at org.h2.table.Table.fireBeforeRow(Table.java:1199) ~[h2-2.4.240.jar:2.4.240]
+	at org.h2.command.dml.Insert.insertRows(Insert.java:171) ~[h2-2.4.240.jar:2.4.240]
+	at org.h2.command.dml.Insert.update(Insert.java:135) ~[h2-2.4.240.jar:2.4.240]
+	at org.h2.command.dml.DataChangeStatement.update(DataChangeStatement.java:77) ~[h2-2.4.240.jar:2.4.240]
+	at org.h2.command.CommandContainer.update(CommandContainer.java:139) ~[h2-2.4.240.jar:2.4.240]
+	at org.h2.command.Command.executeUpdate(Command.java:306) ~[h2-2.4.240.jar:2.4.240]
+	at org.h2.command.Command.executeUpdate(Command.java:250) ~[h2-2.4.240.jar:2.4.240]
+	at org.h2.jdbc.JdbcPreparedStatement.execute(JdbcPreparedStatement.java:262) ~[h2-2.4.240.jar:2.4.240]
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.execute(ProxyPreparedStatement.java:44) ~[HikariCP-7.0.2.jar:na]
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.execute(HikariProxyPreparedStatement.java) ~[HikariCP-7.0.2.jar:na]
+	at org.apache.ibatis.executor.statement.PreparedStatementHandler.update(PreparedStatementHandler.java:48) ~[mybatis-3.5.19.jar:3.5.19]
+	at org.apache.ibatis.executor.statement.RoutingStatementHandler.update(RoutingStatementHandler.java:75) ~[mybatis-3.5.19.jar:3.5.19]
+	at org.apache.ibatis.executor.SimpleExecutor.doUpdate(SimpleExecutor.java:50) ~[mybatis-3.5.19.jar:3.5.19]
+	at org.apache.ibatis.executor.BaseExecutor.update(BaseExecutor.java:117) ~[mybatis-3.5.19.jar:3.5.19]
+	at org.apache.ibatis.executor.CachingExecutor.update(CachingExecutor.java:76) ~[mybatis-3.5.19.jar:3.5.19]
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.update(DefaultSqlSession.java:197) ~[mybatis-3.5.19.jar:3.5.19]
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.insert(DefaultSqlSession.java:184) ~[mybatis-3.5.19.jar:3.5.19]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[na:na]
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:348) ~[mybatis-spring-4.0.0.jar:4.0.0]
+	at jdk.proxy3/jdk.proxy3.$Proxy145.insert(Unknown Source) ~[na:na]
+	at org.mybatis.spring.SqlSessionTemplate.insert(SqlSessionTemplate.java:239) ~[mybatis-spring-4.0.0.jar:4.0.0]
+	at org.apache.ibatis.binding.MapperMethod.execute(MapperMethod.java:62) ~[mybatis-3.5.19.jar:3.5.19]
+	at org.apache.ibatis.binding.MapperProxy$PlainMethodInvoker.invoke(MapperProxy.java:141) ~[mybatis-3.5.19.jar:3.5.19]
+	at org.apache.ibatis.binding.MapperProxy.invoke(MapperProxy.java:86) ~[mybatis-3.5.19.jar:3.5.19]
+	at jdk.proxy3/jdk.proxy3.$Proxy168.insert(Unknown Source) ~[na:na]
+	at com.campus.remarket.portal.StaffPortalService.update(StaffPortalService.java:61) ~[main/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[na:na]
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359) ~[spring-aop-7.0.3.jar:7.0.3]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:190) ~[spring-aop-7.0.3.jar:7.0.3]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:158) ~[spring-aop-7.0.3.jar:7.0.3]
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:133) ~[spring-tx-7.0.3.jar:7.0.3]
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:371) ~[spring-tx-7.0.3.jar:7.0.3]
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:130) ~[spring-tx-7.0.3.jar:7.0.3]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179) ~[spring-aop-7.0.3.jar:7.0.3]
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:719) ~[spring-aop-7.0.3.jar:7.0.3]
+	at com.campus.remarket.portal.StaffPortalService$$SpringCGLIB$$0.update(<generated>) ~[main/:na]
+	at com.campus.remarket.portal.StaffPortalController.operations(StaffPortalController.java:12) ~[main/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:258) ~[spring-web-7.0.3.jar:7.0.3]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:190) ~[spring-web-7.0.3.jar:7.0.3]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117) ~[spring-webmvc-7.0.3.jar:7.0.3]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:934) ~[spring-webmvc-7.0.3.jar:7.0.3]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:853) ~[spring-webmvc-7.0.3.jar:7.0.3]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:86) ~[spring-webmvc-7.0.3.jar:7.0.3]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963) ~[spring-webmvc-7.0.3.jar:7.0.3]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866) ~[spring-webmvc-7.0.3.jar:7.0.3]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1003) ~[spring-webmvc-7.0.3.jar:7.0.3]
+	at org.springframework.web.servlet.FrameworkServlet.doPut(FrameworkServlet.java:914) ~[spring-webmvc-7.0.3.jar:7.0.3]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:656) ~[jakarta.servlet-api-6.1.0.jar:6.1.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874) ~[spring-webmvc-7.0.3.jar:7.0.3]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:723) ~[jakarta.servlet-api-6.1.0.jar:6.1.0]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128) ~[tomcat-embed-core-11.0.15.jar:11.0.15]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53) ~[tomcat-embed-websocket-11.0.15.jar:11.0.15]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.15.jar:11.0.15]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-7.0.3.jar:7.0.3]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.3.jar:7.0.3]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.15.jar:11.0.15]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-7.0.3.jar:7.0.3]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.3.jar:7.0.3]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.15.jar:11.0.15]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199) ~[spring-web-7.0.3.jar:7.0.3]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.3.jar:7.0.3]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.15.jar:11.0.15]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165) ~[tomcat-embed-core-11.0.15.jar:11.0.15]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77) ~[tomcat-embed-core-11.0.15.jar:11.0.15]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[tomcat-embed-core-11.0.15.jar:11.0.15]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113) ~[tomcat-embed-core-11.0.15.jar:11.0.15]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83) ~[tomcat-embed-core-11.0.15.jar:11.0.15]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72) ~[tomcat-embed-core-11.0.15.jar:11.0.15]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341) ~[tomcat-embed-core-11.0.15.jar:11.0.15]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397) ~[tomcat-embed-core-11.0.15.jar:11.0.15]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-11.0.15.jar:11.0.15]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903) ~[tomcat-embed-core-11.0.15.jar:11.0.15]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1778) ~[tomcat-embed-core-11.0.15.jar:11.0.15]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-11.0.15.jar:11.0.15]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946) ~[tomcat-embed-core-11.0.15.jar:11.0.15]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480) ~[tomcat-embed-core-11.0.15.jar:11.0.15]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57) ~[tomcat-embed-core-11.0.15.jar:11.0.15]
+	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
+
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

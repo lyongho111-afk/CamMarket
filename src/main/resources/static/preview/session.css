@@ -1,0 +1,4 @@
+.member-actions{display:flex;align-items:center;justify-content:flex-end;gap:12px;padding:9px max(32px,calc((100% - 1180px)/2 + 32px));font-size:13px;background:#f6f7f1;flex-wrap:wrap}
+.member-actions a{color:#365c48;text-decoration:none}.member-actions button{font:inherit;border:1px solid #bccbbd;border-radius:6px;padding:4px 10px;background:white;cursor:pointer}
+
+@media(max-width:800px){.member-actions{padding-inline:20px}}

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campus.remarket.dao.SalesDao">
+    <resultMap id="dto" type="SalesDto">
+        <id property="selno" column="selno"/>
+        <result property="schoolId" column="school_id"/>
+        <result property="seller" column="seller"/>
+        <result property="sellerMemberId" column="seller_member_id"/>
+        <result property="sellerName" column="seller_name"/>
+        <result property="sellerSchoolName" column="seller_school_name"/>
+        <result property="category" column="category"/>
+        <result property="name" column="name"/>
+        <result property="oprice" column="oprice"/>
+        <result property="buyprice" column="buyprice"/>
+        <result property="wishprice" column="wishprice"/>
+        <result property="detail" column="detail"/>
+        <result property="discount" column="discount"/>
+        <result property="starttime" column="starttime"/>
+        <result property="endtime" column="endtime"/>
+        <result property="regtime" column="regtime"/>
+        <result property="status" column="status"/>
+        <result property="photo1" column="photo1"/>
+        <result property="photo2" column="photo2"/>
+        <result property="photo3" column="photo3"/>
+        <result property="location" column="location"/>
+        <result property="icon" column="icon"/>
+        <result property="sellerTemperature" column="seller_temperature"/>
+        <result property="bumpedAt" column="bumped_at"/>
+        <result property="currentPrice" column="current_price"/>
+        <result property="exposurePriority" column="exposure_priority"/>
+    </resultMap>
+    <sql id="listing">SELECT l.*,m.name AS seller_name,sc.name AS seller_school_name FROM sale_listing l LEFT JOIN member m ON m.id=l.seller_member_id LEFT JOIN school sc ON sc.id=m.school_id</sql>
+    <select id="selectAll" resultMap="dto">
+        <include refid="listing"/> ORDER BY exposure_priority,
+            CASE WHEN exposure_priority=0 THEN regtime END DESC,
+            CASE WHEN exposure_priority=1 THEN bumped_at END DESC,
+            CASE WHEN exposure_priority=2 THEN seller_temperature END DESC,
+            regtime DESC, selno DESC
+    </select>
+    <select id="selectOne" resultMap="dto"><include refid="listing"/> WHERE l.selno=#{id}</select>
+    <insert id="insert" parameterType="SalesDto" useGeneratedKeys="true" keyProperty="selno">
+        INSERT INTO sales (school_id,seller,seller_member_id,category,name,oprice,buyprice,wishprice,detail,location,photo1,photo2,photo3,icon) VALUES (#{schoolId},#{seller},#{sellerMemberId},#{category},#{name},#{oprice},#{buyprice},#{wishprice},#{detail},#{location},#{photo1},#{photo2},#{photo3},#{icon})
+    </insert>
+    <update id="update" parameterType="SalesDto">
+        UPDATE sales SET category=#{category}, name=#{name}, oprice=#{oprice}, buyprice=#{buyprice}, wishprice=#{wishprice}, detail=#{detail}, location=#{location}, photo1=#{photo1}, photo2=#{photo2}, photo3=#{photo3} WHERE selno=#{selno}
+    </update>
+    <delete id="delete">DELETE FROM sales WHERE selno=#{id}</delete>
+
+    <update id="discountStart">
+        UPDATE sales SET discount=#{rate}, starttime=CURRENT_TIMESTAMP, endtime=DATEADD('HOUR',24,CURRENT_TIMESTAMP)
+        WHERE selno=#{selno} AND status='판매중' AND (discount=0 OR endtime &lt;= CURRENT_TIMESTAMP)
+    </update>
+    <update id="discountEnd">UPDATE sales SET discount=0,starttime=NULL,endtime=NULL WHERE selno=#{selno} AND status='판매중'</update>
+    <update id="bump">
+        UPDATE sales SET bumped_at=CURRENT_TIMESTAMP WHERE selno=#{selno} AND status='판매중'
+        AND (bumped_at IS NULL OR bumped_at &lt;= DATEADD('HOUR',-24,CURRENT_TIMESTAMP))
+    </update>
+    <update id="statusUpdate">UPDATE sales SET status=#{status} WHERE selno=#{selno}</update>
+    <select id="orderCount" resultType="int">SELECT COUNT(*) FROM trade_orders WHERE selno=#{selno}</select>
+    <select id="lockSale" resultType="long">SELECT selno FROM sales WHERE selno=#{selno} FOR UPDATE</select>
+</mapper>

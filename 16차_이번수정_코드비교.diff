@@ -1,0 +1,734 @@
+--- before/src/main/java/com/campus/remarket/config/AdditionalCampusShopsSeed.java
++++ after/src/main/java/com/campus/remarket/config/AdditionalCampusShopsSeed.java
+@@ -0,0 +1,76 @@
++package com.campus.remarket.config;
++
++import com.campus.remarket.dao.ShopDao;
++import com.campus.remarket.dto.ShopDto;
++import demo.campus.campusremarketmember.member.entity.Member;
++import demo.campus.campusremarketmember.member.repository.*;
++import java.math.BigDecimal;
++import org.springframework.beans.factory.annotation.Value;
++import org.springframework.boot.context.event.ApplicationReadyEvent;
++import org.springframework.context.event.EventListener;
++import org.springframework.core.annotation.Order;
++import org.springframework.core.io.ClassPathResource;
++import org.springframework.jdbc.core.JdbcTemplate;
++import org.springframework.security.crypto.password.PasswordEncoder;
++import org.springframework.stereotype.Component;
++import org.springframework.transaction.annotation.Transactional;
++import tools.jackson.databind.JsonNode;
++import tools.jackson.databind.json.JsonMapper;
++
++/** User-requested INU/Chungwoon catalog and separate demo owners. Never resets existing data. */
++@Component
++public class AdditionalCampusShopsSeed {
++    private static final String MARKER="additional-campus-shops-20261106-v1";
++    private final ShopDao shops;private final MemberRepository members;private final SchoolRepository schools;
++    private final JdbcTemplate db;private final PasswordEncoder passwords;private final boolean enabled;
++    public AdditionalCampusShopsSeed(ShopDao shops,MemberRepository members,SchoolRepository schools,JdbcTemplate db,PasswordEncoder passwords,
++        @Value("${campus.shops.seed-campus-20261106:${campus.demo-campus.enabled:false}}")boolean enabled){
++        this.shops=shops;this.members=members;this.schools=schools;this.db=db;this.passwords=passwords;this.enabled=enabled;
++    }
++    @EventListener(ApplicationReadyEvent.class) @Order(250) @Transactional
++    public void ready(){if(enabled)seed();}
++
++    @Transactional public void seed(){
++        if(db.queryForObject("SELECT COUNT(*) FROM catalog_meta WHERE name=?",Integer.class,MARKER)>0)return;
++        final JsonNode rows;
++        try(var in=new ClassPathResource("campus-shops-20261106.json").getInputStream()){rows=JsonMapper.builder().build().readTree(in);}
++        catch(Exception e){throw new IllegalStateException("추가 가게 목록을 읽을 수 없습니다.",e);}
++        for(var row:rows)add(row);
++        db.update("INSERT INTO catalog_meta(name) VALUES(?)",MARKER);
++    }
++    private void add(JsonNode row){
++        String code=text(row,"school"),login=text(row,"loginId"),name=text(row,"name");
++        var school=schools.findByCampusCode(code).orElseThrow(()->new IllegalStateException("서비스 학교를 찾을 수 없습니다: "+code));
++        String address=text(row,"address")+" "+text(row,"addressDetail");
++        var matches=shops.selectAll().stream().filter(s->name.equals(s.getShopname())&&address.equals(s.getAddress())).toList();
++        var owner=members.findByAccountKey("staff:"+login).orElse(null);
++        if(!matches.isEmpty()){
++            if(matches.size()!=1||owner==null||!school.getId().equals(matches.getFirst().getSchoolId())||!owner.getId().equals(matches.getFirst().getOwnerMemberId()))
++                throw new IllegalStateException("기존 가게의 소유권·학교를 임의로 변경하지 않습니다: "+name);
++            return;
++        }
++        if(owner!=null)throw new IllegalStateException("추가 사장 아이디가 기존 회원과 겹칩니다: "+login);
++        String kind=text(row,"category");
++        if(db.queryForObject("SELECT COUNT(*) FROM business_categories WHERE name=?",Integer.class,kind)!=1)
++            throw new IllegalStateException("기존 업종을 확인해 주세요: "+kind);
++        String label=code.equals("INU")?"인천대":"청운대";
++        // Synthetic identifiers and non-deliverable email; these are not the real business owners' accounts.
++        String businessNo="DEMO26-"+(code.equals("INU")?"I":"C")+login.substring(login.length()-2);
++        owner=Member.owner(login,passwords.encode("campus1234!"),label+" 시연사장 "+login.substring(login.length()-2),login+"@example.invalid",null,businessNo);
++        owner.chooseSchool(school);owner=members.saveAndFlush(owner);
++        BigDecimal latitude=new BigDecimal(text(row,"latitude")),longitude=new BigDecimal(text(row,"longitude"));
++        com.campus.remarket.service.AddressLocator.validate(latitude,longitude);
++        if(latitude.doubleValue()<37||latitude.doubleValue()>38||longitude.doubleValue()<126||longitude.doubleValue()>127)
++            throw new IllegalStateException("인천 지역 좌표를 확인해 주세요: "+name);
++        var s=new ShopDto();s.setSchoolId(school.getId());s.setOwnerMemberId(owner.getId());s.setShopname(name);
++        s.setShopphone(text(row,"phone"));s.setAddress(address);s.setLatitude(latitude);s.setLongitude(longitude);s.setPhoto(null);
++        s.setBusiKind(kind);s.setBmenu(text(row,"menu"));s.setBusitime(text(row,"hours"));s.setOffday(text(row,"offday"));
++        s.setSpecialevent(row.path("note").asText(""));s.setCeoname(owner.getName());s.setBusino(businessNo);
++        // Initial demo state only. Existing owner-center controls remain authoritative after registration.
++        s.setStatus("영업종료");shops.insert(s);
++        // Public reference catalog requested by the user; ordinary owner signups still need approval.
++        db.update("UPDATE shops SET checked=TRUE WHERE shopId=?",s.getShopId());
++        db.update("INSERT INTO notification_settings(member_id,email,phone,sms_enabled,email_enabled,kakao_enabled) VALUES(?,?,?,FALSE,FALSE,FALSE)",owner.getId(),owner.getEmail(),"");
++    }
++    private static String text(JsonNode row,String key){return row.path(key).asText("");}
++}
+--- before/src/main/resources/campus-shops-20261106.json
++++ after/src/main/resources/campus-shops-20261106.json
+@@ -0,0 +1,190 @@
++[
++  {
++    "school": "INU",
++    "loginId": "owner_inu01",
++    "name": "압록순대국 송도본점",
++    "category": "음식점",
++    "phone": "032-831-2226",
++    "address": "인천 연수구 테크노파크로111번길 12",
++    "addressDetail": "102호, 103호",
++    "hours": "월~토 10:00~23:00 (브레이크 15:00~17:00) · 라스트오더 22:00 / 일 10:30~21:00 · 라스트오더 20:00",
++    "offday": "없음",
++    "menu": "순대 · 순댓국 · 수육 · 보쌈",
++    "latitude": 37.3854600278176,
++    "longitude": 126.64359827785,
++    "matchedAddress": "인천 연수구 테크노파크로111번길 12",
++    "source": "Kakao Local address API",
++    "checkedDate": "2026-11-06"
++  },
++  {
++    "school": "INU",
++    "loginId": "owner_inu02",
++    "name": "지츠겐",
++    "category": "음식점",
++    "phone": "070-8633-0761",
++    "address": "인천 연수구 하모니로 144",
++    "addressDetail": "지웰푸르지오시티 A동 128호",
++    "hours": "평일 11:30~21:00 (브레이크 14:30~17:30)",
++    "offday": "토·일",
++    "menu": "돈까스 · 우동",
++    "latitude": 37.3840647142873,
++    "longitude": 126.643211374294,
++    "matchedAddress": "인천 연수구 하모니로 144",
++    "source": "Kakao Local address API",
++    "checkedDate": "2026-11-06"
++  },
++  {
++    "school": "INU",
++    "loginId": "owner_inu03",
++    "name": "오봉집 송도인천대입구역점",
++    "category": "음식점",
++    "phone": "032-832-5056",
++    "address": "인천 연수구 하모니로 158",
++    "addressDetail": "송도타임스페이스 C동 1층 120,121호",
++    "hours": "매일 11:00~22:00 (브레이크 15:00~17:00) · 라스트오더 21:15",
++    "offday": "없음",
++    "menu": "직화낙지 · 수육",
++    "latitude": 37.3832947004154,
++    "longitude": 126.64225604799,
++    "matchedAddress": "인천 연수구 하모니로 158",
++    "source": "Kakao Local address API",
++    "checkedDate": "2026-11-06"
++  },
++  {
++    "school": "INU",
++    "loginId": "owner_inu04",
++    "name": "목향 중식당",
++    "category": "중식",
++    "phone": "0507-1447-8012",
++    "address": "인천 연수구 하모니로178번길 6",
++    "addressDetail": "중앙타워 건물 2층 201~206호",
++    "hours": "매일 11:00~21:30 (브레이크 15:00~17:00) · 라스트오더 20:45",
++    "offday": "없음",
++    "menu": "딤섬 · 짜장 · 짬뽕 · 코스요리",
++    "latitude": 37.382340086168,
++    "longitude": 126.641368803184,
++    "matchedAddress": "인천 연수구 하모니로178번길 6",
++    "source": "Kakao Local address API",
++    "checkedDate": "2026-11-06"
++  },
++  {
++    "school": "INU",
++    "loginId": "owner_inu05",
++    "name": "나 그리고 너",
++    "category": "양식",
++    "phone": "0507-1334-7763",
++    "address": "인천 연수구 하모니로 144",
++    "addressDetail": "송도 지웰 푸르지오 1층 B동 106-107호",
++    "hours": "매일 11:00~21:30 (브레이크 15:30~17:00) · 라스트오더 20:45",
++    "offday": "없음",
++    "menu": "파스타 · 피자 · 스테이크",
++    "latitude": 37.3840647142873,
++    "longitude": 126.643211374294,
++    "matchedAddress": "인천 연수구 하모니로 144",
++    "source": "Kakao Local address API",
++    "checkedDate": "2026-11-06"
++  },
++  {
++    "school": "CHUNGWOON",
++    "loginId": "owner_chung01",
++    "name": "국수나무 인천도화점",
++    "category": "음식점",
++    "phone": "032-875-9494",
++    "address": "인천 미추홀구 숙골로87번길 14",
++    "addressDetail": "HS메디켈빌딩 102호",
++    "hours": "매일 11:00~21:00",
++    "offday": "없음",
++    "menu": "덮밥 · 돈가스 · 메밀소바 · 잔치국수",
++    "latitude": 37.4699179669497,
++    "longitude": 126.661994478397,
++    "matchedAddress": "인천 미추홀구 숙골로87번길 14",
++    "source": "Kakao Local address API",
++    "checkedDate": "2026-11-06"
++  },
++  {
++    "school": "CHUNGWOON",
++    "loginId": "owner_chung02",
++    "name": "정정아식당",
++    "category": "음식점",
++    "phone": "032-888-8874",
++    "address": "인천 미추홀구 숙골로95번길 13",
++    "addressDetail": "2층",
++    "hours": "매일 11:00~22:30 (정기휴무 매달 1·3번째 토요일)",
++    "offday": "매달 1·3번째 토요일",
++    "menu": "닭볶음탕 · 꼬막 · 도토리묵 · 코다리구이",
++    "note": "운영 여부 확인 필요 (2026-11-06)",
++    "latitude": 37.4702407087997,
++    "longitude": 126.661176958688,
++    "matchedAddress": "인천 미추홀구 숙골로95번길 13",
++    "source": "Kakao Local address API",
++    "checkedDate": "2026-11-06"
++  },
++  {
++    "school": "CHUNGWOON",
++    "loginId": "owner_chung03",
++    "name": "담솥 앨리웨이 인천점",
++    "category": "음식점",
++    "phone": "032-716-9255",
++    "address": "인천 미추홀구 숙골로88번길 12",
++    "addressDetail": "110동 3층 304~306호",
++    "hours": "매일 11:00~21:30 (브레이크 15:00~17:00) · 라스트오더 21:00",
++    "offday": "없음",
++    "menu": "가지솥밥 · 장어솥밥 · 스테이크솥밥",
++    "latitude": 37.4695305506994,
++    "longitude": 126.664593164043,
++    "matchedAddress": "인천 미추홀구 숙골로88번길 12",
++    "source": "Kakao Local address API",
++    "checkedDate": "2026-11-06"
++  },
++  {
++    "school": "CHUNGWOON",
++    "loginId": "owner_chung04",
++    "name": "히노아지 앨리웨이인천점",
++    "category": "음식점",
++    "phone": "070-7621-7459",
++    "address": "인천 미추홀구 숙골로88번길 12",
++    "addressDetail": "앨리웨이 110동 3층 14호",
++    "hours": "매일 11:00~21:00 (브레이크 15:30~17:00) · 라스트오더 20:00",
++    "offday": "없음",
++    "menu": "가츠동 · 탄탄멘 · 우동 · 마제소바 · 라멘",
++    "latitude": 37.4695305506994,
++    "longitude": 126.664593164043,
++    "matchedAddress": "인천 미추홀구 숙골로88번길 12",
++    "source": "Kakao Local address API",
++    "checkedDate": "2026-11-06"
++  },
++  {
++    "school": "CHUNGWOON",
++    "loginId": "owner_chung05",
++    "name": "백령면옥",
++    "category": "음식점",
++    "phone": "032-881-8489",
++    "address": "인천 미추홀구 숙골로87번길 5",
++    "addressDetail": "204동 1층 1-04,05,06",
++    "hours": "매일 11:00~21:00 (브레이크 15:30~16:30) · 라스트오더 20:30",
++    "offday": "화",
++    "menu": "냉면 · 빈대떡 · 만두 · 사골떡만둣국 · 칼국수",
++    "latitude": 37.4694616330478,
++    "longitude": 126.663265893925,
++    "matchedAddress": "인천 미추홀구 숙골로87번길 5",
++    "source": "Kakao Local address API",
++    "checkedDate": "2026-11-06"
++  },
++  {
++    "school": "CHUNGWOON",
++    "loginId": "owner_chung06",
++    "name": "시아우동",
++    "category": "음식점",
++    "phone": "",
++    "address": "인천 미추홀구 염전로202번길 48-35",
++    "addressDetail": "1층 102호",
++    "hours": "매일 11:00~20:00 (브레이크 14:40~17:00) · 토·일은 오후 3시까지 영업",
++    "offday": "없음",
++    "menu": "텐동 · 튀김우동 · 어묵우동 · 냉우동 · 김치우동",
++    "latitude": 37.4759306835528,
++    "longitude": 126.660873727764,
++    "matchedAddress": "인천 미추홀구 염전로202번길 48-35",
++    "source": "Kakao Local address API",
++    "checkedDate": "2026-11-06"
++  }
++]--- before/src/main/resources/static/preview/shops.js
++++ after/src/main/resources/static/preview/shops.js
+@@ -27,7 +27,8 @@
+    const marker=L.circleMarker(position,{radius:12,color:'#fff',weight:3,fillColor:shopStateColors[store.status]||'#73808b',fillOpacity:1}).addTo(map).bindPopup(box);
+    marker.bindTooltip(store.title+' · '+store.status,{direction:'top'});store._mapMarker=marker;
+   }
+-  map.setView(campusCenter(),16);
++  if(positions.length)map.fitBounds(L.latLngBounds([campusCenter(),...positions]),{padding:[28,28],maxZoom:16});
++  else map.setView(campusCenter(),16);
+   requestAnimationFrame(()=>{if(mapNode.isConnected)map.invalidateSize()});
+  }else mapNode.append(el('p','shops-empty','지도를 불러오지 못했습니다. 업체 목록에서 이용 정보를 확인해 주세요.'));
+  let unlocated=0;
+@@ -36,6 +37,7 @@
+   status.style.color=shopStateColors[store.status];status.style.background=(shopStateColors[store.status]||'#73808b')+'18';
+   info.append(el('strong','campus-store-name',store.title),el('span','campus-store-hours',store.hours||'영업시간 문의'));
+   open.append(shopPhoto(store),info,status);open.onclick=()=>shopDetail(store);card.append(open);
++  if(store.event?.startsWith('운영 여부 확인 필요'))card.append(el('p','campus-store-menu',store.event));
+   if(store.address)card.append(el('p','campus-store-menu',store.address));if(store.menu)card.append(el('p','campus-store-menu',store.menu));if(store.space)card.append(el('p','campus-store-space','여유 공간 · '+store.space));
+   const actions=el('div','campus-store-actions');
+   if(store.latitude!=null&&store.longitude!=null){const mapButton=actionButton('지도에서 보기',()=>{const m=store._mapMarker;if(registeredShopMap&&m){registeredShopMap.setView(m.getLatLng(),17);m.openPopup();mapNode.scrollIntoView({behavior:'smooth',block:'center'})}},false,'shop-map-button');const pin=document.createElementNS('http://www.w3.org/2000/svg','svg');pin.setAttribute('viewBox','0 0 24 24');pin.setAttribute('aria-hidden','true');pin.innerHTML='<path d="M20 10c0 6-8 11-8 11S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/>';mapButton.prepend(pin);actions.append(mapButton)}
+--- before/src/main/resources/static/preview/app.js
++++ after/src/main/resources/static/preview/app.js
+@@ -32,7 +32,7 @@
+ function postForm(p=null){return communityForm(p)}
+ function confirmAction(title,body,task,label='확인'){const root=modal(title,body),button=actionButton(label,async()=>{button.disabled=true;const ok=await perform(task,'처리했어요.');if(!ok)button.disabled=false});root.append(button)}
+ function postDetail(p){communityOpen(p.id)}
+-function shopDetail(s){const root=modal(s.title,s.category||'캠퍼스 가게');if(s.photo){const photo=el('img');photo.src='/api/shops/photo/'+encodeURIComponent(s.photo);photo.alt=s.title+' 상점 사진';photo.style.cssText='width:100%;max-height:240px;object-fit:cover;border-radius:12px';root.append(photo)}for(const [label,value]of [['주소',s.address],['운영 상태',s.status],['영업시간',s.hours],['메뉴',s.menu],['전화',s.phone],['휴무',s.offday],['이벤트',s.event],['여유 공간',s.space]])if(value)root.append(el('p','detail-description',label+' · '+value));root.append(engagementControls('SHOP',s.id,s.title))}
++function shopDetail(s){const root=modal(s.title,s.category||'캠퍼스 가게');if(s.photo){const photo=el('img');photo.src='/api/shops/photo/'+encodeURIComponent(s.photo);photo.alt=s.title+' 상점 사진';photo.style.cssText='width:100%;max-height:240px;object-fit:cover;border-radius:12px';root.append(photo)}for(const [label,value]of [['주소',s.address],['운영 상태',s.status],['영업시간',s.hours],['메뉴',s.menu],['전화',s.phone],['휴무',s.offday],[s.event?.startsWith('운영 여부 확인 필요')?'안내':'이벤트',s.event],['여유 공간',s.space]])if(value)root.append(el('p','detail-description',label+' · '+value));root.append(engagementControls('SHOP',s.id,s.title))}
+ function productDetail(id){const p=products.find(p=>p.id===id);if(!p)return;activeProductId=id;const root=modal(p.title,p.category+' · '+p.location);root.dataset.productId=id;const image=el('div','detail-art'),i=Math.max(0,categories.indexOf(p.category));image.style.background=palettes[i];renderProductPhoto(image,p);const like=engagementControls('SALE',p.id,p.title);like.classList.add('detail-like-controls');root.prepend(like,image);root.append(priceBlock(p),el('p','detail-description',p.body||'같은 캠퍼스 이웃과 가까운 곳에서 거래해요.'),sellerInformation(p),el('p','fine-print','등록 '+dateTime(p.createdAt)+(p.bumpedAt?' · 끌어올림 '+dateTime(p.bumpedAt):'')));if(p.agreedPrice!=null)root.append(el('p','locked-price','약속한 거래 가격 '+formatMoney(p.agreedPrice)+' 유지'));if(p.order?.meetingPlace)root.append(el('p','detail-description','📍 '+p.order.meetingPlace+(p.order.meetingTime?' · '+dateTime(timestamp(p.order.meetingTime)):'')));if(p.status==='sale'&&p.seller!==actorKey())root.append(actionButton('거래 약속 잡기',()=>appointmentDialog(p)));if(p.status!=='done')root.append(actionButton('거래 지도 · 결제 확인 →',()=>{$('#modal').close();tradeProductId=id;switchTab('integrations')}));else {root.append(el('p','locked-price','✓ 거래가 완료됐어요.'));if(p.order)renderTradeRating(root,p.order.orderId);}root.append(actionButton('내 판매글 관리',()=>{$('#modal').close();switchTab('mine')},false,'secondary wide'))}
+ function appointmentDialog(p){if(!requireStudentLogin())return;if(p.seller===actorKey())return toast('내 판매글에는 구매 예약을 할 수 없어요.');const root=modal('가까운 곳에서 약속해요','확정 시점의 판매 가격으로 거래 약속을 저장해요.'),form=el('form');const select=addField(form,'거래 장소','meetingPlace','','select');previewPlaces.forEach(x=>select.append(new Option(x.name,x.name)));const time=addField(form,'약속 시간 (선택)','meetingTime','','input',false);time.type='datetime-local';root.append(priceBlock(p));submitForm(form,'이 가격과 약속으로 확정',f=>{const place=previewPlaces.find(x=>x.name===f.get('meetingPlace'));return api('trades','POST',{selno:p.id,meetingPlace:place.name,meetingTime:f.get('meetingTime')||null,latitude:place.lat,longitude:place.lng})});root.append(form)}
+ function renderMine(){if(!requireStudentLogin())return;const mine=products.filter(isMySale);$('#section-kicker').textContent='MY CAMPUS SHOP';$('#section-title').textContent='내 물건의 다음 이야기';$('#section-sub').textContent='할인율만 입력하세요. 판매 가격은 자동으로 계산해 드려요.';const root=$('#results');root.className='manage-view';root.replaceChildren();const stats=el('div','shop-stats');[['판매 중',mine.filter(p=>p.status==='sale').length],['24시간 할인 중',mine.filter(isDiscounted).length],['끌어올리기 가능',mine.filter(p=>p.status==='sale'&&(!p.bumpedAt||Date.now()-p.bumpedAt>=PREVIEW_DAY)).length]].forEach(([title,n])=>{const s=el('div');s.append(el('span','',title),el('strong','',n+'개'));stats.append(s)});root.append(stats,el('p','demo-note seller-notice','◷ 할인은 딱 24시간, 끝나면 원래 가격으로. 예약 가격은 유지돼요.\n최신 등록 → 끌어올리기 → 판매 중(온도순) → 예약 중 → 거래 완료'),actionButton('＋ 판매글 등록',()=>saleForm(),false,'secondary'));const list=el('div','seller-list');for(const p of mine){const row=el('article','seller-row'),image=el('div','seller-image'),info=el('div','seller-info'),buttons=el('div','seller-actions');renderProductPhoto(image,p);info.append(el('small','',p.category+' · '+statusText(p)),el('h3','',p.title),priceBlock(p));if(p.order)info.append(el('p','fine-print','약속 가격 '+formatMoney(p.order.agreedPrice)+' · '+(p.order.meetingPlace||'장소 미지정')));const cooldown=p.bumpedAt&&Date.now()-p.bumpedAt<PREVIEW_DAY;if(cooldown&&p.status==='sale')info.append(el('p','fine-print','다음 끌어올림 '+dateTime(p.bumpedAt+PREVIEW_DAY)));buttons.append(actionButton(isDiscounted(p)?'할인 종료':'◷ 24시간 할인',()=>discountDialog(p),p.status!=='sale'),actionButton(cooldown?'↟ 끌어올림 대기':'↟ 끌어올리기',()=>bumpDialog(p),p.status!=='sale'||cooldown,'secondary'),actionButton('수정',()=>saleForm(p),false,'secondary'),actionButton('삭제',()=>confirmAction('판매글을 삭제할까요?',p.title,()=>api('products/'+p.id,'DELETE'),'삭제하기'),Boolean(orders.find(o=>o.selno===p.id)),'secondary'));const state=el('select');state.setAttribute('aria-label',p.title+' 판매 상태');[['sale','판매 중'],['reserved','예약 중'],['done','거래 완료']].forEach(([v,t])=>state.append(new Option(t,v)));if(p.status==='sale')state.querySelector('option[value=done]').disabled=true;state.value=p.status;state.disabled=p.status==='done';state.onchange=()=>{const next=state.value;state.value=p.status;if(next===p.status)return;if(p.status==='sale')toast('구매자가 상품 상세에서 예약하면 상태가 변경돼요.');else if(next==='sale')cancelReservation(p);else if(next==='done')completeTrade(p)};buttons.append(state);row.append(image,info,buttons);list.append(row)}root.append(list)}
+--- before/src/test/java/com/campus/remarket/AdditionalCampusShopsTests.java
++++ after/src/test/java/com/campus/remarket/AdditionalCampusShopsTests.java
+@@ -0,0 +1,75 @@
++package com.campus.remarket;
++
++import com.campus.remarket.config.AdditionalCampusShopsSeed;
++import demo.campus.campusremarketmember.member.entity.*;
++import demo.campus.campusremarketmember.member.repository.*;
++import java.net.*;
++import java.net.http.*;
++import java.util.*;
++import org.junit.jupiter.api.Test;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.boot.test.context.SpringBootTest;
++import org.springframework.boot.test.web.server.LocalServerPort;
++import org.springframework.jdbc.core.JdbcTemplate;
++import org.springframework.security.crypto.password.PasswordEncoder;
++import tools.jackson.databind.json.JsonMapper;
++import tools.jackson.databind.JsonNode;
++import static org.junit.jupiter.api.Assertions.*;
++
++@SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT,properties={
++    "spring.datasource.url=jdbc:h2:mem:additionalshops;MODE=MySQL;DB_CLOSE_DELAY=-1",
++    "campus.notifications.enabled=false"})
++class AdditionalCampusShopsTests {
++    @Autowired AdditionalCampusShopsSeed seed;@Autowired JdbcTemplate db;
++    @Autowired MemberRepository members;@Autowired SchoolRepository schools;@Autowired PasswordEncoder passwords;
++    @LocalServerPort int port;final JsonMapper json=JsonMapper.builder().build();
++    HttpClient browser(){return HttpClient.newBuilder().cookieHandler(new CookieManager()).build();}
++    JsonNode call(HttpClient c,String method,String path,Object data,String token,int expected)throws Exception{
++        var b=HttpRequest.newBuilder(URI.create("http://127.0.0.1:"+port+path));SecurityTestClient.csrf(c,b,method,path,port);
++        if(data!=null)b.header("Content-Type","application/json");if(token!=null)b.header("X-CSRF-Token",token);
++        var r=c.send(b.method(method,data==null?HttpRequest.BodyPublishers.noBody():HttpRequest.BodyPublishers.ofString(json.writeValueAsString(data))).build(),HttpResponse.BodyHandlers.ofString());
++        assertEquals(expected,r.statusCode(),path+": "+r.body());return r.body().isBlank()?null:json.readTree(r.body());
++    }
++    HttpClient login(String id,String role,Long school)throws Exception{
++        var c=browser();var input=new HashMap<String,Object>();input.put("loginId",id);input.put("role",role);input.put("password","campus1234!");if(school!=null)input.put("schoolId",school);
++        call(c,"POST","/api/members/login",input,null,200);return c;
++    }
++    @Test void elevenStoresOwnAccountsAndSchoolVisibilityPreserveDataAndOwnerSettings()throws Exception{
++        var originalShops=db.queryForList("SELECT * FROM shops ORDER BY shopId");
++        var originalSales=db.queryForList("SELECT * FROM sales ORDER BY selno");
++        var originalMembers=db.queryForList("SELECT * FROM member ORDER BY id");
++        seed.seed();
++        assertEquals(originalShops.size()+11,db.queryForObject("SELECT COUNT(*) FROM shops",Integer.class));
++        assertEquals(originalMembers.size()+11,db.queryForObject("SELECT COUNT(*) FROM member",Integer.class));
++        for(var before:originalShops)assertEquals(before,db.queryForMap("SELECT * FROM shops WHERE shopId=?",before.get("SHOPID")));
++        for(var before:originalMembers)assertEquals(before,db.queryForMap("SELECT * FROM member WHERE id=?",before.get("ID")));
++        assertEquals(originalSales,db.queryForList("SELECT * FROM sales ORDER BY selno"));
++        assertEquals(11,db.queryForObject("SELECT COUNT(*) FROM shops s JOIN member m ON m.id=s.owner_member_id WHERE m.login_id LIKE 'owner_inu%' OR m.login_id LIKE 'owner_chung%'",Integer.class));
++        String[][] groups={{"INU","owner_inu", "5"},{"CHUNGWOON","owner_chung","6"}};
++        for(var group:groups){
++            var school=schools.findByCampusCode(group[0]).orElseThrow();
++            int count=Integer.parseInt(group[2]);
++            var pupil=members.saveAndFlush(Member.student(group[0].equals("INU")?"20269961":"20269962",passwords.encode("campus1234!"),"가게조회 학생",group[0]+"-shops@example.invalid",null,StudentStatus.ENROLLED,school));
++            var student=login(pupil.getLoginId(),"STUDENT",school.getId());var visible=call(student,"GET","/api/shops",null,null,200);assertEquals(count,visible.size());
++            var publicNames=new HashSet<String>();for(var s:visible)publicNames.add(s.get("title").asText());
++            for(int i=1;i<=count;i++){
++                String id=group[1]+String.format("%02d",i);var owner=login(id,"OWNER",null);var home=call(owner,"GET","/api/owner/dashboard",null,null,200);var shop=home.get("shop");
++                assertTrue(publicNames.contains(shop.get("name").asText()));assertTrue(shop.get("photo").isNull());
++                assertTrue(shop.get("latitude").asDouble()>37&&shop.get("latitude").asDouble()<38);
++                assertTrue(shop.get("longitude").asDouble()>126&&shop.get("longitude").asDouble()<127);
++                assertEquals(school.getId(),members.findByAccountKey("staff:"+id).orElseThrow().getSchool().getId());
++                if(id.equals("owner_inu01")){
++                    call(owner,"PUT","/api/owner/shop/status",Map.of("status","영업중","version",shop.get("version").asLong()),home.get("csrfToken").asText(),200);
++                    var next=call(student,"GET","/api/shops",null,null,200);boolean changed=false;for(var s:next)if(s.get("id").asLong()==shop.get("id").asLong())changed=s.get("status").asText().equals("영업중");assertTrue(changed);
++                }
++            }
++        }
++        assertEquals("",db.queryForObject("SELECT s.shopphone FROM shops s JOIN member m ON m.id=s.owner_member_id WHERE m.login_id='owner_chung06'",String.class));
++        var changed=db.queryForMap("SELECT s.* FROM shops s JOIN member m ON m.id=s.owner_member_id WHERE m.login_id='owner_inu01'");
++        seed.seed();assertEquals(changed,db.queryForMap("SELECT s.* FROM shops s JOIN member m ON m.id=s.owner_member_id WHERE m.login_id='owner_inu01'"));
++        assertEquals(originalShops.size()+11,db.queryForObject("SELECT COUNT(*) FROM shops",Integer.class));
++        var inha=login("20261234","STUDENT",schools.findByCampusCode("INHA").orElseThrow().getId());
++        var list=call(inha,"GET","/api/shops",null,null,200);assertEquals(originalShops.size(),list.size());
++        long foreign=((Number)changed.get("SHOPID")).longValue();call(inha,"GET","/shops/selectOne?id="+foreign,null,null,404);
++    }
++}
+--- before/docs/16차_가게11곳_추가/사용자입력_원본.json
++++ after/docs/16차_가게11곳_추가/사용자입력_원본.json
+@@ -0,0 +1,13 @@
++[
++ {"school":"INU","loginId":"owner_inu01","name":"압록순대국 송도본점","category":"음식점","phone":"032-831-2226","address":"인천 연수구 테크노파크로111번길 12","addressDetail":"102호, 103호","hours":"월~토 10:00~23:00 (브레이크 15:00~17:00) · 라스트오더 22:00 / 일 10:30~21:00 · 라스트오더 20:00","offday":"없음","menu":"순대 · 순댓국 · 수육 · 보쌈"},
++ {"school":"INU","loginId":"owner_inu02","name":"지츠겐","category":"음식점","phone":"070-8633-0761","address":"인천 연수구 하모니로 144","addressDetail":"지웰푸르지오시티 A동 128호","hours":"평일 11:30~21:00 (브레이크 14:30~17:30)","offday":"토·일","menu":"돈까스 · 우동"},
++ {"school":"INU","loginId":"owner_inu03","name":"오봉집 송도인천대입구역점","category":"음식점","phone":"032-832-5056","address":"인천 연수구 하모니로 158","addressDetail":"송도타임스페이스 C동 1층 120,121호","hours":"매일 11:00~22:00 (브레이크 15:00~17:00) · 라스트오더 21:15","offday":"없음","menu":"직화낙지 · 수육"},
++ {"school":"INU","loginId":"owner_inu04","name":"목향 중식당","category":"중식","phone":"0507-1447-8012","address":"인천 연수구 하모니로178번길 6","addressDetail":"중앙타워 건물 2층 201~206호","hours":"매일 11:00~21:30 (브레이크 15:00~17:00) · 라스트오더 20:45","offday":"없음","menu":"딤섬 · 짜장 · 짬뽕 · 코스요리"},
++ {"school":"INU","loginId":"owner_inu05","name":"나 그리고 너","category":"양식","phone":"0507-1334-7763","address":"인천 연수구 하모니로 144","addressDetail":"송도 지웰 푸르지오 1층 B동 106-107호","hours":"매일 11:00~21:30 (브레이크 15:30~17:00) · 라스트오더 20:45","offday":"없음","menu":"파스타 · 피자 · 스테이크"},
++ {"school":"CHUNGWOON","loginId":"owner_chung01","name":"국수나무 인천도화점","category":"음식점","phone":"032-875-9494","address":"인천 미추홀구 숙골로87번길 14","addressDetail":"HS메디켈빌딩 102호","hours":"매일 11:00~21:00","offday":"없음","menu":"덮밥 · 돈가스 · 메밀소바 · 잔치국수"},
++ {"school":"CHUNGWOON","loginId":"owner_chung02","name":"정정아식당","category":"음식점","phone":"032-888-8874","address":"인천 미추홀구 숙골로95번길 13","addressDetail":"2층","hours":"매일 11:00~22:30 (정기휴무 매달 1·3번째 토요일)","offday":"매달 1·3번째 토요일","menu":"닭볶음탕 · 꼬막 · 도토리묵 · 코다리구이","note":"운영 여부 확인 필요 (2026-11-06)"},
++ {"school":"CHUNGWOON","loginId":"owner_chung03","name":"담솥 앨리웨이 인천점","category":"음식점","phone":"032-716-9255","address":"인천 미추홀구 숙골로88번길 12","addressDetail":"110동 3층 304~306호","hours":"매일 11:00~21:30 (브레이크 15:00~17:00) · 라스트오더 21:00","offday":"없음","menu":"가지솥밥 · 장어솥밥 · 스테이크솥밥"},
++ {"school":"CHUNGWOON","loginId":"owner_chung04","name":"히노아지 앨리웨이인천점","category":"음식점","phone":"070-7621-7459","address":"인천 미추홀구 숙골로88번길 12","addressDetail":"앨리웨이 110동 3층 14호","hours":"매일 11:00~21:00 (브레이크 15:30~17:00) · 라스트오더 20:00","offday":"없음","menu":"가츠동 · 탄탄멘 · 우동 · 마제소바 · 라멘"},
++ {"school":"CHUNGWOON","loginId":"owner_chung05","name":"백령면옥","category":"음식점","phone":"032-881-8489","address":"인천 미추홀구 숙골로87번길 5","addressDetail":"204동 1층 1-04,05,06","hours":"매일 11:00~21:00 (브레이크 15:30~16:30) · 라스트오더 20:30","offday":"화","menu":"냉면 · 빈대떡 · 만두 · 사골떡만둣국 · 칼국수"},
++ {"school":"CHUNGWOON","loginId":"owner_chung06","name":"시아우동","category":"음식점","phone":"","address":"인천 미추홀구 염전로202번길 48-35","addressDetail":"1층 102호","hours":"매일 11:00~20:00 (브레이크 14:40~17:00) · 토·일은 오후 3시까지 영업","offday":"없음","menu":"텐동 · 튀김우동 · 어묵우동 · 냉우동 · 김치우동"}
++]
+--- before/docs/16차_가게11곳_추가/실행검증결과.json
++++ after/docs/16차_가게11곳_추가/실행검증결과.json
+@@ -0,0 +1,143 @@
++{
++  "passed": true,
++  "counts": {
++    "members": 36,
++    "students": 12,
++    "shops": 16,
++    "pendingShops": 0,
++    "sales": 24,
++    "trades": 2,
++    "completed": 1,
++    "ratings": 0
++  },
++  "schools": [
++    {
++      "code": "INHA",
++      "schoolId": 1,
++      "name": "인하대학교",
++      "shops": 5,
++      "products": 8
++    },
++    {
++      "code": "INU",
++      "schoolId": 2,
++      "name": "인천대학교",
++      "shops": 5,
++      "products": 8
++    },
++    {
++      "code": "CHUNGWOON",
++      "schoolId": 6,
++      "name": "청운대학교 인천캠퍼스",
++      "shops": 6,
++      "products": 8
++    }
++  ],
++  "owners": [
++    {
++      "loginId": "owner_inu01",
++      "shopId": 6,
++      "school": "INU",
++      "name": "압록순대국 송도본점",
++      "latitude": 37.38546,
++      "longitude": 126.6435983,
++      "verified": true
++    },
++    {
++      "loginId": "owner_inu02",
++      "shopId": 7,
++      "school": "INU",
++      "name": "지츠겐",
++      "latitude": 37.3840647,
++      "longitude": 126.6432114,
++      "verified": true
++    },
++    {
++      "loginId": "owner_inu03",
++      "shopId": 8,
++      "school": "INU",
++      "name": "오봉집 송도인천대입구역점",
++      "latitude": 37.3832947,
++      "longitude": 126.642256,
++      "verified": true
++    },
++    {
++      "loginId": "owner_inu04",
++      "shopId": 9,
++      "school": "INU",
++      "name": "목향 중식당",
++      "latitude": 37.3823401,
++      "longitude": 126.6413688,
++      "verified": true
++    },
++    {
++      "loginId": "owner_inu05",
++      "shopId": 10,
++      "school": "INU",
++      "name": "나 그리고 너",
++      "latitude": 37.3840647,
++      "longitude": 126.6432114,
++      "verified": true
++    },
++    {
++      "loginId": "owner_chung01",
++      "shopId": 11,
++      "school": "CHUNGWOON",
++      "name": "국수나무 인천도화점",
++      "latitude": 37.469918,
++      "longitude": 126.6619945,
++      "verified": true
++    },
++    {
++      "loginId": "owner_chung02",
++      "shopId": 12,
++      "school": "CHUNGWOON",
++      "name": "정정아식당",
++      "latitude": 37.4702407,
++      "longitude": 126.661177,
++      "verified": true
++    },
++    {
++      "loginId": "owner_chung03",
++      "shopId": 13,
++      "school": "CHUNGWOON",
++      "name": "담솥 앨리웨이 인천점",
++      "latitude": 37.4695306,
++      "longitude": 126.6645932,
++      "verified": true
++    },
++    {
++      "loginId": "owner_chung04",
++      "shopId": 14,
++      "school": "CHUNGWOON",
++      "name": "히노아지 앨리웨이인천점",
++      "latitude": 37.4695306,
++      "longitude": 126.6645932,
++      "verified": true
++    },
++    {
++      "loginId": "owner_chung05",
++      "shopId": 15,
++      "school": "CHUNGWOON",
++      "name": "백령면옥",
++      "latitude": 37.4694616,
++      "longitude": 126.6632659,
++      "verified": true
++    },
++    {
++      "loginId": "owner_chung06",
++      "shopId": 16,
++      "school": "CHUNGWOON",
++      "name": "시아우동",
++      "latitude": 37.4759307,
++      "longitude": 126.6608737,
++      "verified": true
++    }
++  ],
++  "newOwnerLogins": 11,
++  "ownerStatusSync": true,
++  "blankPhotos": 11,
++  "siaPhoneBlank": true,
++  "jeongNotice": true,
++  "externalMessagesSent": 0
++}--- before/docs/16차_가게11곳_추가/카카오_좌표확인.json
++++ after/docs/16차_가게11곳_추가/카카오_좌표확인.json
+@@ -0,0 +1,190 @@
++[
++  {
++    "school": "INU",
++    "loginId": "owner_inu01",
++    "name": "압록순대국 송도본점",
++    "category": "음식점",
++    "phone": "032-831-2226",
++    "address": "인천 연수구 테크노파크로111번길 12",
++    "addressDetail": "102호, 103호",
++    "hours": "월~토 10:00~23:00 (브레이크 15:00~17:00) · 라스트오더 22:00 / 일 10:30~21:00 · 라스트오더 20:00",
++    "offday": "없음",
++    "menu": "순대 · 순댓국 · 수육 · 보쌈",
++    "latitude": 37.3854600278176,
++    "longitude": 126.64359827785,
++    "matchedAddress": "인천 연수구 테크노파크로111번길 12",
++    "source": "Kakao Local address API",
++    "checkedDate": "2026-11-06"
++  },
++  {
++    "school": "INU",
++    "loginId": "owner_inu02",
++    "name": "지츠겐",
++    "category": "음식점",
++    "phone": "070-8633-0761",
++    "address": "인천 연수구 하모니로 144",
++    "addressDetail": "지웰푸르지오시티 A동 128호",
++    "hours": "평일 11:30~21:00 (브레이크 14:30~17:30)",
++    "offday": "토·일",
++    "menu": "돈까스 · 우동",
++    "latitude": 37.3840647142873,
++    "longitude": 126.643211374294,
++    "matchedAddress": "인천 연수구 하모니로 144",
++    "source": "Kakao Local address API",
++    "checkedDate": "2026-11-06"
++  },
++  {
++    "school": "INU",
++    "loginId": "owner_inu03",
++    "name": "오봉집 송도인천대입구역점",
++    "category": "음식점",
++    "phone": "032-832-5056",
++    "address": "인천 연수구 하모니로 158",
++    "addressDetail": "송도타임스페이스 C동 1층 120,121호",
++    "hours": "매일 11:00~22:00 (브레이크 15:00~17:00) · 라스트오더 21:15",
++    "offday": "없음",
++    "menu": "직화낙지 · 수육",
++    "latitude": 37.3832947004154,
++    "longitude": 126.64225604799,
++    "matchedAddress": "인천 연수구 하모니로 158",
++    "source": "Kakao Local address API",
++    "checkedDate": "2026-11-06"
++  },
++  {
++    "school": "INU",
++    "loginId": "owner_inu04",
++    "name": "목향 중식당",
++    "category": "중식",
++    "phone": "0507-1447-8012",
++    "address": "인천 연수구 하모니로178번길 6",
++    "addressDetail": "중앙타워 건물 2층 201~206호",
++    "hours": "매일 11:00~21:30 (브레이크 15:00~17:00) · 라스트오더 20:45",
++    "offday": "없음",
++    "menu": "딤섬 · 짜장 · 짬뽕 · 코스요리",
++    "latitude": 37.382340086168,
++    "longitude": 126.641368803184,
++    "matchedAddress": "인천 연수구 하모니로178번길 6",
++    "source": "Kakao Local address API",
++    "checkedDate": "2026-11-06"
++  },
++  {
++    "school": "INU",
++    "loginId": "owner_inu05",
++    "name": "나 그리고 너",
++    "category": "양식",
++    "phone": "0507-1334-7763",
++    "address": "인천 연수구 하모니로 144",
++    "addressDetail": "송도 지웰 푸르지오 1층 B동 106-107호",
++    "hours": "매일 11:00~21:30 (브레이크 15:30~17:00) · 라스트오더 20:45",
++    "offday": "없음",
++    "menu": "파스타 · 피자 · 스테이크",
++    "latitude": 37.3840647142873,
++    "longitude": 126.643211374294,
++    "matchedAddress": "인천 연수구 하모니로 144",
++    "source": "Kakao Local address API",
++    "checkedDate": "2026-11-06"
++  },
++  {
++    "school": "CHUNGWOON",
++    "loginId": "owner_chung01",
++    "name": "국수나무 인천도화점",
++    "category": "음식점",
++    "phone": "032-875-9494",
++    "address": "인천 미추홀구 숙골로87번길 14",
++    "addressDetail": "HS메디켈빌딩 102호",
++    "hours": "매일 11:00~21:00",
++    "offday": "없음",
++    "menu": "덮밥 · 돈가스 · 메밀소바 · 잔치국수",
++    "latitude": 37.4699179669497,
++    "longitude": 126.661994478397,
++    "matchedAddress": "인천 미추홀구 숙골로87번길 14",
++    "source": "Kakao Local address API",
++    "checkedDate": "2026-11-06"
++  },
++  {
++    "school": "CHUNGWOON",
++    "loginId": "owner_chung02",
++    "name": "정정아식당",
++    "category": "음식점",
++    "phone": "032-888-8874",
++    "address": "인천 미추홀구 숙골로95번길 13",
++    "addressDetail": "2층",
++    "hours": "매일 11:00~22:30 (정기휴무 매달 1·3번째 토요일)",
++    "offday": "매달 1·3번째 토요일",
++    "menu": "닭볶음탕 · 꼬막 · 도토리묵 · 코다리구이",
++    "note": "운영 여부 확인 필요 (2026-11-06)",
++    "latitude": 37.4702407087997,
++    "longitude": 126.661176958688,
++    "matchedAddress": "인천 미추홀구 숙골로95번길 13",
++    "source": "Kakao Local address API",
++    "checkedDate": "2026-11-06"
++  },
++  {
++    "school": "CHUNGWOON",
++    "loginId": "owner_chung03",
++    "name": "담솥 앨리웨이 인천점",
++    "category": "음식점",
++    "phone": "032-716-9255",
++    "address": "인천 미추홀구 숙골로88번길 12",
++    "addressDetail": "110동 3층 304~306호",
++    "hours": "매일 11:00~21:30 (브레이크 15:00~17:00) · 라스트오더 21:00",
++    "offday": "없음",
++    "menu": "가지솥밥 · 장어솥밥 · 스테이크솥밥",
++    "latitude": 37.4695305506994,
++    "longitude": 126.664593164043,
++    "matchedAddress": "인천 미추홀구 숙골로88번길 12",
++    "source": "Kakao Local address API",
++    "checkedDate": "2026-11-06"
++  },
++  {
++    "school": "CHUNGWOON",
++    "loginId": "owner_chung04",
++    "name": "히노아지 앨리웨이인천점",
++    "category": "음식점",
++    "phone": "070-7621-7459",
++    "address": "인천 미추홀구 숙골로88번길 12",
++    "addressDetail": "앨리웨이 110동 3층 14호",
++    "hours": "매일 11:00~21:00 (브레이크 15:30~17:00) · 라스트오더 20:00",
++    "offday": "없음",
++    "menu": "가츠동 · 탄탄멘 · 우동 · 마제소바 · 라멘",
++    "latitude": 37.4695305506994,
++    "longitude": 126.664593164043,
++    "matchedAddress": "인천 미추홀구 숙골로88번길 12",
++    "source": "Kakao Local address API",
++    "checkedDate": "2026-11-06"
++  },
++  {
++    "school": "CHUNGWOON",
++    "loginId": "owner_chung05",
++    "name": "백령면옥",
++    "category": "음식점",
++    "phone": "032-881-8489",
++    "address": "인천 미추홀구 숙골로87번길 5",
++    "addressDetail": "204동 1층 1-04,05,06",
++    "hours": "매일 11:00~21:00 (브레이크 15:30~16:30) · 라스트오더 20:30",
++    "offday": "화",
++    "menu": "냉면 · 빈대떡 · 만두 · 사골떡만둣국 · 칼국수",
++    "latitude": 37.4694616330478,
++    "longitude": 126.663265893925,
++    "matchedAddress": "인천 미추홀구 숙골로87번길 5",
++    "source": "Kakao Local address API",
++    "checkedDate": "2026-11-06"
++  },
++  {
++    "school": "CHUNGWOON",
++    "loginId": "owner_chung06",
++    "name": "시아우동",
++    "category": "음식점",
++    "phone": "",
++    "address": "인천 미추홀구 염전로202번길 48-35",
++    "addressDetail": "1층 102호",
++    "hours": "매일 11:00~20:00 (브레이크 14:40~17:00) · 토·일은 오후 3시까지 영업",
++    "offday": "없음",
++    "menu": "텐동 · 튀김우동 · 어묵우동 · 냉우동 · 김치우동",
++    "latitude": 37.4759306835528,
++    "longitude": 126.660873727764,
++    "matchedAddress": "인천 미추홀구 염전로202번길 48-35",
++    "source": "Kakao Local address API",
++    "checkedDate": "2026-11-06"
++  }
++]

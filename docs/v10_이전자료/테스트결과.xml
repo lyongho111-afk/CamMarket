@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="com.campus.remarket.MyBatisFlowTests" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-29T09:06:13.862Z" time="4.337">
+  <properties />
+  <testcase name="shopAndBoardCrud()" classname="com.campus.remarket.MyBatisFlowTests" time="0.788" />
+  <testcase name="reservationUsesServerPriceAndKeepsIt()" classname="com.campus.remarket.MyBatisFlowTests" time="0.037" />
+  <testcase name="expiredDiscountRestoresPriceAndAllowsNewDay()" classname="com.campus.remarket.MyBatisFlowTests" time="0.019" />
+  <testcase name="meetingAndCompletionAreStored()" classname="com.campus.remarket.MyBatisFlowTests" time="0.018" />
+  <testcase name="noPaymentApprovalWithoutKeys()" classname="com.campus.remarket.MyBatisFlowTests" time="0.004" />
+  <testcase name="xmlQueriesAndJoin()" classname="com.campus.remarket.MyBatisFlowTests" time="0.013" />
+  <testcase name="saleCrudDiscountAndBump()" classname="com.campus.remarket.MyBatisFlowTests" time="0.019" />
+  <testcase name="invalidRatesRejected()" classname="com.campus.remarket.MyBatisFlowTests" time="0.005" />
+  <testcase name="exposureOrderMatchesPolicy()" classname="com.campus.remarket.MyBatisFlowTests" time="0.007" />
+  <system-out>18:06:14.074 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.campus.remarket.MyBatisFlowTests]: MyBatisFlowTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+18:06:14.218 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.campus.remarket.CampusApplication for test class com.campus.remarket.MyBatisFlowTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.2)
+
+2026-10-29T18:06:14.724+09:00  INFO 28364 --- [campus-remarket-mybatis] [    Test worker] com.campus.remarket.MyBatisFlowTests     : Starting MyBatisFlowTests using Java 25.0.4.1 with PID 28364 (started by tj-bu-705-07 in C:\Users\tj-bu-705-07\Documents\Codex\2026-10-29\new-chat-3\work\intellij-remarket)
+2026-10-29T18:06:14.725+09:00  INFO 28364 --- [campus-remarket-mybatis] [    Test worker] com.campus.remarket.MyBatisFlowTests     : No active profile set, falling back to 1 default profile: "default"
+2026-10-29T18:06:15.833+09:00  INFO 28364 --- [campus-remarket-mybatis] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-29T18:06:16.088+09:00  INFO 28364 --- [campus-remarket-mybatis] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:campus user=SA
+2026-10-29T18:06:16.093+09:00  INFO 28364 --- [campus-remarket-mybatis] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-29T18:06:17.128+09:00  INFO 28364 --- [campus-remarket-mybatis] [    Test worker] o.s.b.h.a.H2ConsoleAutoConfiguration     : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:campus'
+2026-10-29T18:06:17.255+09:00  INFO 28364 --- [campus-remarket-mybatis] [    Test worker] com.campus.remarket.MyBatisFlowTests     : Started MyBatisFlowTests in 2.833 seconds (process running for 4.456)
+</system-out>
+  <system-err>Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (C:\Users\tj-bu-705-07\.gradle\caches\modules-2\files-2.1\net.bytebuddy\byte-buddy-agent\1.17.8\f09415827a71be7ed621c7bd02550678f28bc81c\byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+</system-err>
+</testsuite>

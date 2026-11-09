@@ -1,0 +1,114 @@
+{
+  "checks": [
+    {
+      "name": "main_is_card_design",
+      "status": "PASS"
+    },
+    {
+      "name": "no_group_or_old_preview_navigation",
+      "status": "PASS"
+    },
+    {
+      "name": "create_returns_generated_id",
+      "status": "PASS"
+    },
+    {
+      "name": "update_is_saved",
+      "status": "PASS"
+    },
+    {
+      "name": "20_percent_is_22400",
+      "status": "PASS"
+    },
+    {
+      "name": "discount_is_exactly_24_hours",
+      "status": "PASS"
+    },
+    {
+      "name": "second_discount_rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "bad_rate_rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "bump_is_saved",
+      "status": "PASS"
+    },
+    {
+      "name": "bump_cooldown_rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "reservation_ignores_client_amount",
+      "status": "PASS"
+    },
+    {
+      "name": "sale_becomes_reserved",
+      "status": "PASS"
+    },
+    {
+      "name": "double_reservation_rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "reserved_discount_rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "reserved_bump_rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "meeting_change_is_saved",
+      "status": "PASS"
+    },
+    {
+      "name": "cancel_returns_sale",
+      "status": "PASS"
+    },
+    {
+      "name": "end_discount_restores_28000",
+      "status": "PASS"
+    },
+    {
+      "name": "old_agreement_is_kept",
+      "status": "PASS"
+    },
+    {
+      "name": "complete_updates_sale",
+      "status": "PASS"
+    },
+    {
+      "name": "trade_history_blocks_delete",
+      "status": "PASS"
+    },
+    {
+      "name": "delete_unreserved_sale",
+      "status": "PASS"
+    },
+    {
+      "name": "board_update",
+      "status": "PASS"
+    },
+    {
+      "name": "board_delete",
+      "status": "PASS"
+    },
+    {
+      "name": "shop_public_fields_only",
+      "status": "PASS"
+    },
+    {
+      "name": "no_secret_in_public_config",
+      "status": "PASS"
+    },
+    {
+      "name": "payment_disabled_without_keys",
+      "status": "PASS"
+    }
+  ],
+  "passed": 27,
+  "failed": 0
+}

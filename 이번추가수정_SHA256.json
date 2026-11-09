@@ -1,0 +1,71 @@
+{
+  "base_archive": "캠퍼스리마켓_최종수정본_학교분리_관리자CRUD_20261105.zip",
+  "base_sha256": "755e691b4df48b2ba7bbc9aa68f15f63f2163a7f3130b2dbbfa4b75db9225904",
+  "tests": {
+    "tests": 92,
+    "failures": 0,
+    "errors": 0
+  },
+  "connections": {
+    "/sales/selectAll": 200,
+    "/owner/": 200,
+    "/admin/": 200,
+    "smtpAuthentication": "passed",
+    "smsAuthentication": 200,
+    "messagesSent": 0
+  },
+  "new_real_messages_sent": 0,
+  "both_parties_external_delivery": "mock adapters and local mailbox verified; no new dual-handset confirmation",
+  "kakao_connected": false,
+  "private_settings_included": false,
+  "changes": [
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/config/NotificationRecipientMigration.java",
+      "sha256": "e56ea6c7eaaccbdabd364edfbaad2449c986c7306ba4a23d40f6b2fb1e6b6e3c"
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/notification/NotificationService.java",
+      "sha256": "39bed142cbd77f32b06402e4f08c1d338574584bc59fa96b30e4f2823827006c"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/schema.sql",
+      "sha256": "fc2782ad42601a22e4dd4420b49033e202da5bb1e12c03e008637532bace738b"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/preview/v14.js",
+      "sha256": "0e4143b10bf2d0b2e6ca43c55aad7ead26a9a386cc49a56c9db2bb873d11139a"
+    },
+    {
+      "path": "campus-remarket/src/test/java/com/campus/remarket/AdminCampusIntegrationTests.java",
+      "sha256": "4560762fa08c8ce3ecf9add8108d5a9ff9d38769d614c51b15803e2f30cb3e45"
+    },
+    {
+      "path": "campus-remarket/src/test/java/com/campus/remarket/LocalDemoTests.java",
+      "sha256": "b4846cf1aef61e4e7a37e4b689fb790747042f66f2602d94d79f3ba086d6878e"
+    },
+    {
+      "path": "campus-remarket/src/test/java/com/campus/remarket/MemberIntegrationTests.java",
+      "sha256": "2fc574d9fbf2c0b8168a2d255da01d73c49102afdf75d7360d050833fc39db5c"
+    },
+    {
+      "path": "campus-remarket/src/test/java/com/campus/remarket/NotificationRecipientMigrationTests.java",
+      "sha256": "56574e4274de26326875ee93ad58189dc7125907adae0f28aef120bfcdd0a614"
+    },
+    {
+      "path": "campus-remarket/app/campus-remarket.jar",
+      "sha256": "0ba2c47d9d59f161b3d7f5b9a1f10e71f68bac4c0e94376d6ed810b901065dcb"
+    },
+    {
+      "path": "campus-remarket/00_이번추가수정_양쪽거래알림_20261105.txt",
+      "sha256": "3ea542cced2eaf4d8d9a37145740137768d582e47c26fd991fec33ebb3d15781"
+    },
+    {
+      "path": "campus-remarket/README.md",
+      "sha256": "95516213ae05d43fe860c3a3b7f92e5b9197972f05afd044d1c9f07ce04d5672"
+    },
+    {
+      "path": "campus-remarket/이번추가수정_코드비교.diff",
+      "sha256": "3e6a3510f4ad2251707b77cf316e7093d8ca2be13ec87475f2323ca3a7be93e7"
+    }
+  ]
+}

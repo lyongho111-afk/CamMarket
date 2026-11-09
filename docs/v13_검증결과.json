@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-31",
+  "javaTests": 38,
+  "javaFailures": 0,
+  "frontendChecks": 20,
+  "frontendFailures": 0,
+  "jsFilesSyntaxChecked": 4,
+  "bundledRuntimeStart": true,
+  "sites": [
+    {
+      "port": 8080,
+      "status": 200
+    },
+    {
+      "port": 8081,
+      "status": 200
+    },
+    {
+      "port": 8082,
+      "status": 200
+    }
+  ],
+  "ownerRole": "OWNER",
+  "adminRole": "ADMIN",
+  "crossPortalStatus": 403,
+  "finalJarVersionFieldPresent": true,
+  "browserConflictInputPreserved": true,
+  "browserDirtyNavigationCancelPassed": true,
+  "browserAdminNoteAndOwnerNoticePassed": true,
+  "browserCsvDownloadPassed": true,
+  "browserSearchPersistenceAndDateValidationPassed": true,
+  "browserErrorLogs": 0,
+  "mobileDocumentOverflow": false,
+  "limitations": [
+    "H2 tests only; MySQL not executed",
+    "Memory database resets at shared server shutdown",
+    "Viewport emulation, not physical mobile device testing",
+    "No internet deployment or live payment/mail verification"
+  ]
+}

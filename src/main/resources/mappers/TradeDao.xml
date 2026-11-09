@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campus.remarket.dao.TradeDao">
+    <select id="selectAll" resultType="TradeDto">SELECT o.*,s.school_id,s.name AS sale_name,s.seller FROM trade_orders o JOIN sales s ON o.selno=s.selno ORDER BY created_at DESC, order_id DESC</select>
+    <select id="selectOne" resultType="TradeDto">SELECT o.*,s.school_id,s.name AS sale_name,s.seller FROM trade_orders o JOIN sales s ON o.selno=s.selno WHERE order_id=#{id}</select>
+    <select id="lockOne" resultType="TradeDto">SELECT * FROM trade_orders WHERE order_id=#{id} FOR UPDATE</select>
+    <insert id="insert" parameterType="TradeDto">
+        INSERT INTO trade_orders(order_id,selno,buyer,agreed_price,status,meeting_place,meeting_time,latitude,longitude)
+        VALUES(#{orderId},#{selno},#{buyer},#{agreedPrice},'RESERVED',#{meetingPlace},#{meetingTime},#{latitude},#{longitude})
+    </insert>
+    <update id="cancel">UPDATE trade_orders SET status='CANCELED' WHERE order_id=#{id} AND status='RESERVED'</update>
+    <update id="complete">UPDATE trade_orders SET status='COMPLETED' WHERE order_id=#{id} AND status IN ('RESERVED','PAID')</update>
+    <update id="meeting">UPDATE trade_orders SET meeting_place=#{meetingPlace},meeting_time=#{meetingTime},latitude=#{latitude},longitude=#{longitude} WHERE order_id=#{orderId} AND status='RESERVED'</update>
+    <update id="paymentReady">UPDATE trade_orders SET status='PAYMENT_READY' WHERE order_id=#{id} AND status='RESERVED'</update>
+    <update id="paymentConfirmed">UPDATE trade_orders SET status='PAID',payment_key=#{key} WHERE order_id=#{id} AND status='PAYMENT_READY'</update>
+</mapper>

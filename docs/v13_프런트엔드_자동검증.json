@@ -1,0 +1,5 @@
+{
+  "checks": 20,
+  "failed": 0,
+  "scope": "Shared owner/admin helpers: bodyless DELETE CSRF, GET headers, versioned PUT, CSV quoting/formula neutralization, conflict errors, visible dirty forms and closed dialog exclusion"
+}

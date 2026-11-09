@@ -1,0 +1,146 @@
+[
+  {
+    "path": "src/main/resources/static/login.html",
+    "sha256": "420fe93767bc2395ce019533e56020f4db9de23261c3733b7784a51538df7ad5"
+  },
+  {
+    "path": "src/main/resources/static/manager.html",
+    "sha256": "c42111c7aca313c7cf595b9b9a67f2b3cf25f947f0a5a355fd0cde6410040b3d"
+  },
+  {
+    "path": "src/main/resources/static/member-navigation.js",
+    "sha256": "e67a87eb9e3c01620c5b5bef600d641835df15d886525dfa072a748a1c2b00f2"
+  },
+  {
+    "path": "src/main/resources/static/member.js",
+    "sha256": "bed5e20ce6ccf0fb0ee388873d9886b89d0a69233f059f1ba27d55a967d31a7c"
+  },
+  {
+    "path": "src/main/resources/static/signup.html",
+    "sha256": "817a7543c0aa57217a9ffc00aaf7dee9734273db730881cff3f65f664720e3ba"
+  },
+  {
+    "path": "src/main/resources/static/style.css",
+    "sha256": "e9eff735ce2c5dab80469e70931ce205e4a35d089ed40a13deaf06f2f5a657c7"
+  },
+  {
+    "path": "src/main/resources/static/css/app.css",
+    "sha256": "ee4df5b1f7d758074201ff41c8a2fc28445e520b09805f2545413249576987e9"
+  },
+  {
+    "path": "src/main/resources/static/preview/app.js",
+    "sha256": "a810e90e8cca5f39e0da82b7858fcad896b5c5206b5d1f327effc34797ad87ad"
+  },
+  {
+    "path": "src/main/resources/static/preview/features.css",
+    "sha256": "80587bde8d23e97b300d1bf488815e8a95dc118c12cc66ac442cf1256a7a138b"
+  },
+  {
+    "path": "src/main/resources/static/preview/features.js",
+    "sha256": "9b798d9ba70aee78ac9178546a089d7ace4f83c43eb9ed90ae8b036a0bfb9cfa"
+  },
+  {
+    "path": "src/main/resources/static/preview/index.html",
+    "sha256": "1e7e8c2bad9951574baa5c29b7fa63071b7a0cdb05de17b03c52bdd6c4dd6bd2"
+  },
+  {
+    "path": "src/main/resources/static/preview/integrations-live.js",
+    "sha256": "2431a1a33a86bf79618e276477574f1170f37b9f2357dec9ec58f3c254314e5d"
+  },
+  {
+    "path": "src/main/resources/static/preview/manner-rating.js",
+    "sha256": "4195c4ec8c1febe9c4e2387c596520e98390666fe988f5cce8559b16ffd6ee3c"
+  },
+  {
+    "path": "src/main/resources/static/preview/payment-result.html",
+    "sha256": "90d1bf3896e7fb1f6bea8b7cd017ebb586184ad59db60a27c7601d651645b7ef"
+  },
+  {
+    "path": "src/main/resources/static/preview/payment-result.js",
+    "sha256": "3f17c138662d5353113d33abc8bd3619aa59f8cd9165b0fe764341ec9ebe5e6f"
+  },
+  {
+    "path": "src/main/resources/static/preview/plan.html",
+    "sha256": "ed1dd0dea8e06500f3568ac72172500583a84ab16eb6b13e2a8359366c5d5d42"
+  },
+  {
+    "path": "src/main/resources/static/preview/README.txt",
+    "sha256": "0b4596528db500fbb33bdba2869aeeb87125418ade7da518c0872c5a99273aaf"
+  },
+  {
+    "path": "src/main/resources/static/preview/session.css",
+    "sha256": "7e1e5ea4b39cfe73e6213a68b1f21dc4588d52a2d8479dd9e9fffee418cc4f16"
+  },
+  {
+    "path": "src/main/resources/static/preview/session.js",
+    "sha256": "4ee45e018a955c12e3931dcd1d9ecd7560283c6c0fb26a4be7c541749a98d898"
+  },
+  {
+    "path": "src/main/resources/static/preview/shops.css",
+    "sha256": "c105030fde66951c164be76216136c807521de08b4fde25379362bfffa1894c0"
+  },
+  {
+    "path": "src/main/resources/static/preview/shops.js",
+    "sha256": "21f0dbacbb8659a48e73073dc908f67cc24e60b0ffe2c81c7122ec59e3e682c0"
+  },
+  {
+    "path": "src/main/resources/static/preview/style.css",
+    "sha256": "cbbc7b3b6906d98251c9e4422649c95095a4b04caaa03202fa491f8644d3af26"
+  },
+  {
+    "path": "src/main/resources/static/preview/계획서.md",
+    "sha256": "dfeca006eab2193ed1df8ef38f90988bfecf0e75c2c5aa4df2eb4eec84c7b0a5"
+  },
+  {
+    "path": "src/main/resources/templates/error.html",
+    "sha256": "f65fc3e2b217f0b4656f406d5523fa2f75535a179a7d11d4b1d852057ce153de"
+  },
+  {
+    "path": "src/main/resources/templates/board/form.html",
+    "sha256": "ce40d26bdd2095a7a73dc02e5c7d83152f9685214e3d8a979a6c09dc2cce3afa"
+  },
+  {
+    "path": "src/main/resources/templates/board/selectAll.html",
+    "sha256": "54cc0e7399a446908382f3b0763e7203add16483f0297a862d3c49b28f2ef4db"
+  },
+  {
+    "path": "src/main/resources/templates/board/selectOne.html",
+    "sha256": "e5910d7f15a267917f2f0b029056acd612a602512803d65ff19a68ae1ac5c99b"
+  },
+  {
+    "path": "src/main/resources/templates/common/nav.html",
+    "sha256": "f51ffe30a45c06c9dadeba58e4268fcd1d3907ac5b509c86b00e222c50cbd63a"
+  },
+  {
+    "path": "src/main/resources/templates/market/index.html",
+    "sha256": "df8f781214a1fc03941780d07f9fac4045ab916c534aee1c0bf9d5fd14321862"
+  },
+  {
+    "path": "src/main/resources/templates/sales/form.html",
+    "sha256": "a49305bbd463ca7bcb27641df9af39424c27191c1171522ba00d14e6a4083124"
+  },
+  {
+    "path": "src/main/resources/templates/sales/selectAll.html",
+    "sha256": "f35d05535496e58f08ae59acbb2597d966ef48039bde6194f513a42c41eb67a6"
+  },
+  {
+    "path": "src/main/resources/templates/sales/selectOne.html",
+    "sha256": "d5d4f28b8a5d69909673a772cf731232826a1a8360f334aa8284af420dee7afd"
+  },
+  {
+    "path": "src/main/resources/templates/shops/selectOne.html",
+    "sha256": "ca683d2866550cd711b6d92ee710c3b1101dc395aa11cf209ebb31905d8a248e"
+  },
+  {
+    "path": "src/main/resources/templates/trades/form.html",
+    "sha256": "acfd50c3c24fbeed085ec70fb017fabb624b0c8ecc48b37884263fb38c240e14"
+  },
+  {
+    "path": "src/main/resources/templates/trades/selectAll.html",
+    "sha256": "e87e4517f51e7b57b02410efba94648176f3fae23caefd37818f224ae70e8211"
+  },
+  {
+    "path": "src/main/resources/templates/trades/selectOne.html",
+    "sha256": "35b77368e4175d6cffe0d204222bd93f766952f2ac9990ca9bad04ddfee9aff4"
+  }
+]

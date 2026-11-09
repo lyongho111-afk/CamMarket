@@ -1,0 +1,48 @@
+{
+  "original": "캠퍼스리마켓_최종통합_UI수정.zip",
+  "original_sha256": "459c451ef9153ce22cfdf7829b60dac789fe492bfefff8070e9d04c50569f5f0",
+  "validation": {
+    "previous_integration_full_java_suite": {
+      "total": 81,
+      "failures": 0,
+      "errors": 0
+    },
+    "this_change": "Category icons removed; JavaScript syntax and bootJar passed; no Java behavior changed",
+    "shop_buttons_same_baseline": true,
+    "community_comment_like_same_baseline": true,
+    "existing_database_demo_seller_distribution": {
+      "A": 2,
+      "B": 3,
+      "C": 3
+    },
+    "completed_and_reserved_orders_preserved": true,
+    "javascript_syntax_files": 1,
+    "exact_sample_shop_removed_on_database_copy": true
+  },
+  "changes": [
+    {
+      "path": "campus-remarket/00_전체변경사항_최종정리.md",
+      "sha256": "dd7689cc81267497aa1424965d585ece3e4bf74464d481d968720a7aa914d780"
+    },
+    {
+      "path": "campus-remarket/README.md",
+      "sha256": "b2f5b052509bf3098ea2bbf295aa5615cbf2d611dd67f273532f7034e3b68059"
+    },
+    {
+      "path": "campus-remarket/app/campus-remarket.jar",
+      "sha256": "c81a5ebfe5fed29fada14fef13648f991c211e64bc6d7290ab090b663adfef7f"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/preview/community.js",
+      "sha256": "a10ac7c4855e797cb90e72163e74b038f29bca0e747386cc696ba1a95d138994"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/preview/index.html",
+      "sha256": "c5e7e01b45c4a1ba0da031cb9b7fdbf1284105c39e477a3d43f782fa9d68bba1"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/templates/market/index.html",
+      "sha256": "c2adc75c34e0ef8df4518984eed2ceffe64ad3f9247502acabae6290746f83d8"
+    }
+  ]
+}

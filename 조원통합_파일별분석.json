@@ -1,0 +1,677 @@
+{
+  "base_archive": "캠퍼스리마켓_최종수정본_3개학교_계정12명_상품24개_20261105.zip",
+  "base_sha256": "c7ea7ff252215116a5e0792ee5057109b783abcbb860decbd3480c7f4a837cb3",
+  "tests": {
+    "tests": 96,
+    "failures": 0,
+    "errors": 0
+  },
+  "incoming_file_analysis": [
+    {
+      "group": "A",
+      "path": "src/main/java/demo/campus/campusremarketmember/member/dto/NameDto.java",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/java/demo/campus/campusremarketmember/member/dto/PhoneDto.java",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/java/demo/campus/campusremarketmember/member/dto/StatusDto.java",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/java/demo/campus/campusremarketmember/member/dto/WithdrawDto.java",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/login-banner.js",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": false
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/mypage.html",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": false
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/mypage.js",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-food/경인교육대학교-1.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-food/경인교육대학교-2.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-food/경인여자대학교-1.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-food/경인여자대학교-2.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-food/연세대학교 국제캠퍼스-1.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-food/연세대학교 국제캠퍼스-2.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-food/인천가톨릭대학교-1.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-food/인천가톨릭대학교-2.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-food/인천가톨릭대학교-3.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-food/인천대학교-1.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-food/인천대학교-2.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-food/인하공업전문대학-1.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-food/인하공업전문대학-2.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-food/인하대학교-1.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-food/인하대학교-2.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-food/재능대학교-1.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-food/재능대학교-2.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-food/청운대학교 인천캠퍼스-1.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-food/청운대학교 인천캠퍼스-2.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-photos/경인교육대학교-약도.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-photos/경인교육대학교.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-photos/경인여자대학교-약도.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-photos/경인여자대학교.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-photos/넣는법.txt",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-photos/연세대학교 국제캠퍼스-약도.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-photos/연세대학교 국제캠퍼스.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-photos/인천가톨릭대학교.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-photos/인천대학교-약도.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-photos/인천대학교.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-photos/인하공업전문대학.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-photos/인하대학교-약도.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-photos/인하대학교.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-photos/재능대학교.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "A",
+      "path": "src/main/resources/static/school-photos/청운대학교 인천캠퍼스.jpg",
+      "exists_in_user_baseline": false,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": true
+    },
+    {
+      "group": "B",
+      "path": "src/main/java/com/campus/remarket/auth/MarketMember.java",
+      "exists_in_user_baseline": true,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": false
+    },
+    {
+      "group": "B",
+      "path": "src/main/java/com/campus/remarket/controller/RatingSession.java",
+      "exists_in_user_baseline": true,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": false
+    },
+    {
+      "group": "B",
+      "path": "src/main/java/com/campus/remarket/service/StudentMemberLink.java",
+      "exists_in_user_baseline": true,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": false
+    },
+    {
+      "group": "B",
+      "path": "src/main/java/demo/campus/campusremarketmember/member/controller/MemberController.java",
+      "exists_in_user_baseline": true,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": false
+    },
+    {
+      "group": "B",
+      "path": "src/main/java/demo/campus/campusremarketmember/member/entity/Member.java",
+      "exists_in_user_baseline": true,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": false
+    },
+    {
+      "group": "B",
+      "path": "src/main/java/demo/campus/campusremarketmember/member/service/MemberService.java",
+      "exists_in_user_baseline": true,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": false
+    },
+    {
+      "group": "B",
+      "path": "src/main/resources/portal-sites/admin/index.html",
+      "exists_in_user_baseline": true,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": false
+    },
+    {
+      "group": "B",
+      "path": "src/main/resources/portal-sites/owner/index.html",
+      "exists_in_user_baseline": true,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": false
+    },
+    {
+      "group": "B",
+      "path": "src/main/resources/static/login.html",
+      "exists_in_user_baseline": true,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": false
+    },
+    {
+      "group": "B",
+      "path": "src/main/resources/static/preview/app.js",
+      "exists_in_user_baseline": true,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": false
+    },
+    {
+      "group": "B",
+      "path": "src/main/resources/static/preview/session.js",
+      "exists_in_user_baseline": true,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": false
+    },
+    {
+      "group": "B",
+      "path": "src/main/resources/static/preview/v14.js",
+      "exists_in_user_baseline": true,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": false
+    },
+    {
+      "group": "B",
+      "path": "src/main/resources/templates/market/index.html",
+      "exists_in_user_baseline": true,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": false
+    },
+    {
+      "group": "B",
+      "path": "src/test/java/com/campus/remarket/BoardCommunityTests.java",
+      "exists_in_user_baseline": true,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": false
+    },
+    {
+      "group": "B",
+      "path": "src/test/java/com/campus/remarket/MannerRatingTests.java",
+      "exists_in_user_baseline": true,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": false
+    },
+    {
+      "group": "B",
+      "path": "src/test/java/com/campus/remarket/MemberIntegrationTests.java",
+      "exists_in_user_baseline": true,
+      "same_as_user_baseline": false,
+      "final_same_as_incoming": false
+    }
+  ],
+  "validation": {
+    "live_logins": 12,
+    "school_product_counts": {
+      "INU": 8,
+      "INHA": 8,
+      "CHUNGWOON": 8
+    },
+    "members": 22,
+    "shops": 5,
+    "trades": 2,
+    "browser_settings_save": true,
+    "private_settings_included": false
+  },
+  "changes": [
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/config/LoginSecurityConfig.java",
+      "sha256": "350b06eae9f63b640f2d796fa4d800130ddb2d0f3444c8e6b197f369e5057e0f"
+    },
+    {
+      "path": "campus-remarket/src/main/java/com/campus/remarket/service/TradeService.java",
+      "sha256": "815e3ab3e4669489a0dc0448b6639622e2295c39e5d757b3406da1bf88035582"
+    },
+    {
+      "path": "campus-remarket/src/main/java/demo/campus/campusremarketmember/member/controller/MemberController.java",
+      "sha256": "f6182289b0d5852777deb2e052aa6f40fb027ef2d7cc2fb44ac42097142a5d3a"
+    },
+    {
+      "path": "campus-remarket/src/main/java/demo/campus/campusremarketmember/member/dto/NameDto.java",
+      "sha256": "af61fb90e4d2839f7b271c9a5216f50eb3a01d5ad44da47f560620358a820c65"
+    },
+    {
+      "path": "campus-remarket/src/main/java/demo/campus/campusremarketmember/member/dto/PhoneDto.java",
+      "sha256": "e5686a968b8e8ac0237a598827f8562aee6feafbee4f4892276ab13763f8b0e7"
+    },
+    {
+      "path": "campus-remarket/src/main/java/demo/campus/campusremarketmember/member/dto/StatusDto.java",
+      "sha256": "3a0e19ed60a70f191d9a86025a38a6b2b40035edbb1d94d67723e0b083004c9b"
+    },
+    {
+      "path": "campus-remarket/src/main/java/demo/campus/campusremarketmember/member/dto/WithdrawDto.java",
+      "sha256": "edcad38820fcf0b87b8e857d833b0a4571635ba5b450d89eb3afade405544ad7"
+    },
+    {
+      "path": "campus-remarket/src/main/java/demo/campus/campusremarketmember/member/entity/Member.java",
+      "sha256": "d4dd6c1b9c8f1aad467ab4bf6c74898c54b3a8f3cefb2a6e2b35b3e92c093fc6"
+    },
+    {
+      "path": "campus-remarket/src/main/java/demo/campus/campusremarketmember/member/service/MemberService.java",
+      "sha256": "ede96bbf65611e902d07b7c22c4f566e66aca09496c46969a80311e13a290434"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/portal-sites/admin/index.html",
+      "sha256": "fd595df18e1c957d2ba3254e4cda2d091f1efe6438f3bfa3b2ef392e9a8610be"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/portal-sites/owner/index.html",
+      "sha256": "ba53276419edbe3fefc6de5605181f8d43a10cd91ed0f2aced850a1360c7d095"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/login-banner.js",
+      "sha256": "af66c52eb588a90f0c9513ac002e1b84b2f56688dc8dbdfe1c9a034c2656469c"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/login.html",
+      "sha256": "9bc273884f4fdac6e0084b7c7fe8da68e1039ac7f0840442ea2f0ebf35a09cb1"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/mypage.html",
+      "sha256": "52de83df3056981cb2ebb068c94eb3168d4afc971d34fc1d4daad2202ec9498f"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/mypage.js",
+      "sha256": "8eca55214fbba02fc63eaf4abdb4f6b11bcf1ac23fe9e1044b8845b0fb51261f"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/preview/index.html",
+      "sha256": "bb913125a74de53b3fc29471666d531d65a55b9f1ceef3cebc6ea536629412c4"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/preview/session.js",
+      "sha256": "ddb1bc293ba494ecd4c7ca3f3309a3dbf0478fbeb5f967495e321224f81a477b"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/preview/v14.js",
+      "sha256": "d4cf776f3c5dfc8ce8ee3fea685cb544c1be3333c64c62a59d4a92d59c0f02ae"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-food/경인교육대학교-1.jpg",
+      "sha256": "91d51cb152aa03777eb38df67ec59c12bcad9331d4efe268878f465007d03587"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-food/경인교육대학교-2.jpg",
+      "sha256": "6b3ec5cec66171ccd23c324273a07ca7860774ba56d47acf831fe5e9aa428b6d"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-food/경인여자대학교-1.jpg",
+      "sha256": "310f813bf0b5d0a690d96c62ad2eba45ff52ac9d94687618b062af9c5696be0a"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-food/경인여자대학교-2.jpg",
+      "sha256": "1e5580ffe58bd5c7a0d9c0b983bdd59f879534f21e45393bb84703d700371450"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-food/연세대학교 국제캠퍼스-1.jpg",
+      "sha256": "fa05f83da3dec61be875548d851ad8439079e4cff3f3860f544a11220f32f00a"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-food/연세대학교 국제캠퍼스-2.jpg",
+      "sha256": "cda6e71fc609c6c82ea4cedeaf4d4c460db9b1171ca10630bcbd0a2e6dc41876"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-food/인천가톨릭대학교-1.jpg",
+      "sha256": "736afd31517fad0eedf31bb7330df735948cbf1fa9f843905c2f3f52ce61c396"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-food/인천가톨릭대학교-2.jpg",
+      "sha256": "284030abc05f9bfae578f378658ffa2850c0996aa16b13a4f9cfc8fc55bfba9c"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-food/인천가톨릭대학교-3.jpg",
+      "sha256": "3386f8a3dfaa909667ec95cccf24f7a2febca6b2f55a3c7310c60ea1ccc22f53"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-food/인천대학교-1.jpg",
+      "sha256": "41f1dd4ec5a6d8d5724944dee6961490766769a7f3b4ad4e61b3ccfd3557793f"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-food/인천대학교-2.jpg",
+      "sha256": "2ee1278343e50cd714ad76dc7c9e6b8f954d5ffe0903468eca5836b3452812c1"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-food/인하공업전문대학-1.jpg",
+      "sha256": "ecaf6817720fe4f6f70838bb8c50505dd23fe9d94b98209b68cb93630756dc74"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-food/인하공업전문대학-2.jpg",
+      "sha256": "b6927e932a15ce9a0850c91c77213077f76ef2df5a8740fbf6e0771d7ba302b0"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-food/인하대학교-1.jpg",
+      "sha256": "62d35aea3a97eded5c065f332f882f0523eb6418b0bb55e0324afad5a21f827d"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-food/인하대학교-2.jpg",
+      "sha256": "8e505fccdbcb5a41aea23744cad40954552dfb98b8d2600d24a41a04e5043b90"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-food/재능대학교-1.jpg",
+      "sha256": "7a77ef3b80a5cf9c12b1eec02e45f08d22c48d13afc8b59469ff6c41eb502b5b"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-food/재능대학교-2.jpg",
+      "sha256": "3bac709c5aa4c8bc1e05939b4e7c7284c77ffe9a05c9b11bb6d42a1c8d4def8e"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-food/청운대학교 인천캠퍼스-1.jpg",
+      "sha256": "6c52122803dd6fc9b926f766633012e60fc8f1b1801db9856f929f351d7b7035"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-food/청운대학교 인천캠퍼스-2.jpg",
+      "sha256": "c4bd04357f67f374756240940dc8b4e14ee528638023a95aad0b5c3644acb3bb"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-photos/경인교육대학교-약도.jpg",
+      "sha256": "68b1379d8dbf13f199a9c9ba12c57c7e4e53bc87681bf548ede0fa034ce7a2d0"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-photos/경인교육대학교.jpg",
+      "sha256": "4637a2d9f368dbdf2ab54f3b8e17a4226cefde97bb38ae8bd813ea33597df639"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-photos/경인여자대학교-약도.jpg",
+      "sha256": "a9637def9d0ba8a8c448a4d4ded0d6f4405d80657c4edea8340397791374d30e"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-photos/경인여자대학교.jpg",
+      "sha256": "77aa45c1119c71f87f2cb3e22f8df0491ec6a8cf00b2c835903c92abb605007a"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-photos/넣는법.txt",
+      "sha256": "73adb204bef71516fcc2ea1a9b74ec3cfc31bf30e7492543278da94707a3f917"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-photos/연세대학교 국제캠퍼스-약도.jpg",
+      "sha256": "ea7c15c0d0bddca17d4c96faa6f997e8e8ec267bd5c09d99edcf306f4e6ddab8"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-photos/연세대학교 국제캠퍼스.jpg",
+      "sha256": "2e7d6e18b73deb3d71aa64f3a77fe9b25cc56385b1cdd03a304c672cb6568e1b"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-photos/인천가톨릭대학교.jpg",
+      "sha256": "6f64e47ce8130c658a327d3ca283c5b52e11658956ebb7d62cef2544883191f4"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-photos/인천대학교-약도.jpg",
+      "sha256": "e169b2d02a1ffadb361dbab52f2cdbaa1e49d2b2f4834f06405ef05a7d05a7a7"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-photos/인천대학교.jpg",
+      "sha256": "410726b6e1c73ec45cf22de8612a6a57ae7e69a5e391e7e3e5318297c7a75013"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-photos/인하공업전문대학.jpg",
+      "sha256": "a2e2b7798ad29c3fedce2bc97c496df9a1d6d580cd7dae4e030e1c280d808de5"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-photos/인하대학교-약도.jpg",
+      "sha256": "3afe7327d2e7791f55ea3daa63bcc8838045fa9f74d5f3031ed0d95a67c90d56"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-photos/인하대학교.jpg",
+      "sha256": "39e2f7e38e6d54dae2e5a4782eee7632a6451e642cb63b1b27195de0d5bf952f"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-photos/재능대학교.jpg",
+      "sha256": "5534100fa5bee192af4f2d2c87b5a1355beb687b41446956131edd116c1b2e96"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/static/school-photos/청운대학교 인천캠퍼스.jpg",
+      "sha256": "3c91d1f8990c1058c2a1e4c5d38947ae1650c504d855b8f8af9ce7ae18698501"
+    },
+    {
+      "path": "campus-remarket/src/main/resources/templates/market/index.html",
+      "sha256": "39aedf5395cd124f222f0597f2d45b5382efd89a4f58bf076a73d2df16cd31a7"
+    },
+    {
+      "path": "campus-remarket/src/test/java/com/campus/remarket/TeammateMergeTests.java",
+      "sha256": "4d871d756a7fb4353ad05d4d04c97afded030a05734ab3334d97407af8345c95"
+    },
+    {
+      "path": "campus-remarket/00_조원파일_차이점과통합내역_20261105.md",
+      "sha256": "6ac2cd349b7361f744fdfbee895f5ad7a7dc122b1eff7d42ae32840caa444e09"
+    },
+    {
+      "path": "campus-remarket/기존DB_회원탈퇴컬럼_추가.sql",
+      "sha256": "385448936306843d1fc7a3a2d7005c5d22cca9dc482a06567b93084fcd268a04"
+    },
+    {
+      "path": "campus-remarket/docs/조원통합_검증화면/account-settings.png",
+      "sha256": "f5f29c3b14fb2d49b9dbd2c72ecfc0adb4bc2958543a310d3a809f09498114f4"
+    },
+    {
+      "path": "campus-remarket/docs/조원통합_검증화면/campus-banner.png",
+      "sha256": "39327093d76231c6d7f36a899805266029743bc8f2a64368597033b5262a79cc"
+    },
+    {
+      "path": "campus-remarket/docs/조원통합_검증화면/food-banner.png",
+      "sha256": "eb93d7ecc9d5cbe3f09db21464f2180f7d66e83a07a50e94bddf403f82cb1865"
+    },
+    {
+      "path": "campus-remarket/docs/조원통합_검증화면/login-school-photo.png",
+      "sha256": "1d4fb140b29b746eb14b16b54f4d7a3c2374d844d668e8c28c0758001065b747"
+    },
+    {
+      "path": "campus-remarket/app/campus-remarket.jar",
+      "sha256": "5c45fc930381904ee2103a5fa960bb86090f8ff88f79d04cca21e1169af9cf55"
+    },
+    {
+      "path": "campus-remarket/README.md",
+      "sha256": "90911d0185e6a82d27fb43397ea621a34b06dc03332d98896c172df1fc0fe754"
+    },
+    {
+      "path": "campus-remarket/조원통합_코드변경.diff",
+      "sha256": "dc8435a4f609cee4333887a5fb57689dbdd0d010d1a3b4097c0b51c6b5c3800e"
+    }
+  ]
+}

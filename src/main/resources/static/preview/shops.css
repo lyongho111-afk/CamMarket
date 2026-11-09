@@ -1,0 +1,29 @@
+.hero + #content{margin-top:36px}
+body[data-page="shops"] #content{margin-top:0}
+body[data-page="shops"] .section-head{margin-bottom:24px}
+.shops-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:stretch}
+.shops-panel{border:1px solid var(--line);border-radius:16px;padding:28px;background:#fff;min-width:0}
+.shops-panel h3{font-size:21px;letter-spacing:-.7px;line-height:1.5;margin:10px 0 7px}
+.shops-description{font-size:12px;color:#7d8a80;line-height:1.7}
+.shops-map-filters{display:flex;gap:8px;margin:19px 0 13px;flex-wrap:wrap}
+.shops-map-filters button{font-size:11px;padding:6px 12px;border-radius:20px;background:#f2f5ef;color:#6e806e;border:1px solid transparent}
+.shops-map-filters button.active{background:#24694f;color:white}
+.shops-google-map{display:block;width:100%;height:355px;border:0;border-radius:12px;background:#eaf0e5}
+.shops-map-panel .map-link{margin-top:13px;font-size:11px}
+.campus-store-list{margin-top:15px}
+.campus-store{padding:20px 0;border-bottom:1px solid var(--line)}
+.campus-store-open{display:flex;align-items:center;gap:13px;width:100%;text-align:left;padding:0;border-radius:8px}
+.campus-store-open:hover .campus-store-name{text-decoration:underline;text-underline-offset:4px}
+.campus-store-icon{font-size:27px;width:38px;flex-shrink:0;text-align:center}
+.campus-store-info{min-width:0;flex:1}
+.campus-store-name{display:block;font-size:13px;font-weight:600;color:#284c3d;overflow-wrap:anywhere}
+.campus-store-hours{display:block;font-size:10px;color:#829180;margin-top:5px}
+.store-status{font-size:10px;white-space:nowrap;border-radius:5px;padding:4px 8px;flex-shrink:0}
+.store-status.is-open{background:#edf3e7;color:#57774d}
+.store-status.is-closed{background:#f1f2ef;color:#7c867b}
+.campus-store-menu,.campus-store-space{font-size:11px;color:#7c897b;margin:9px 0 0 51px;line-height:1.7}
+.campus-store-space{color:#64835b}
+.shops-data-note{font-size:10px;color:#98a092;margin-top:18px;line-height:1.7}
+.shops-empty{padding:32px 0;color:#869082;font-size:12px;line-height:1.8}
+@media(max-width:800px){.shops-layout{gap:16px}.shops-panel{padding:21px}.shops-panel h3{font-size:19px}.campus-store-open{gap:8px}.store-status{padding:3px 6px}.shops-google-map{height:320px}}
+@media(max-width:700px){.shops-layout{grid-template-columns:1fr}.shops-panel{padding:23px}.shops-google-map{height:300px}.hero + #content{margin-top:28px}.campus-store-menu,.campus-store-space{margin-left:46px}}

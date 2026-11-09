@@ -1,0 +1,40 @@
+{
+  "original": "캠퍼스리마켓_최종통합_아이콘정리.zip",
+  "original_sha256": "dddc9181effd0b4935083091c0b62d767fde6c73203a859a86ca7e8983ae3493",
+  "validation": {
+    "previous_integration_full_java_suite": {
+      "total": 81,
+      "failures": 0,
+      "errors": 0
+    },
+    "this_change": "Kakao app created with approval; Map API enabled; server privately configured; 3 road addresses and 1 land-lot address resolved; signup map pin verified",
+    "shop_buttons_same_baseline": true,
+    "community_comment_like_same_baseline": true,
+    "existing_database_demo_seller_distribution": {
+      "A": 2,
+      "B": 3,
+      "C": 3
+    },
+    "completed_and_reserved_orders_preserved": true,
+    "javascript_syntax_files": 1,
+    "exact_sample_shop_removed_on_database_copy": true
+  },
+  "changes": [
+    {
+      "path": "campus-remarket/00_전체변경사항_최종정리.md",
+      "sha256": "8acc7f9b24ff66db495f19249074a3d8352b5dd819326ed73b806321b5543c6d"
+    },
+    {
+      "path": "campus-remarket/00_카카오API_연결완료.md",
+      "sha256": "e55dfeb0298e47e248e7b0da3de9b4785eafea0bff76b93ccc4d9601adeae218"
+    },
+    {
+      "path": "campus-remarket/README.md",
+      "sha256": "ae608abdab3c945441c66b7d51a83b4e1b346110d186f943fa0c363ff521eba8"
+    },
+    {
+      "path": "campus-remarket/app/campus-remarket.jar",
+      "sha256": "c81a5ebfe5fed29fada14fef13648f991c211e64bc6d7290ab090b663adfef7f"
+    }
+  ]
+}

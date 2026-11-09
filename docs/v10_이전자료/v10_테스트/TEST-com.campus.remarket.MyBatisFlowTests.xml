@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.campus.remarket.MyBatisFlowTests" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-30T00:58:56.203Z" time="0.123">
+  <properties/>
+  <testcase name="shopAndBoardCrud()" classname="com.campus.remarket.MyBatisFlowTests" time="0.012"/>
+  <testcase name="reservationUsesServerPriceAndKeepsIt()" classname="com.campus.remarket.MyBatisFlowTests" time="0.019"/>
+  <testcase name="expiredDiscountRestoresPriceAndAllowsNewDay()" classname="com.campus.remarket.MyBatisFlowTests" time="0.008"/>
+  <testcase name="meetingAndCompletionAreStored()" classname="com.campus.remarket.MyBatisFlowTests" time="0.013"/>
+  <testcase name="noPaymentApprovalWithoutKeys()" classname="com.campus.remarket.MyBatisFlowTests" time="0.004"/>
+  <testcase name="xmlQueriesAndJoin()" classname="com.campus.remarket.MyBatisFlowTests" time="0.012"/>
+  <testcase name="saleCrudDiscountAndBump()" classname="com.campus.remarket.MyBatisFlowTests" time="0.022"/>
+  <testcase name="invalidRatesRejected()" classname="com.campus.remarket.MyBatisFlowTests" time="0.005"/>
+  <testcase name="exposureOrderMatchesPolicy()" classname="com.campus.remarket.MyBatisFlowTests" time="0.008"/>
+  <system-out/>
+  <system-err/>
+</testsuite>

@@ -1,0 +1,44 @@
+{
+  "service_tests": 9,
+  "failures": 0,
+  "checks": [
+    {
+      "name": "shortcut_bar_removed",
+      "status": "PASS"
+    },
+    {
+      "name": "student_shop_script_linked",
+      "status": "PASS"
+    },
+    {
+      "name": "map_and_store_panels",
+      "status": "PASS"
+    },
+    {
+      "name": "no_status_demo_controls",
+      "status": "PASS"
+    },
+    {
+      "name": "shop_api_reads_db",
+      "status": "PASS"
+    },
+    {
+      "name": "other_sales_unchanged",
+      "status": "PASS"
+    },
+    {
+      "name": "/shops/insert_unavailable",
+      "status": "PASS"
+    },
+    {
+      "name": "/shops/update?id=1_unavailable",
+      "status": "PASS"
+    },
+    {
+      "name": "detail_is_student_only",
+      "status": "PASS"
+    }
+  ],
+  "browser_map": "PASS",
+  "responsive_panels": "PASS"
+}

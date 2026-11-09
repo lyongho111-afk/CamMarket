@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.campus.remarket.MyBatisFlowTests" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-30T02:11:12.600Z" hostname="DESKTOP-5NRA95L" time="0.1">
+  <properties/>
+  <testcase name="shopAndBoardCrud()" classname="com.campus.remarket.MyBatisFlowTests" time="0.008"/>
+  <testcase name="reservationUsesServerPriceAndKeepsIt()" classname="com.campus.remarket.MyBatisFlowTests" time="0.013"/>
+  <testcase name="expiredDiscountRestoresPriceAndAllowsNewDay()" classname="com.campus.remarket.MyBatisFlowTests" time="0.011"/>
+  <testcase name="meetingAndCompletionAreStored()" classname="com.campus.remarket.MyBatisFlowTests" time="0.013"/>
+  <testcase name="noPaymentApprovalWithoutKeys()" classname="com.campus.remarket.MyBatisFlowTests" time="0.004"/>
+  <testcase name="xmlQueriesAndJoin()" classname="com.campus.remarket.MyBatisFlowTests" time="0.009"/>
+  <testcase name="saleCrudDiscountAndBump()" classname="com.campus.remarket.MyBatisFlowTests" time="0.013"/>
+  <testcase name="invalidRatesRejected()" classname="com.campus.remarket.MyBatisFlowTests" time="0.006"/>
+  <testcase name="exposureOrderMatchesPolicy()" classname="com.campus.remarket.MyBatisFlowTests" time="0.005"/>
+  <system-out><![CDATA[2026-10-30T11:11:12.601+09:00  INFO 21356 --- [campus-remarket-mybatis] [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.campus.remarket.MyBatisFlowTests]: MyBatisFlowTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-30T11:11:12.604+09:00  INFO 21356 --- [campus-remarket-mybatis] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.campus.remarket.CampusApplication for test class com.campus.remarket.MyBatisFlowTests
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

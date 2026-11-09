@@ -1,0 +1,109 @@
+--- 조원원본/src/main/java/com/campus/remarket/controller/TradeReviewApiController.java
++++ 최종통합/src/main/java/com/campus/remarket/controller/TradeReviewApiController.java
+@@ -4,4 +4,6 @@
+ import com.campus.remarket.service.TradeReviewService;
+ import org.springframework.web.bind.annotation.*;
++import com.campus.remarket.auth.MarketMember;
++import jakarta.servlet.http.HttpServletRequest;
+ import java.util.List;
+ 
+@@ -11,6 +13,9 @@
+ 
+     private final TradeReviewService reviewService;
++    private final MarketMember member;
++    private final RatingSession ratingSession;
+ 
+-    public TradeReviewApiController(TradeReviewService reviewService) {
++    public TradeReviewApiController(TradeReviewService reviewService, MarketMember member, RatingSession ratingSession) {
++        this.member=member; this.ratingSession=ratingSession;
+         this.reviewService = reviewService;
+     }
+@@ -21,5 +26,8 @@
+      */
+     @PostMapping
+-    public TradeReviewDto submitReview(@RequestBody TradeReviewDto dto) {
++    public TradeReviewDto submitReview(@RequestBody TradeReviewDto dto, @RequestHeader(value="X-CSRF-Token",required=false) String csrf, HttpServletRequest request) {
++        member.trade(dto.getOrderId());
++        ratingSession.verify(request,csrf);
++        dto.setReviewerId(member.studentKey());
+         return reviewService.submitReview(dto);
+     }
+@@ -31,4 +39,5 @@
+     @GetMapping("/user/{userId}")
+     public List<TradeReviewDto> getUserReviews(@PathVariable String userId) {
++        member.studentKey();
+         return reviewService.getReviewsForUser(userId);
+     }
+--- 조원원본/src/main/java/com/campus/remarket/service/TradeReviewService.java
++++ 최종통합/src/main/java/com/campus/remarket/service/TradeReviewService.java
+@@ -4,4 +4,6 @@
+ import com.campus.remarket.dao.TradeDao;
+ import com.campus.remarket.dao.SalesDao;
++import com.campus.remarket.dao.StudentDao;
++import com.campus.remarket.dao.MannerRatingDao;
+ import com.campus.remarket.dto.TradeDto;
+ import com.campus.remarket.dto.SalesDto;
+@@ -17,6 +19,9 @@
+     private final TradeDao tradeDao;
+     private final SalesDao salesDao;
++    private final StudentDao students;
++    private final MannerRatingDao legacyRatings;
+ 
+-    public TradeReviewService(TradeReviewDao reviewDao, TradeDao tradeDao, SalesDao salesDao) {
++    public TradeReviewService(TradeReviewDao reviewDao, TradeDao tradeDao, SalesDao salesDao, StudentDao students, MannerRatingDao legacyRatings) {
++        this.students=students;this.legacyRatings=legacyRatings;
+         this.reviewDao = reviewDao;
+         this.tradeDao = tradeDao;
+@@ -37,4 +42,8 @@
+         }
+ 
++        if (dto.getOrderId().length()>50 || dto.getReviewerId().length()>50 || dto.getAttitude()!=null&&dto.getAttitude().length()>50 || dto.getContent()!=null&&dto.getContent().length()>500)
++            throw new IllegalArgumentException("주문번호·태도(50자)·후기(500자) 길이를 확인하세요.");
++        // 같은 거래의 두 평가 API가 동시에 제출되어도 하나만 처리합니다.
++        tradeDao.lockOne(dto.getOrderId());
+         // 2. 거래 조회
+         TradeDto trade = tradeDao.selectOne(dto.getOrderId());
+@@ -44,5 +53,5 @@
+ 
+         // 3. 거래 완료 상태 검증 (YS 조원이 정의한 COMPLETED 상태 확인)
+-        if (!"COMPLETED".equalsIgnoreCase(trade.getStatus())) {
++        if (!trade.isCompleted()) {
+             throw new IllegalStateException("거래가 최종 완료된 상태에서만 매너 평가를 진행할 수 있습니다.");
+         }
+@@ -68,8 +77,12 @@
+ 
+         // 5. 중복 평가 방지
+-        if (reviewDao.countByOrderAndReviewer(dto.getOrderId(), dto.getReviewerId()) > 0) {
++        if (reviewDao.countByOrderAndReviewer(dto.getOrderId(), dto.getReviewerId()) > 0 || legacyRatings.selectOne(dto.getOrderId(), dto.getReviewerId()) != null) {
+             throw new IllegalStateException("이미 해당 거래에 대한 매너 평가를 완료하셨습니다.");
+         }
+ 
++        if (students.selectOne(dto.getReviewerId()) == null) throw new IllegalStateException("평가자의 학생 정보가 없습니다.");
++        var targetStudent=students.lockOne(targetId);
++        if (targetStudent == null) throw new IllegalStateException("상대방의 학생 정보가 없습니다.");
++        int beforeTemp=targetStudent.getTemp();
+         // 6. 점수별 매너온도 계산 (5점:+0.5, 4점:+0.2, 3점:0, 2점:-0.3, 1점:-0.8)
+         int delta = switch (dto.getScore()) {
+@@ -85,10 +98,12 @@
+         // 7. DB 업데이트
+         reviewDao.updateStudentTemperature(targetId, delta);
++        // 상·하한에서 실제 반영된 증감량을 기록합니다.
++        Integer updatedTemp = reviewDao.getStudentTemperature(targetId);
++        dto.setTemperatureDelta(updatedTemp-beforeTemp);
+         reviewDao.insert(dto);
+ 
+         // 8. 결과 DTO 반환
+-        Integer updatedTemp = reviewDao.getStudentTemperature(targetId);
+         dto.setCurrentTemperature(updatedTemp != null ? updatedTemp / 10.0 : 36.5);
+-        dto.setAppliedDelta(delta / 10.0);
++        dto.setAppliedDelta(dto.getTemperatureDelta() / 10.0);
+ 
+         return dto;
+--- 조원원본/src/test/java/com/campus/remarket/TradeReviewFlowTests.java
++++ 최종통합/src/test/java/com/campus/remarket/TradeReviewFlowTests.java
+@@ -13,4 +13,5 @@
+ @SpringBootTest
+ @Transactional
++@org.springframework.test.context.jdbc.Sql(statements="INSERT INTO student(unisno) VALUES ('student'),('buyer')")
+ class TradeReviewFlowTests {
+ 

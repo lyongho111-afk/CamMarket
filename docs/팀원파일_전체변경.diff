@@ -1,0 +1,75 @@
+--- member-original/src/main/java/demo/campus/campusremarketmember/member/controller/MemberController.java
++++ v10-integrated/src/main/java/demo/campus/campusremarketmember/member/controller/MemberController.java
+@@ -83,6 +83,10 @@
+         Member m = service.login(req.schoolId(), req.loginId(), req.password());
+         HttpSession session = request.getSession();          // 세션이 없으면 새로 만듦
+         request.changeSessionId();                           // 로그인 순간 세션 번호를 바꿔 "세션 고정 공격"을 막음
++        session.removeAttribute("loginStudent");
++        session.removeAttribute("mannerCsrf");
++        if (m.isStudent()) session.setAttribute("loginUnisno", m.getLoginId());
++        else session.removeAttribute("loginUnisno");
+         session.setAttribute(LoginSession.KEY, m.getId());   // 세션에는 회원 번호만 저장 (객체 통째로 X)
+         return MemberView.of(m);
+     }
+--- member-original/src/main/java/demo/campus/campusremarketmember/member/service/MemberService.java
++++ v10-integrated/src/main/java/demo/campus/campusremarketmember/member/service/MemberService.java
+@@ -9,6 +9,7 @@
+ import demo.campus.campusremarketmember.member.repository.EmailVerificationRepository;
+ import demo.campus.campusremarketmember.member.repository.MemberRepository;
+ import demo.campus.campusremarketmember.member.repository.SchoolRepository;
++import com.campus.remarket.service.StudentMemberLink;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ import org.springframework.beans.factory.annotation.Value;
+@@ -40,6 +41,7 @@
+     private static final Pattern EMAIL = Pattern.compile("[^@\\s]+@[^@\\s]+\\.[^@\\s]+");     // 아이디@도메인.점
+     private static final Pattern PASSWORD = Pattern.compile("(?=.*[A-Za-z])(?=.*\\d).{8,64}"); // 영문+숫자 8자 이상
+ 
++    private final StudentMemberLink studentLink;
+     private final MemberRepository members;
+     private final SchoolRepository schools;
+     private final EmailVerificationRepository verifications;
+@@ -47,9 +49,10 @@
+     private final boolean mailMock;                          // true면 메일 대신 화면·콘솔에 번호 표시
+     private final SecureRandom random = new SecureRandom();
+ 
+-    public MemberService(MemberRepository members, SchoolRepository schools,
++    public MemberService(StudentMemberLink studentLink, MemberRepository members, SchoolRepository schools,
+                          EmailVerificationRepository verifications, PasswordEncoder passwordEncoder,
+                          @Value("${campus.mail.mock:true}") boolean mailMock) {
++        this.studentLink = studentLink;
+         this.members = members;
+         this.schools = schools;
+         this.verifications = verifications;
+@@ -121,6 +124,7 @@
+ 
+         Member saved = members.save(Member.student(studentNo, passwordEncoder.encode(f.password()),
+                 name, email, phone, f.studentStatus(), school));
++        studentLink.link(saved);
+         verifications.deleteByEmail(email);
+         return saved;
+     }
+@@ -184,10 +188,12 @@
+     // ===================== 로그인 =====================
+ 
+     /** schoolId가 있으면 학생(학교+학번), 없으면 사장·매니저·관리자(아이디) */
++    @Transactional
+     public Member login(Long schoolId, String loginId, String password) {
+         Member m = members.findByAccountKey(Member.accountKey(schoolId, trim(loginId))).orElse(null);
+         if (m == null || password == null || !passwordEncoder.matches(password, m.getPassword()))
+             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "아이디 또는 비밀번호가 맞지 않아요."); // 어느 쪽이 틀렸는지 안 알려줌
++        studentLink.link(m);
+         return m;
+     }
+ 
+--- member-original/src/main/resources/static/member.js
++++ v10-integrated/src/main/resources/static/member.js
+@@ -59,7 +59,7 @@
+       });
+       toast(`${me.name}님, 반가워요!`);
+       const next = me.role === 'OWNER' ? 'manager.html'   // 사장 → 매니저 관리 화면
+-                 : '/api/members/me';                     // 연습용: 내 정보 확인 (통합본에선 '/')
++                 : '/';                     // 연습용: 내 정보 확인 (통합본에선 '/')
+       setTimeout(() => location.href = next, 700);
+     } catch (err) { toast(err.message); b.disabled = false; }
+   };

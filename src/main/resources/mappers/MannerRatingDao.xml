@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campus.remarket.dao.MannerRatingDao">
+    <select id="selectOne" resultType="MannerRatingDto">SELECT * FROM manner_ratings WHERE order_id=#{orderId} AND reviewer_unisno=#{reviewer}</select>
+    <insert id="insert" parameterType="MannerRatingDto" useGeneratedKeys="true" keyProperty="ratingId">
+        INSERT INTO manner_ratings(order_id,reviewer_unisno,recipient_unisno,feedback,delta)
+        VALUES(#{orderId},#{reviewerUnisno},#{recipientUnisno},#{feedback},#{delta})
+    </insert>
+</mapper>

@@ -1,0 +1,48 @@
+{
+  "tests": [
+    {
+      "name": "com.campus.remarket.MannerRatingTests",
+      "tests": "8",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-10-30T03:12:12.611Z",
+      "hostname": "DESKTOP-5NRA95L",
+      "time": "7.704"
+    },
+    {
+      "name": "com.campus.remarket.MemberIntegrationTests",
+      "tests": "7",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-10-30T03:12:20.321Z",
+      "hostname": "DESKTOP-5NRA95L",
+      "time": "5.596"
+    },
+    {
+      "name": "com.campus.remarket.MyBatisFlowTests",
+      "tests": "9",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-10-30T03:12:25.918Z",
+      "hostname": "DESKTOP-5NRA95L",
+      "time": "0.082"
+    },
+    {
+      "name": "com.campus.remarket.StaffPortalTests",
+      "tests": "9",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-10-30T03:12:26.001Z",
+      "hostname": "DESKTOP-5NRA95L",
+      "time": "4.356"
+    }
+  ],
+  "total": 33,
+  "historyApi": "/api/owner/shop/history",
+  "source": "owner/manager session identity; shop row lock; same-transaction audit",
+  "studentAndAdminFrontendUnchanged": true
+}

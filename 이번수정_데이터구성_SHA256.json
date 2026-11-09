@@ -1,0 +1,39 @@
+{
+  "java_tests": {
+    "tests": 93,
+    "failures": 0,
+    "errors": 0
+  },
+  "actual_login_checks": 12,
+  "school_products": {
+    "INU": 8,
+    "INHA": 8,
+    "CHUNGWOON": 8
+  },
+  "original_products_preserved": true,
+  "existing_trade_records_preserved": true,
+  "new_images_generated": 0,
+  "private_settings_included": false,
+  "changes": [
+    {
+      "path": "src/main/java/com/campus/remarket/config/CampusDemoDataSeed.java",
+      "sha256": "e9a6da7bfc73611573c7579a6bb4f9869656a650c5ef3a1c4c07fb3ca1e184db"
+    },
+    {
+      "path": "src/main/java/demo/campus/campusremarketmember/member/entity/Member.java",
+      "sha256": "80323187e5fd5f44d7a76bea6643a63a2024857b1b4c4d47f4e1515691b912c2"
+    },
+    {
+      "path": "src/main/resources/application.properties",
+      "sha256": "3744185aaa6bbe61404dfb66eaae3ca13f287ce63af093369783cd3245750d6b"
+    },
+    {
+      "path": "src/test/java/com/campus/remarket/CampusDemoDataTests.java",
+      "sha256": "b2779ac953a28086805a7e8edf52f85f4ad3f3af041d7f16760d69f52890b9c6"
+    },
+    {
+      "path": "build.gradle",
+      "sha256": "0c1a0663d72cde1b88023f60193f9dcb3a4f195f1518e5ea0547987640be9cbe"
+    }
+  ]
+}

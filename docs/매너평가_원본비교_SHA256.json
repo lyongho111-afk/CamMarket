@@ -1,0 +1,44 @@
+[
+  {
+    "file": "src/main/java/com/campus/remarket/controller/TradeReviewApiController.java",
+    "identicalToOriginal": false,
+    "originalSHA256": "b9b7ee5cef1c323094bc39a9d88ee9d00fee29f342514ef5caccdd860e178d93",
+    "integratedSHA256": "42db3884cf1495c8057ec7246931e071b7f341af4989243818c0dd871a7821ae"
+  },
+  {
+    "file": "src/main/java/com/campus/remarket/service/TradeReviewService.java",
+    "identicalToOriginal": false,
+    "originalSHA256": "a32907417270c249dedf656e2ca10f37392521971755b8fa11ecd490a366b4f0",
+    "integratedSHA256": "04bd2505042cd452bbbe4dfa967d63491231a23b1d30b314f4361622790f7227"
+  },
+  {
+    "file": "src/main/java/com/campus/remarket/dao/TradeReviewDao.java",
+    "identicalToOriginal": true,
+    "originalSHA256": "5a9446f562b2c07773e1c20c1d4b09400a653f11d3ea8f20d3fdfa74f6cfad94",
+    "integratedSHA256": "5a9446f562b2c07773e1c20c1d4b09400a653f11d3ea8f20d3fdfa74f6cfad94"
+  },
+  {
+    "file": "src/main/java/com/campus/remarket/dto/TradeReviewDto.java",
+    "identicalToOriginal": true,
+    "originalSHA256": "c88a0a58e587854f2605fe10f31b96957c7ad40e373edb64af054d6193ed9178",
+    "integratedSHA256": "c88a0a58e587854f2605fe10f31b96957c7ad40e373edb64af054d6193ed9178"
+  },
+  {
+    "file": "src/main/resources/mappers/TradeReviewDao.xml",
+    "identicalToOriginal": true,
+    "originalSHA256": "323568b4c6add1f20b39d176ed3f46daf5c4e4f72557cba0437d0d1e06a99852",
+    "integratedSHA256": "323568b4c6add1f20b39d176ed3f46daf5c4e4f72557cba0437d0d1e06a99852"
+  },
+  {
+    "file": "src/test/java/com/campus/remarket/TradeReviewFlowTests.java",
+    "identicalToOriginal": false,
+    "originalSHA256": "c26f4d34664971272320486f977893e556429c6deefec4db24e4d37a5390564f",
+    "integratedSHA256": "1799482d1462dca10b5957ccc95d9e0f6615bbaeff99d4c136f705907b59915d"
+  },
+  {
+    "file": "function mannerReviewDialog(p) from integrations-live.js",
+    "identicalToOriginal": true,
+    "originalSHA256": "02f3480b8321d031669f882a96f08251c4f71ec4863be9325b8fa2a74843f86f",
+    "integratedSHA256": "02f3480b8321d031669f882a96f08251c4f71ec4863be9325b8fa2a74843f86f"
+  }
+]
