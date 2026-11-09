@@ -1,18 +1,18 @@
-INSERT INTO student (unisno) VALUES ('demo-buyer'), ('demo-seller'), ('demo-seller-2'), ('demo-seller-3');
+INSERT IGNORE INTO student (unisno) VALUES ('demo-buyer'), ('demo-seller'), ('demo-seller-2'), ('demo-seller-3');
 
 -- 학교생활의 실제 업체 세 곳은 CampusShopSeed에서 등록합니다.
 
-INSERT INTO board_categories (category_id, category_name) VALUES
+INSERT IGNORE INTO board_categories (category_id, category_name) VALUES
                                                               (1, '학교'), (2, '주변'), (3, '취업팁'), (4, '고민상담'), (5, '제안'),
                                                               (6, '맛집 추천'), (7, '술집 추천'), (8, '가성비'), (9, '공지'), (10, '자유게시판');
 
-INSERT INTO board_posts (category_id, writer, title, content) VALUES
+INSERT IGNORE INTO board_posts (category_id, writer, title, content) VALUES
                                                                   (6, 'demo-student', '후문 근처 점심 맛집 추천해 주세요', '수업 사이에 빠르게 먹을 수 있는 식당을 추천해 주세요. 예시 게시글입니다.'),
                                                                   (7, 'demo-student', '친구와 가기 좋은 조용한 술집 있나요?', '학교 주변에서 대화하기 편한 곳을 찾고 있어요. 예시 게시글입니다.'),
                                                                   (8, 'demo-student', '만원 이하 든든한 한 끼를 찾아요', '학생 할인이나 가성비 메뉴 정보를 같이 나눠요. 예시 게시글입니다.'),
                                                                   (9, 'demo-student', '커뮤니티 이용 안내', '광고·개인정보 노출을 삼가고 서로 존중해 주세요. 예시 안내글입니다.');
 
-INSERT INTO sales (seller, category, name, oprice, detail, location, icon, regtime, seller_temperature, status) VALUES
+INSERT IGNORE INTO sales (seller, category, name, oprice, detail, location, icon, regtime, seller_temperature, status) VALUES
                                                                                                                     ('demo-seller', '노트북·디지털', '아이패드 에어 · 필기용 추천', 280000, '필기용 태블릿 예시', '학생회관', 'laptop', DATE_SUB(NOW(), INTERVAL 8 DAY), 46.7, '거래완료'),
                                                                                                                     ('demo-seller', '제도·자격증', '스테들러 제도용 샤프 & 삼각자', 12000, '제도 도구 예시', '정문', 'tools', DATE_SUB(NOW(), INTERVAL 7 DAY), 37.8, '예약중'),
                                                                                                                     ('demo-seller-2', '조리·실습복', '한식조리 실습용 조리복 · L', 15000, '조리복 예시', '후문', 'chef', DATE_SUB(NOW(), INTERVAL 6 DAY), 43.2, '판매중'),
@@ -38,7 +38,7 @@ SET discount = 20,
     endtime = DATE_ADD(NOW(), INTERVAL 24 HOUR)
 WHERE selno = 8;
 
-INSERT INTO trade_orders (order_id, selno, buyer, agreed_price, status, meeting_place) VALUES
+INSERT IGNORE INTO trade_orders (order_id, selno, buyer, agreed_price, status, meeting_place) VALUES
                                                                                            ('demo-completed-1', 1, 'demo-buyer', 280000, 'COMPLETED', '학생회관'),
                                                                                            ('demo-reserved-2', 2, 'demo-buyer', 12000, 'RESERVED', '인하대학교 정문');
 -- 공개 시연 계정입니다. 실제 로그인 정보가 아닙니다.

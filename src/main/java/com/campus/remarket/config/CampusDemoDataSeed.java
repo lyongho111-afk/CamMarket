@@ -82,7 +82,7 @@ public class CampusDemoDataSeed implements CommandLineRunner {
         account(school,numbers[2],label+" 구매자 A",null);account(school,numbers[3],label+" 구매자 B",null);
         for(int i=0;i<templates.size();i++){
             var t=templates.get(i);var owner=i<4?a:b;
-            db.update("INSERT INTO sales(school_id,seller,seller_member_id,category,name,oprice,detail,location,icon,photo1,photo2,photo3,status) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            db.update("INSERT IGNORE INTO sales(school_id,seller,seller_member_id,category,name,oprice,detail,location,icon,photo1,photo2,photo3,status) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 school.getId(),links.key(owner),owner.getId(),t.get("CATEGORY"),t.get("NAME"),((Number)t.get("OPRICE")).intValue()+adjustment,
                 label+" 시연용 상품입니다. 실제 판매 글이 아닙니다.",school.getName()+" 정문",t.get("ICON"),t.get("PHOTO1"),t.get("PHOTO2"),t.get("PHOTO3"),"판매중");
         }
